@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One lesson, measured — Bordin Rattanasiri</title>
+<meta name="description" content="A chat explanation of derivatives, kept word for word and cut into steps. 18 questions, 11 on one step, and what that measured.">
+<style>
+:root{
+  --paper:#E9E8E3;
+  --panel:#F3F2EE;
+  --ink:#16171B;
+  --mute:#6E6F6A;
+  --rule:#C9C8C1;
+  --mark:#7B2233;
+  --mono:ui-monospace,"SF Mono","Cascadia Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--serif);font-size:18px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:0 24px}
+section{padding:56px 0;border-top:1px solid var(--rule)}
+section:first-of-type{border-top:0}
+
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--mute);margin:0 0 20px;
+}
+h1{
+  font-family:var(--mono);font-weight:600;
+  font-size:clamp(25px,4.4vw,38px);line-height:1.24;
+  letter-spacing:-.015em;margin:0 0 8px;text-wrap:balance;
+}
+h2{
+  font-family:var(--mono);font-weight:600;font-size:16px;
+  letter-spacing:.02em;margin:0 0 22px;
+}
+h3{font-family:var(--mono);font-size:13px;font-weight:600;margin:0 0 6px}
+p{margin:0 0 18px}
+p:last-child{margin-bottom:0}
+a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--mark)}
+a:hover{color:var(--mark)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--mark);outline-offset:3px}
+strong{font-weight:600}
+.lede{font-size:20px}
+.note{font-size:15px;color:var(--mute)}
+.mono{font-family:var(--mono)}
+
+/* ---- header ---- */
+header{padding:52px 0 0}
+.byline{
+  font-family:var(--mono);font-size:12px;color:var(--mute);
+  display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 40px;
+}
+
+/* ---- the distribution ---- */
+figure{margin:34px 0 0}
+.chart{width:100%;height:auto;display:block;overflow:visible}
+.bar{fill:var(--ink);transform-box:fill-box;transform-origin:bottom}
+.bar.spike{fill:var(--mark)}
+.bar.zero{fill:var(--rule)}
+figcaption{
+  font-family:var(--mono);font-size:12px;color:var(--mute);
+  margin-top:16px;line-height:1.55;
+}
+.axis{font-family:var(--mono);font-size:10px;fill:var(--mute)}
+.axis.hit{fill:var(--mark)}
+.count{font-family:var(--mono);font-size:13px;font-weight:600;fill:var(--mark)}
+@media (prefers-reduced-motion:no-preference){
+  .bar{animation:rise .5s cubic-bezier(.2,.7,.3,1) backwards}
+  @keyframes rise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+}
+
+/* ---- cards ---- */
+.cards{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+@media (max-width:640px){.cards{grid-template-columns:1fr}}
+.card{
+  background:var(--panel);border:1px solid var(--rule);
+  padding:22px;display:flex;flex-direction:column;gap:10px;
+}
+.card p{font-size:15px;margin:0;flex:1}
+.card .open{
+  font-family:var(--mono);font-size:12px;letter-spacing:.06em;
+  text-transform:uppercase;border-bottom:0;align-self:flex-start;
+  border:1px solid var(--ink);padding:7px 14px;
+}
+.card .open:hover{background:var(--ink);color:var(--paper)}
+
+/* ---- tables ---- */
+table{width:100%;border-collapse:collapse;font-size:15px;margin:0 0 20px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+thead th{
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--mute);font-weight:500;
+}
+td.num,th.num{font-family:var(--mono);text-align:right;white-space:nowrap}
+tr.accent td{color:var(--mark)}
+.qtable td:first-child{font-family:var(--mono);font-size:12px;white-space:nowrap;color:var(--mute)}
+.qtable .th{font-size:14px;color:var(--mute);display:block;margin-top:3px}
+.qtable td.num{font-size:12px}
+.sub td:nth-child(2){padding-left:26px;position:relative}
+.sub td:nth-child(2)::before{
+  content:"";position:absolute;left:8px;top:14px;width:10px;
+  border-top:1px solid var(--rule);
+}
+
+/* ---- code ---- */
+pre{
+  background:var(--panel);border:1px solid var(--rule);
+  padding:16px 18px;overflow-x:auto;font-family:var(--mono);
+  font-size:13px;line-height:1.7;margin:0 0 18px;
+}
+code{font-family:var(--mono);font-size:.92em}
+
+/* ---- lists of files ---- */
+.files{list-style:none;padding:0;margin:0;font-size:15px}
+.files li{padding:9px 0;border-bottom:1px solid var(--rule);display:flex;gap:14px}
+.files li:first-child{border-top:1px solid var(--rule)}
+.files .what{color:var(--mute);font-size:14px}
+
+footer{padding:44px 0 72px;border-top:1px solid var(--rule);font-size:15px;color:var(--mute)}
+footer a{border-bottom-color:var(--rule)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="byline">
+      <span>Bordin Rattanasiri</span>
+      <span>Music theory teacher, Thailand</span>
+      <span>July 2026</span>
+    </p>
+    <p class="eyebrow">One lesson, measured</p>
+    <h1>The explanation was good. It held about a quarter of what I needed, and the chat had no way to show that.</h1>
+
+    <figure>
+      <svg class="chart" viewBox="0 0 520 210" role="img"
+           aria-label="Bar chart of 25 steps. Step 2.1 received 11 questions, step 2.2 received 3, step 7.3 received 2, steps 3.2 and 8.2 received 1 each, and the remaining 20 steps received none.">
+        <line x1="0" y1="170" x2="520" y2="170" stroke="var(--rule)" stroke-width="1"/>
+        <g id="bars"></g>
+        <text class="count" x="75.5" y="18" text-anchor="middle">11</text>
+        <text class="axis" x="8" y="190">1.1</text>
+        <text class="axis hit" x="75.5" y="190" text-anchor="middle">2.1</text>
+        <text class="axis" x="512" y="190" text-anchor="end">8.2</text>
+      </svg>
+      <figcaption>
+        Where 18 questions landed across the 25 steps of one explanation.<br>
+        Eleven of them, 61%, arrived at a single step.
+      </figcaption>
+    </figure>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>What happened</h2>
+    <p class="lede">I teach music theory in Thailand — fundamentals through harmony, counterpoint and form, to students from complete beginners up to university level. Fifteen years of it. My own maths stopped in secondary school.</p>
+    <p>In July 2026 I asked Claude to teach me derivatives, a topic I had never studied. The explanation it gave in chat was good. Good enough that I asked for it back word for word as a web page, with two buttons on every sub-step: one to mark it understood, and one that opens a box to type a question about that step. Whatever I asked came back as a panel attached to the step itself, so the answer sat where the confusion was. Claude cut its own answer into 25 steps; I did not choose that number, or the places it cut.</p>
+    <p>Nothing else changed. Same words, same model, same session, a few minutes apart. The only new thing was somewhere to point.</p>
+    <p>I asked 18 questions. Eleven of them landed on step 2.1. Answering all 18 took three times more writing than the whole original explanation contained.</p>
+    <p>Step 2.1 was not a hard step. It was missing about four sections' worth of ground, and nothing in the chat version could have revealed that — not to me, and not to the model. <strong>A learner cannot name what they do not understand; that is what not understanding is.</strong> Given somewhere to point, they can point, and the shape of where they point is the missing curriculum.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The two pages</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>Lesson 1</h3>
+        <p>The chat explanation, kept word for word and cut into 25 steps. This is the page I actually studied from. The replies to all 18 questions are still inside it, behind the buttons where they landed.</p>
+        <a class="open" href="lesson-1.html">Open lesson 1</a>
+      </div>
+      <div class="card">
+        <h3>Lesson 2</h3>
+        <p>The same topic built again, after Claude had been told what had gone wrong the first time. Thirty steps, and nothing hidden behind a button.</p>
+        <a class="open" href="lesson-2.html">Open lesson 2</a>
+      </div>
+    </div>
+    <p class="note" style="margin-top:18px">Both are single HTML files with no server and no dependencies, and both are in Thai. Save either one and it works offline. Lesson 1 is the evidence; lesson 2 only shows what the same lesson looks like when the method is designed in from the start.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The numbers</h2>
+    <table>
+      <thead>
+        <tr><th></th><th class="num">Lesson 1</th><th class="num">Lesson 2</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Steps on the main line</td><td class="num">25</td><td class="num">30</td></tr>
+        <tr><td>Characters on the main line</td><td class="num">13,889</td><td class="num">60,580</td></tr>
+        <tr><td>Median characters per step</td><td class="num">223</td><td class="num">1,856</td></tr>
+        <tr><td>Steps under 600 characters</td><td class="num">21</td><td class="num">0</td></tr>
+        <tr><td>Questions asked</td><td class="num">18</td><td class="num">—</td></tr>
+        <tr><td>Characters written in reply</td><td class="num">42,220</td><td class="num">0</td></tr>
+        <tr class="accent"><td>Questions on the busiest step</td><td class="num">11 of 18</td><td class="num">—</td></tr>
+      </tbody>
+    </table>
+    <p>The first column is a measurement of the chat answer, not of the page. The page kept every word; it only made the seams visible. Cut along its own conceptual joints, a chat explanation that read as complete averages 223 characters per step, and 42,220 more characters had to be written before I could get through it.</p>
+    <p class="note">Three of the answer windows in lesson 1 were added by Claude unprompted rather than asked for. They are excluded from the count of 18. The script names them.</p>
+
+    <h2 style="margin-top:40px">Checking them</h2>
+    <p>Put <a href="verify.py">verify.py</a> beside the two lesson files and run it. No dependencies, Python 3.8 or newer. It prints every figure in the table above.</p>
+    <pre>python3 verify.py</pre>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Where the questions landed</h2>
+    <p>All 18, in the order asked, with the length of each reply. Indented rows are follow-ups inside the same thread. The originals are in Thai.</p>
+    <table class="qtable">
+      <thead>
+        <tr><th>Step</th><th>Question</th><th class="num">Reply</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>2.1</td><td>Where does s(t) = t² come from — and the table shows distance, not speed<span class="th">s(t) = t² มาจากไหน (และตัวเลขในตารางคือระยะทาง ไม่ใช่ความเร็ว)</span></td><td class="num">1,034</td></tr>
+        <tr class="sub"><td></td><td>Galileo found distance grows with time squared — does that hold only for straight ramps, and at every angle?<span class="th">แล้วที่กาลิเลโอพบว่าระยะทางโตแบบเวลายกกำลังสอง ใช้กับทางลาดเส้นตรงเท่านั้นหรือเปล่า ถ้าใช่เป็นทุกองศาความเอียงไหม</span></td><td class="num">2,305</td></tr>
+        <tr class="sub"><td></td><td>I don't understand "gravity is split into two directions, and only the part parallel to the slope pushes the ball down"<span class="th">ไม่เข้าใจคำว่า "แรงโน้มถ่วงถูกแบ่งออกเป็นสองทาง มีเพียงส่วนที่ขนานไปกับพื้นลาดเท่านั้นที่ดันลูกบอลให้ไหลลง"</span></td><td class="num">1,555</td></tr>
+        <tr class="sub"><td></td><td>Explain the unit of acceleration — metres per second squared<span class="th">อธิบายหน่วยความเร่ง — เมตรต่อวินาทีกำลังสอง</span></td><td class="num">1,431</td></tr>
+        <tr class="sub"><td></td><td>Is g = 9.8 the g-force people talk about? And give me a real example of "acceleration measures how fast speed changes"<span class="th">g = 9.8 คือแรงจีที่คนพูดกันใช่ไหม / แล้วขอตัวอย่างจริงของ "ความเร่งวัดว่าความเร็วเปลี่ยนเร็วแค่ไหน" หน่อย</span></td><td class="num">2,892</td></tr>
+        <tr class="sub"><td></td><td>Is 15 ÷ 3 = 5 what "dividing by seconds twice" means? I read that as 5 metres per second, per second<span class="th">ที่ผมคิดว่า เอา 15 ÷ 3 = 5 คือความหมายของ "หารวินาทีสองครั้ง" ใช่ไหม / แล้วผมอ่านเองว่า 5 เมตรต่อวินาที ต่อวินาที</span></td><td class="num">2,798</td></tr>
+        <tr class="sub"><td></td><td>That is what I meant — I read the "/s" already written as the first division<span class="th">ผมหมายถึงแบบนั้นแหละ ตรงที่เขียน /วิ ผมเข้าใจว่าคือหารรอบแรกไปแล้ว</span></td><td class="num">1,314</td></tr>
+        <tr class="sub"><td></td><td>In "acceleration = metres / second / second", where does that second denominator actually come from?<span class="th">ตรงสูตร ความเร่ง = เมตร / วินาที / วินาที คำว่าวินาทีตัวล่างที่เป็นตัวหาร มันมาจากไหนกันแน่</span></td><td class="num">2,628</td></tr>
+        <tr><td>2.1</td><td>What if the numbers I wrote down don't come out as t²?<span class="th">ถ้าตัวเลขที่จดมาไม่ลงตัวเป็น t² ล่ะ</span></td><td class="num">1,844</td></tr>
+        <tr class="sub"><td></td><td>Expand the sentence "imagine you really only have a four-row table"<span class="th">ขยายความประโยค "ลองนึกว่าคุณมีแค่ตาราง 4 แถวจริง ๆ" หน่อย</span></td><td class="num">2,266</td></tr>
+        <tr class="sub"><td></td><td>Ah — you mean there are only measured values in the table, with no formula to carry them on<span class="th">อ๋อ หมายถึงมีแต่ค่าที่วัดมาใส่ตาราง แต่ไม่มีสูตรมาจับต่อ</span></td><td class="num">968</td></tr>
+        <tr><td>2.2</td><td>Substitute and show me what a is. Does it have a unit? And h too<span class="th">แทนค่าให้ดูหน่อยว่า a เท่ากับเท่าไร มีหน่วยไหม แล้ว h ด้วย</span></td><td class="num">2,664</td></tr>
+        <tr class="sub"><td></td><td>The s(a+h) column isn't measured, it comes from the formula? Add a column for s(a+h) − s(a), and unpack the equation in the note<span class="th">ค่า s(a+h) ในตารางไม่ได้มาจากการวัดใช่ไหม มันมาจากสูตร / ขอเพิ่มคอลัมน์ s(a+h) − s(a) ก่อนคอลัมน์สุดท้าย / แล้วขอเจาะสมการในเกร็ดท้ายกล่อง</span></td><td class="num">4,507</td></tr>
+        <tr class="sub"><td></td><td>Guessing a formula from the pattern in a table — is that what's called a model?<span class="th">การเดาสูตรจากรูปแบบตัวเลขในตาราง อันนี้ใช่ที่เรียกว่าแบบจำลองไหม</span></td><td class="num">2,779</td></tr>
+        <tr><td>3.2</td><td>Is "average rate" a technical term? Would "average speed" be clearer?<span class="th">คำว่าอัตราเฉลี่ยเป็นคำเจาะจงหรือเป็นทางการไหม ใช้ว่าความเร็วเฉลี่ยจะชัดกว่าหรือเปล่า</span></td><td class="num">2,715</td></tr>
+        <tr><td>7.3</td><td>What if I want it at some other point — how do you write a when it changes?<span class="th">ถ้าจะหาที่จุดอื่นบ้างล่ะ เวลาเขียนจะระบุค่า a ที่เปลี่ยนไปอย่างไร</span></td><td class="num">2,578</td></tr>
+        <tr class="sub"><td></td><td>So the speed at point a is 2a? And what do we call it when a is some other value?<span class="th">สรุปว่าความเร็วที่จุด a เท่ากับ 2a ใช่ไหม / แล้วเวลาพูดถึงกรณีที่ a เป็นค่าอื่น เราเรียกมันว่าอะไร</span></td><td class="num">1,980</td></tr>
+        <tr><td>8.2</td><td>Checking my answer — acceleration 3 at a = 2.4 gives an average rate of 7.2 + 1.5h<span class="th">ตรวจคำตอบ ความเร่งเป็น 3 ที่จุด a = 2.4 ได้อัตราเฉลี่ยเป็น 7.2 + 1.5h</span></td><td class="num">2,627</td></tr>
+      </tbody>
+    </table>
+    <p>Reading down the first eight rows: the explanation had introduced <code>s(t) = t²</code> as a fact. Everything under it — where the formula came from, what a ramp has to do with gravity, what an acceleration unit means, why seconds appear twice — was ground the step stood on and did not lay. That is not a hard step. It is four missing steps wearing one number.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The transcripts</h2>
+    <p>Unedited, including the turns that went wrong. The first session is the lesson: the two chat explanations, then lesson 1, then every question above. The second is where the method was written down.</p>
+    <ul class="files">
+      <li><a href="https://claude.ai/share/a9ce90b1-004f-497b-be87-658c9d3e8af8">Session 1 — learning derivatives, and building lesson 1</a></li>
+      <li><a href="https://claude.ai/share/b5642d3e-54cc-4d52-aff2-718a3fe5ec74">Session 2 — writing the method down, and lesson 2</a></li>
+    </ul>
+    <p class="note" style="margin-top:18px">The instruction that produced lesson 1 is in session 1: keep every line of the explanation, add a button to every sub-step. The three answer windows Claude added on its own are announced in the message that delivers the file.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The method</h2>
+    <p>After the lesson I asked Claude to write down what it had learned about teaching me, so that the next subject would not start from zero. That became two skill files and three reference documents. Claude wrote the prose; I decided what belonged in it, and every rule in it exists because its absence cost me something in session 1.</p>
+    <p>The rule that matters most is the one the chart above taught: <strong>a cluster of questions on one step means a section is missing, not that the step is hard.</strong> The repair is never a longer answer. It is new steps on the main line.</p>
+    <ul class="files">
+      <li><a href="skills/interactive-lesson-page/SKILL.md">interactive-lesson-page</a><span class="what">Building and extending a lesson page across sessions</span></li>
+      <li><a href="skills/ground-up-teaching/SKILL.md">ground-up-teaching</a><span class="what">The same teaching order, for chat with no page</span></li>
+      <li><a href="skills/references/pedagogy.md">pedagogy.md</a><span class="what">What a step owes the reader before it may end</span></li>
+      <li><a href="skills/references/page-spec.md">page-spec.md</a><span class="what">The page itself: controls, storage, states</span></li>
+      <li><a href="skills/references/build-notes.md">build-notes.md</a><span class="what">Assembling a large single file without losing it</span></li>
+    </ul>
+    <p style="margin-top:22px">Beyond this one lesson I can see many more applications. My own subject would need a completely different page — audio, notation, replay — which is exactly the point. The workflow has to be designed per subject, not once. And all of this was built in Thai.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Everything here is MIT licensed. Use it, adapt it, or ignore it.</p>
+    <p>Bordin Rattanasiri · <a href="mailto:bordin.rattanasiri@gmail.com">bordin.rattanasiri@gmail.com</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var steps = ["1.1","1.2","1.3","2.1","2.2","3.1","3.2","4.1","4.2","4.3","4.4","4.5",
+               "5.1","5.2","5.3","6.1","6.2","6.3","6.4","7.1","7.2","7.3","7.4","8.1","8.2"];
+  var counts = [0,0,0,11,3,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1];
+  var g = document.getElementById("bars");
+  var baseline = 170, unit = 13.2, w = 12, gap = 8.5, x0 = 8;
+  var ns = "http://www.w3.org/2000/svg";
+  counts.forEach(function(n, i){
+    var h = n ? n * unit : 2;
+    var r = document.createElementNS(ns, "rect");
+    r.setAttribute("x", x0 + i * (w + gap));
+    r.setAttribute("y", baseline - h);
+    r.setAttribute("width", w);
+    r.setAttribute("height", h);
+    r.setAttribute("class", "bar" + (n === 11 ? " spike" : n ? "" : " zero"));
+    r.style.animationDelay = (i * 22) + "ms";
+    var t = document.createElementNS(ns, "title");
+    t.textContent = "Step " + steps[i] + " — " + (n === 1 ? "1 question" : n + " questions");
+    r.appendChild(t);
+    g.appendChild(r);
+  });
+})();
+</script>
+</body>
+</html>

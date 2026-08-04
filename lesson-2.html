@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ความเร็ว ณ วินาทีนั้นพอดี — จากอัตราเฉลี่ยสู่อนุพันธ์</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;1,400;1,500&family=Trirong:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E8EDEB; --card:#FBFCFC; --card-2:#F2F6F4;
+  --ink:#131E1B; --ink2:#4E5E58; --ink3:#7B8A84;
+  --rule:#CCD6D2; --rule2:#AFBDB7;
+  --done:#0F5F55; --done-bg:#DBEAE6; --done-rule:#8FBFB6;
+  --ask:#8F5C06; --ask-bg:#F5E9D3; --ask-rule:#D5B475;
+  --math:#463BA0; --math-bg:#E6E4F5; --math-rule:#A9A2DE;
+  --warn:#A33A1E;
+  --r:10px;
+  --f-head:'Trirong','Noto Serif Thai',Georgia,serif;
+  --f-body:'IBM Plex Sans Thai','Noto Sans Thai',-apple-system,'Leelawadee UI',Tahoma,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+  --f-math:'IBM Plex Serif',Georgia,serif;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#121917; --card:#1A2321; --card-2:#202B28;
+    --ink:#E6EDEA; --ink2:#A3B2AC; --ink3:#7C8B85;
+    --rule:#2C3936; --rule2:#3D4E49;
+    --done:#6FC7B7; --done-bg:#123029; --done-rule:#2F6459;
+    --ask:#E0AC5C; --ask-bg:#33260F; --ask-rule:#6D5527;
+    --math:#A9A0EE; --math-bg:#231F44; --math-rule:#4C4485;
+    --warn:#E08163;
+  }
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--f-body); font-size:16.5px; line-height:1.85; font-weight:400;
+}
+.wrap{max-width:1140px; margin:0 auto; padding:0 24px 96px}
+
+/* ---------- masthead ---------- */
+.mast{padding:56px 0 32px; border-bottom:1px solid var(--rule)}
+.eyebrow{
+  font-family:var(--f-mono); font-size:11.5px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--ink3); margin:0 0 14px;
+}
+.mast h1{
+  font-family:var(--f-head); font-weight:600; font-size:clamp(28px,4.6vw,44px);
+  line-height:1.35; margin:0 0 14px; letter-spacing:-.005em;
+}
+.mast .lede{margin:0; max-width:60ch; color:var(--ink2); font-size:16px}
+
+/* ---------- progress rail ---------- */
+.rail{
+  position:sticky; top:0; z-index:40; background:var(--paper);
+  border-bottom:1px solid var(--rule); padding:11px 0; margin-bottom:40px;
+}
+.rail-in{max-width:1140px; margin:0 auto; padding:0 24px; display:flex; align-items:center; gap:16px}
+.rail-track{flex:1; height:5px; background:var(--rule); border-radius:3px; overflow:hidden}
+.rail-fill{height:100%; width:0%; background:var(--done); transition:width .45s ease}
+.rail-num{font-family:var(--f-mono); font-size:13px; color:var(--ink2); white-space:nowrap}
+.rail-num b{color:var(--done); font-weight:500}
+.rail-reset{
+  font-family:var(--f-mono); font-size:11.5px; color:var(--ink3); background:none;
+  border:1px solid var(--rule2); border-radius:6px; padding:3px 9px; cursor:pointer;
+}
+.rail-reset:hover{color:var(--ink); border-color:var(--ink3)}
+
+/* ---------- layout ---------- */
+.grid{display:grid; grid-template-columns:minmax(0,1fr) 268px; gap:44px; align-items:start}
+@media (max-width:900px){ .grid{grid-template-columns:minmax(0,1fr); gap:0} }
+
+/* ---------- lesson map ---------- */
+.map{margin:24px 0 0; border:1px solid var(--rule); border-radius:var(--r); background:var(--card); padding:0 18px}
+.map summary{cursor:pointer; padding:13px 0; font-family:var(--f-mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink3); list-style:none}
+.map summary::-webkit-details-marker{display:none}
+.map summary::before{content:"\25B8  "}
+.map[open] summary::before{content:"\25BE  "}
+.map .mb{padding:2px 0 18px}
+.map p.mintro{margin:0 0 14px; font-size:14.5px; color:var(--ink2); line-height:1.8; max-width:70ch}
+.mrow2{display:grid; grid-template-columns:44px minmax(0,1fr); gap:0 12px; padding:7px 0; border-top:1px solid var(--rule)}
+.mrow2 b{font-family:var(--f-mono); font-size:12.5px; color:var(--math); font-weight:500}
+.mrow2 span{font-size:14.5px; line-height:1.7; color:var(--ink2)}
+.mrow2 span i{font-style:normal; color:var(--ink); font-weight:500}
+
+/* ---------- sections ---------- */
+.sec{margin:0 0 52px}
+.sec-head{display:flex; align-items:baseline; gap:12px; margin:0 0 12px; padding-bottom:10px; border-bottom:2px solid var(--ink)}
+.sec-no{font-family:var(--f-mono); font-size:13px; color:var(--ink3); font-weight:500}
+.sec-head h2{font-family:var(--f-head); font-weight:600; font-size:23px; margin:0; line-height:1.4}
+.sec-lede{margin:0 0 22px; font-size:15px; line-height:1.85; color:var(--ink2); max-width:72ch}
+.sec-lede b{color:var(--ink); font-weight:500}
+
+/* ---------- step ---------- */
+.step{
+  background:var(--card); border:1px solid var(--rule); border-radius:var(--r);
+  padding:20px 22px 16px; margin:0 0 16px; transition:border-color .3s,background .3s;
+}
+.step.is-done{border-color:var(--done-rule); background:var(--card-2)}
+.step.is-ask{border-color:var(--ask-rule)}
+.step-no{
+  font-family:var(--f-mono); font-size:11.5px; letter-spacing:.06em; color:var(--ink3);
+  display:block; margin-bottom:4px;
+}
+.step h3{font-family:var(--f-head); font-weight:500; font-size:18px; margin:0 0 12px; line-height:1.5}
+.step h4{font-family:var(--f-body); font-weight:600; font-size:15.5px; margin:20px 0 8px; color:var(--ink)}
+.step p{margin:0 0 12px}
+.step ul,.step ol{margin:0 0 12px; padding-left:20px}
+.step li{margin:0 0 7px; line-height:1.8}
+
+/* ---------- math ---------- */
+.v{font-family:var(--f-math); font-style:italic; font-size:1.06em; color:var(--math)}
+.eq{
+  font-family:var(--f-math); font-size:19px; text-align:center;
+  margin:16px 0; padding:14px 10px; background:var(--math-bg);
+  border-radius:8px; color:var(--ink); line-height:1.5;
+}
+.eq .v{color:var(--math)}
+.eq.plain{background:none; padding:6px 0; margin:10px 0}
+.eq .lbl{display:block; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink3); margin-bottom:8px}
+.frac{display:inline-flex; flex-direction:column; text-align:center; vertical-align:-.9em; margin:0 .2em}
+.frac>span{padding:1px .45em}
+.frac .den{border-top:1.4px solid currentColor}
+.note{
+  font-size:14.5px; color:var(--ink2); border-left:3px solid var(--rule2);
+  padding:2px 0 2px 14px; margin:14px 0; line-height:1.8;
+}
+.trivia{font-size:14.5px; color:var(--ink3); line-height:1.8; margin:14px 0}
+.trivia b{color:var(--ink2); font-weight:500}
+.key{background:var(--math-bg); color:var(--math); padding:1px 5px; border-radius:4px; font-weight:500}
+.tick{color:var(--done); font-weight:500}
+.cross{color:var(--warn); font-weight:500}
+
+/* ---------- crux: what this step settled / what it hands on ---------- */
+.crux{
+  margin:18px 0 4px; padding:12px 14px; background:var(--card-2);
+  border:1px solid var(--rule); border-left:3px solid var(--done-rule); border-radius:7px;
+  font-size:14.5px; line-height:1.8;
+}
+.crux div{display:grid; grid-template-columns:82px minmax(0,1fr); gap:2px 10px}
+.crux div+div{margin-top:6px}
+.crux b{
+  font-family:var(--f-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink3); font-weight:500; padding-top:4px;
+}
+.crux span{color:var(--ink2)}
+.crux span em{font-style:normal; color:var(--ink); font-weight:500}
+
+/* ---------- data table ---------- */
+table.data{border-collapse:collapse; margin:16px 0; font-family:var(--f-mono); font-size:14px; width:auto}
+table.data th{
+  text-align:left; font-weight:500; font-size:11.5px; letter-spacing:.05em;
+  text-transform:uppercase; color:var(--ink3); padding:6px 20px 6px 0;
+  border-bottom:1px solid var(--rule2); font-family:var(--f-body);
+}
+table.data td{padding:7px 20px 7px 0; border-bottom:1px solid var(--rule); vertical-align:top}
+table.data tr:last-child td{border-bottom:none}
+table.data.narrow{font-size:13px}
+table.data.narrow th,table.data.narrow td{padding-right:14px}
+table.data td.wrap{font-family:var(--f-body); white-space:normal; max-width:34ch; line-height:1.65}
+table.data th.wrap{white-space:normal}
+
+/* ---------- figures ---------- */
+.fig{margin:20px 0; padding:16px 16px 10px; background:var(--card-2); border:1px solid var(--rule); border-radius:8px}
+.fig svg{display:block; width:100%; height:auto}
+.figcap{font-size:13.5px; color:var(--ink3); line-height:1.75; margin:10px 0 0}
+
+/* ---------- signature: shrinking-interval log ---------- */
+.log{margin:20px 0 8px; padding:18px 18px 14px; background:var(--card-2); border:1px solid var(--rule); border-radius:8px}
+.log-cap{font-family:var(--f-mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink3); margin:0 0 14px}
+.log-row{display:grid; grid-template-columns:74px minmax(0,1fr) 62px; align-items:center; gap:12px; margin-bottom:9px}
+.log-h{font-family:var(--f-mono); font-size:13px; color:var(--ink2)}
+.log-bar{height:9px; background:var(--rule); border-radius:2px; position:relative}
+.log-bar i{display:block; height:100%; background:var(--math); border-radius:2px; width:var(--w); transition:width .7s cubic-bezier(.2,.7,.3,1)}
+.log-r{font-family:var(--f-mono); font-size:13.5px; color:var(--ink); text-align:right; font-weight:500}
+.nline{margin:22px 0 4px; position:relative; height:60px}
+.nline-axis{position:absolute; left:0; right:0; top:20px; height:1.5px; background:var(--rule2)}
+.nline-dot{position:absolute; top:15px; width:11px; height:11px; margin-left:-5.5px; border-radius:50%; background:var(--math)}
+.nline-lab{position:absolute; top:32px; font-family:var(--f-mono); font-size:12px; color:var(--ink2); transform:translateX(-50%); white-space:nowrap}
+.nline-tgt{position:absolute; top:4px; bottom:22px; width:0; border-left:2px dashed var(--done)}
+.nline-tlab{position:absolute; top:-4px; font-family:var(--f-mono); font-size:12.5px; color:var(--done); font-weight:500; transform:translateX(-4px); white-space:nowrap}
+@media (prefers-reduced-motion:reduce){ .log-bar i{transition:none} .rail-fill{transition:none} }
+
+/* ---------- extras (injected answers) ---------- */
+.extras{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 14px}
+.extras:empty{display:none}
+.ex-btn{
+  font-family:var(--f-body); font-size:13.5px; color:var(--math); background:var(--math-bg);
+  border:1px solid var(--math-rule); border-radius:20px; padding:5px 14px; cursor:pointer;
+  text-align:left; line-height:1.5;
+}
+.ex-btn:hover{background:var(--math); color:#fff}
+.ex-btn::before{content:"+ "; font-family:var(--f-mono)}
+
+/* ---------- actions ---------- */
+.acts{display:flex; gap:9px; align-items:center; padding-top:12px; border-top:1px solid var(--rule); flex-wrap:wrap}
+.btn{
+  font-family:var(--f-body); font-size:14px; padding:7px 15px; border-radius:7px;
+  border:1px solid var(--rule2); background:transparent; color:var(--ink2); cursor:pointer;
+}
+.btn:hover{border-color:var(--ink3); color:var(--ink)}
+.btn-ok.on{background:var(--done); border-color:var(--done); color:#fff}
+.btn-ask.on{background:var(--ask); border-color:var(--ask); color:#fff}
+.badge{font-family:var(--f-mono); font-size:11.5px; color:var(--ask); margin-left:auto}
+.step.is-done .badge{color:var(--done)}
+:focus-visible{outline:2px solid var(--math); outline-offset:2px}
+
+/* ---------- aside ---------- */
+aside{position:sticky; top:64px}
+@media (max-width:900px){
+  aside{position:sticky; top:52px; z-index:30; margin:0 0 28px}
+  .aside-body{display:none}
+  aside.open .aside-body{display:block}
+}
+.panel{background:var(--card); border:1px solid var(--rule); border-radius:var(--r); overflow:hidden}
+.panel-top{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  padding:12px 16px; border-bottom:1px solid var(--rule); background:var(--card-2);
+}
+.panel-top h4{font-family:var(--f-mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink3); margin:0; font-weight:500}
+.panel-toggle{display:none; background:none; border:none; color:var(--ink2); font-size:18px; cursor:pointer; line-height:1; padding:0 4px}
+@media (max-width:900px){ .panel-toggle{display:block} }
+.aside-body{padding:6px 16px 14px; max-height:none}
+.asec{font-family:var(--f-mono); font-size:10px; letter-spacing:.13em; text-transform:uppercase; color:var(--math); margin:14px 0 2px; font-weight:500}
+.asec:first-child{margin-top:4px}
+.vrow{padding:10px 0; border-bottom:1px solid var(--rule)}
+.vrow:last-child{border-bottom:none}
+.vname{font-family:var(--f-math); font-style:italic; font-size:17px; color:var(--math); display:block}
+.gname{font-size:14.5px; font-weight:600; color:var(--ink); display:block}
+.vdesc{font-size:13.5px; line-height:1.7; color:var(--ink2); display:block}
+.vval{font-family:var(--f-mono); font-size:12px; color:var(--ink3); display:block; margin-top:2px}
+.panel-eq{padding:14px 16px; background:var(--math-bg); border-top:1px solid var(--rule)}
+.panel-eq .lbl{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--math); display:block; margin-bottom:8px}
+.panel-eq .eq{margin:0; padding:0; background:none; font-size:16px}
+
+/* ---------- next steps ---------- */
+.next{margin:44px 0 0; padding:26px 24px; border:2px solid var(--rule); border-radius:var(--r); background:var(--card)}
+.next.locked{opacity:.5}
+.next h2{font-family:var(--f-head); font-size:21px; font-weight:600; margin:0 0 6px}
+.next p{margin:0 0 18px; color:var(--ink2); font-size:15px}
+.opts{display:grid; gap:9px}
+.opt{
+  text-align:left; font-family:var(--f-body); font-size:15px; padding:13px 16px;
+  background:var(--card-2); border:1px solid var(--rule); border-radius:8px; cursor:pointer; color:var(--ink);
+  line-height:1.6;
+}
+.opt:hover:not(:disabled){border-color:var(--math); background:var(--math-bg)}
+.opt:disabled{cursor:not-allowed}
+.opt em{display:block; font-style:normal; font-size:13px; color:var(--ink3); margin-top:2px}
+
+/* ---------- post-lesson panel ---------- */
+.postbox{margin:44px 0 0; padding:26px 24px; border:2px solid var(--math-rule); border-radius:var(--r); background:var(--card)}
+.postbox h2{font-family:var(--f-head); font-size:21px; font-weight:600; margin:0 0 6px}
+.postbox p.pintro{margin:0 0 16px; color:var(--ink2); font-size:15px; line-height:1.8}
+.postbox textarea{
+  width:100%; min-height:104px; font-family:var(--f-body); font-size:15px; line-height:1.8;
+  padding:12px 14px; border:1px solid var(--rule2); border-radius:8px; background:var(--paper);
+  color:var(--ink); resize:vertical;
+}
+.postbox textarea:focus{border-color:var(--math); outline:none}
+
+/* ---------- modal ---------- */
+.scrim{position:fixed; inset:0; background:rgba(10,20,18,.55); display:none; align-items:center; justify-content:center; padding:20px; z-index:100}
+.scrim.on{display:flex}
+.modal{background:var(--card); border-radius:14px; max-width:600px; width:100%; max-height:86vh; overflow:auto; padding:26px 26px 22px}
+.modal h3{font-family:var(--f-head); font-size:20px; font-weight:600; margin:0 0 4px; line-height:1.45}
+.modal .sub{font-family:var(--f-mono); font-size:11.5px; letter-spacing:.08em; color:var(--ink3); margin:0 0 16px; text-transform:uppercase}
+.modal textarea{
+  width:100%; min-height:110px; font-family:var(--f-body); font-size:15px; line-height:1.8;
+  padding:12px 14px; border:1px solid var(--rule2); border-radius:8px; background:var(--paper);
+  color:var(--ink); resize:vertical;
+}
+.modal textarea:focus{border-color:var(--math); outline:none}
+.mrow{display:flex; gap:9px; align-items:center; margin-top:14px; flex-wrap:wrap}
+.btn-p{background:var(--math); border-color:var(--math); color:#fff}
+.btn-p:hover{background:var(--ink); border-color:var(--ink); color:#fff}
+.hint{font-size:13px; color:var(--ink3); margin:12px 0 0; line-height:1.7}
+.modal .body{font-size:16px; line-height:1.85}
+.modal .body p{margin:0 0 12px}
+.modal .body ul{padding-left:20px; margin:0 0 12px}
+
+/* ---------- check question from tutor ---------- */
+.check{border:1px solid var(--ask-rule); background:var(--ask-bg); border-radius:8px; padding:14px 16px; margin:0 0 14px}
+.check .clab{font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ask); margin:0 0 8px; display:block; font-weight:500}
+.check p{margin:0 0 10px}
+.check p:last-of-type{margin-bottom:12px}
+.crow{display:flex; gap:8px; flex-wrap:wrap}
+.btn-check{font-family:var(--f-body); font-size:13.5px; padding:6px 14px; border-radius:7px; border:1px solid var(--ask); background:transparent; color:var(--ask); cursor:pointer}
+.btn-check:hover{background:var(--ask); color:var(--card)}
+
+/* ---------- how to use ---------- */
+.howto{margin:24px 0 0; border:1px solid var(--rule); border-radius:var(--r); background:var(--card); padding:0 18px}
+.howto summary{cursor:pointer; padding:13px 0; font-family:var(--f-mono); font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--ink3); list-style:none}
+.howto summary::-webkit-details-marker{display:none}
+.howto summary::before{content:"\25B8  "}
+.howto[open] summary::before{content:"\25BE  "}
+.howto .hb{padding:2px 0 16px; font-size:14.5px; color:var(--ink2); line-height:1.85}
+.howto ol{padding-left:20px; margin:0}
+.howto li{margin:0 0 8px}
+
+/* ---------- follow-up thread inside the answer modal ---------- */
+.thread{margin:22px 0 0; border-top:1px solid var(--rule); padding-top:4px}
+.tq{margin:18px 0 13px; padding:11px 14px; background:var(--ask-bg); border:1px solid var(--ask-rule); border-radius:8px}
+.tq p{margin:0; font-size:15px; line-height:1.8}
+.ta{margin:0 0 22px; padding-left:15px; border-left:2px solid var(--math-rule)}
+.tlbl{display:block; font-family:var(--f-mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; margin-bottom:6px; font-weight:500}
+.tq .tlbl{color:var(--ask)}
+.ta .tlbl{color:var(--math)}
+.ta p{margin:0 0 11px; font-size:15.5px}
+.ta p:last-child{margin-bottom:0}
+.ta ul{padding-left:20px; margin:0 0 11px}
+.compose{margin-top:20px; border-top:1px dashed var(--rule2); padding-top:16px}
+.compose .clbl{display:block; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink3); margin-bottom:9px; font-weight:500}
+.compose textarea{min-height:78px}
+.cnote{margin:12px 0 12px; font-size:14.5px; color:var(--done); line-height:1.75}
+.cnote::before{content:"\2713  "; font-weight:600}
+
+/* ---------- more menu ---------- */
+.morebox{display:none; margin:12px 0 0; padding:13px 15px; background:var(--card-2); border:1px dashed var(--rule2); border-radius:8px}
+.morebox.on{display:block}
+.mlbl{display:block; font-family:var(--f-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink3); margin-bottom:10px; font-weight:500}
+.mopts{display:flex; flex-wrap:wrap; gap:8px}
+.mopts button{font-family:var(--f-body); font-size:13.5px; padding:6px 14px; border-radius:20px; border:1px solid var(--rule2); background:var(--card); color:var(--ink2); cursor:pointer; text-align:left}
+.mopts button:hover{border-color:var(--done); color:var(--done)}
+.mmsg{display:block; margin-top:10px; font-size:13px; color:var(--done); min-height:1px}
+.mhint{margin:9px 0 0; font-size:12.5px; color:var(--ink3); line-height:1.7}
+</style>
+</head>
+<body>
+<div class="rail">
+  <div class="rail-in">
+    <div class="rail-num">เข้าใจแล้ว <b id="pDone">0</b> / <span id="pTot">0</span></div>
+    <div class="rail-track"><div class="rail-fill" id="pFill"></div></div>
+    <button class="rail-reset" id="pReset">ล้างสถานะ</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow">แคลคูลัสจากศูนย์ · บทที่หนึ่ง</p>
+    <h1>ตอนวินาทีที่หนึ่งพอดี<br>ลูกบอลเร็วเท่าไร</h1>
+    <p class="lede">คำถามข้อเดียวที่ใช้เวลาสองพันปีกว่าจะตอบได้ หน้านี้เดินจากตัวเลขสี่แถวที่วัดมาได้ ไปจนถึงคำตอบและชื่อของมัน โดยไม่ข้ามขั้นไหนเลย ทุกขั้นมีปุ่มให้กดยืนยันเมื่อเข้าใจ หรือกดถามเมื่อยังไม่เข้าใจ</p>
+  </header>
+
+  <details class="map" open>
+    <summary>เส้นเรื่องของหน้านี้</summary>
+    <div class="mb">
+      <p class="mintro">เก้าบทนี้เรียงกันเป็นเส้นเดียว แต่ละบทเกิดขึ้นเพราะบทก่อนหน้าทิ้งปัญหาค้างไว้ข้อหนึ่ง ถ้าอ่านแล้วรู้สึกว่าบทไหนโผล่มาลอย ๆ ให้กลับมาดูตารางนี้</p>
+      <div class="mrow2"><b>§1</b><span><i>ตั้งโจทย์</i> — ข้อมูลที่มี ตอบคำถามหนึ่งได้ แต่ตอบอีกคำถามหนึ่งไม่ได้เลย</span></div>
+      <div class="mrow2"><b>§2</b><span><i>หาสูตรมาก่อน</i> — เพราะจะย่อช่วงเวลาได้ ต้องมีค่าที่ไม่มีใครวัดไว้</span></div>
+      <div class="mrow2"><b>§3</b><span><i>สร้างเครื่องมือ</i> — เขียนวิธีคิดเดิมให้ปรับความยาวช่วงได้</span></div>
+      <div class="mrow2"><b>§4</b><span><i>ลงมือย่อ</i> — แทนตัวเลขห้ารอบ แล้วเห็นรูปแบบโผล่ออกมา</span></div>
+      <div class="mrow2"><b>§5</b><span><i>ชนกำแพง</i> — ให้ช่วงยาวศูนย์แล้วพัง จึงต้องเปลี่ยนคำถามเสียใหม่</span></div>
+      <div class="mrow2"><b>§6</b><span><i>พีชคณิต</i> — จัดการทุกค่าพร้อมกันในครั้งเดียว</span></div>
+      <div class="mrow2"><b>§7</b><span><i>คำตอบ</i> — อ่านปลายทางออกมา ตั้งชื่อ และตรวจด้วยฟิสิกส์</span></div>
+      <div class="mrow2"><b>§8</b><span><i>ขยายผล</i> — จากคำตอบจุดเดียวเป็นสูตรที่ตอบได้ทุกจุด</span></div>
+      <div class="mrow2"><b>§9</b><span><i>วางให้ถูกที่</i> — มันคือข้อมูลชนิดไหน ใช้ไม่ได้เมื่อไร และไปโผล่ที่ไหนอีก</span></div>
+    </div>
+  </details>
+
+  <details class="howto">
+    <summary>วิธีใช้หน้านี้</summary>
+    <div class="hb">
+      <ol>
+        <li>อ่านทีละขั้นตามลำดับ ท้ายทุกขั้นมีกล่องสรุปว่าขั้นนั้นให้อะไร ยังขาดอะไร และทำไมจึงต้องมีขั้นถัดไป</li>
+        <li>ขั้นไหนเข้าใจแล้วกด <b>เข้าใจแล้ว</b> แถบด้านบนจะนับให้เอง</li>
+        <li>ขั้นไหนติด กด <b>ยังไม่เข้าใจ / อยากถาม</b> พิมพ์คำถาม แล้วกด <b>คัดลอกคำถาม</b> เอาไปวางในแชท คำตอบจะกลับมาเป็นปุ่มขยายความสีม่วงในขั้นนั้น</li>
+        <li>ถ้าอ่านแล้วรู้สึกว่าตัวเนื้อหาหลักของขั้นนั้นเองยังไม่พอ ให้กด <b>อธิบายเพิ่มเติม</b> แล้วเลือกประเภท ขั้นนั้นจะถูกเขียนใหม่ทั้งขั้นให้อ่านต่อเนื่องกันไปเลย</li>
+        <li>กล่องสีน้ำตาลคือคำถามทวนความเข้าใจ ตอบได้ด้วยปุ่ม <b>ส่งคำตอบ</b> วิธีเดียวกัน</li>
+        <li>ท้ายหน้ามีช่อง <b>พูดคุยหลังบทเรียน</b> ไว้คุยแลกเปลี่ยนเรื่องที่เรียนไป ช่องนี้ไม่ล็อก ใช้ได้ทุกเมื่อ และจะตอบกันในแชท</li>
+        <li>กด <b>เข้าใจแล้ว</b> ครบทุกขั้น กล่องเลือกทางไปต่อจะปลดล็อก เมื่อเลือกทางแล้ว บทเรียนนี้จะถูกสรุปส่งต่อไปยัง session ถัดไปให้อัตโนมัติ</li>
+      </ol>
+    </div>
+  </details>
+
+  <div class="grid">
+  <main>
+
+  <!-- ============ SECTION 1 ============ -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">§1</span><h2>สถานการณ์จริง และคำถามหนึ่งข้อที่ตอบไม่ได้</h2></div>
+    <p class="sec-lede">เรื่องทั้งหมดเริ่มจากสถานการณ์ธรรมดาที่มีตัวเลขอยู่ในมือไม่กี่ตัว บทนี้ทำสามอย่างตามลำดับ คือดูให้ชัดว่าตัวเลขชุดนั้นบอกอะไรได้บ้าง ตอบคำถามที่ตอบได้ด้วยความรู้เดิมให้เสร็จเสียก่อน แล้วจึงชี้ให้เห็นคำถามอีกข้อหนึ่งที่หน้าตาคล้ายกันมาก แต่กลับตอบไม่ได้ด้วยวิธีเดิมเลย <b>คำถามข้อนั้นคือสิ่งที่ทั้งหน้านี้ถูกสร้างขึ้นมาเพื่อตอบ</b></p>
+
+    <article class="step" data-id="1.1">
+      <span class="step-no">§1.1</span>
+      <h3>ลูกบอลกลิ้งลงทางลาด และตัวเลขสี่แถวที่เราวัดมาได้จริง</h3>
+
+      <p>มีลูกบอลลูกหนึ่งวางนิ่งอยู่ที่ปลายบนของทางลาดเอียงตรง ๆ อันหนึ่ง เราปล่อยมือแล้วเริ่มจับเวลาพร้อมกัน ลูกบอลกลิ้งลงไปเรื่อย ๆ และกลิ้งเร็วขึ้นตลอดทาง ระหว่างนั้นเราคอยจดว่าเมื่อเวลาผ่านไปครบวินาทีพอดี ลูกบอลกลิ้งไปได้ไกลจากจุดปล่อยเท่าไรแล้ว จดได้ทั้งหมดสี่ครั้งดังนี้</p>
+
+      <table class="data">
+        <tr><th>เวลาที่ผ่านไป (วินาที)</th><th>ระยะที่กลิ้งได้ (เมตร)</th></tr>
+        <tr><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td></tr>
+        <tr><td>2</td><td>4</td></tr>
+        <tr><td>3</td><td>9</td></tr>
+      </table>
+
+      <p>ขอให้สังเกตก่อนว่าตัวเลขในคอลัมน์ขวาคือ <b>ระยะทาง</b> มีหน่วยเป็นเมตร ไม่ใช่ความเร็ว เหตุผลที่ต้องย้ำเรื่องนี้ก็เพราะสิ่งที่วัดได้ด้วยไม้บรรทัดกับนาฬิกามีเพียงตำแหน่งเท่านั้น ส่วนความเร็วนั้นไม่มีเครื่องมือใดในสถานการณ์นี้วัดออกมาตรง ๆ ได้เลย มันเป็นสิ่งที่ต้องคำนวณเอาจากตำแหน่งที่จดไว้ และการคำนวณนั้นเองคือเนื้อหาของทั้งหน้านี้</p>
+
+      <h4>อ่านตรง ๆ ได้แค่ไหน</h4>
+
+      <p>สิ่งที่อ่านออกมาได้โดยไม่ต้องคิดอะไรเลย มีเพียงตำแหน่งของลูกบอล ณ สี่ช่วงเวลาที่จดไว้ เช่นเมื่อเวลาผ่านไป 2 วินาที ลูกบอลอยู่ห่างจากจุดปล่อย 4 เมตร แค่นั้นจริง ๆ</p>
+
+      <p>แต่ถ้ายอมคำนวณเพิ่มอีกนิดเดียว ตัวเลขชุดเดิมจะบอกอะไรได้มากกว่านั้น เพราะการเอาระยะทางของสองแถวที่ติดกันมาลบกัน จะได้คำตอบว่าในแต่ละหนึ่งวินาทีนั้น ลูกบอลกลิ้งเพิ่มไปได้กี่เมตร</p>
+
+      <table class="data">
+        <tr><th>ช่วงเวลา</th><th>คำนวณจาก</th><th>กลิ้งเพิ่มได้ (เมตร)</th></tr>
+        <tr><td>วินาทีที่ 0 ถึง 1</td><td>1 − 0</td><td>1</td></tr>
+        <tr><td>วินาทีที่ 1 ถึง 2</td><td>4 − 1</td><td>3</td></tr>
+        <tr><td>วินาทีที่ 2 ถึง 3</td><td>9 − 4</td><td>5</td></tr>
+      </table>
+
+      <p>ตารางนี้คือจุดที่ข้อมูลดิบเริ่มพูดกับเรา ทั้งสามช่วงยาวเท่ากันหมดคือหนึ่งวินาทีเท่ากัน แต่ระยะทางที่กลิ้งได้ในแต่ละช่วงกลับไม่เท่ากันเลย จากหนึ่งเมตร กลายเป็นสามเมตร แล้วเป็นห้าเมตร นี่คือหลักฐานชิ้นแรกที่ยืนยันว่าลูกบอลกลิ้งเร็วขึ้นจริง เราไม่ได้เดาเอาจากการมองด้วยตา แต่อ่านออกมาจากตัวเลขที่จดไว้ ถ้าลูกบอลกลิ้งด้วยความเร็วคงที่ ตัวเลขทั้งสามแถวจะต้องเท่ากัน</p>
+
+      <p class="trivia"><b>เกร็ด</b> ตัวเลขสามตัวที่ได้คือ 1, 3 และ 5 ซึ่งเป็นเลขคี่เรียงกันพอดี ถ้าจดต่อไปอีกวินาทีจะได้ 7 แล้วก็ 9 ต่อไปเรื่อย ๆ กาลิเลโอเป็นคนแรกที่สังเกตเห็นรูปแบบเลขคี่นี้เมื่อราวสี่ร้อยปีก่อน และมันเป็นลายเซ็นเฉพาะตัวของสิ่งที่เร่งขึ้นอย่างสม่ำเสมอ</p>
+
+      <h4>อ่านไม่ได้ตรงไหนบ้าง</h4>
+
+      <p>ข้อแรก เราไม่รู้เลยว่าระหว่างสองแถวที่ติดกันเกิดอะไรขึ้น เรารู้ว่าที่วินาทีที่ 1 ลูกบอลอยู่ที่ 1 เมตร และที่วินาทีที่ 2 อยู่ที่ 4 เมตร แต่ไม่มีใครจดไว้ว่าตอนวินาทีที่ 1.5 มันอยู่ตรงไหน ช่วงเวลานั้นลูกบอลกลิ้งผ่านไปโดยไม่มีใครบันทึก</p>
+
+      <p>ข้อที่สองสำคัญกว่ามาก ตัวเลข 3 ในคอลัมน์ขวาของตารางที่สองนั้น ไม่ได้แปลว่าลูกบอลวิ่งด้วยความเร็ว 3 ตลอดช่วงวินาทีที่ 1 ถึง 2 เพราะเรารู้อยู่แล้วว่ามันกำลังเร่งขึ้น ตอนต้นช่วงมันจึงต้องช้ากว่า 3 และตอนปลายช่วงต้องเร็วกว่า 3 เลข 3 เป็นเพียงค่าที่เกลี่ยตลอดทั้งช่วงให้เท่ากันหมด</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>ตำแหน่งของลูกบอลสี่จุด และหลักฐานที่อ่านจากตัวเลขว่ามัน<em>กำลังเร่งขึ้นจริง</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ความเร็วของลูกบอล ณ เวลาใดเวลาหนึ่ง — ยังไม่มีตัวเลขไหนในหน้านี้ที่เป็นความเร็ว</span></div>
+        <div><b>ต่อไป</b><span>ตอบคำถามเรื่องความเร็วข้อที่ง่ายที่สุดก่อน เพื่อดูว่าเครื่องมือที่เรามีอยู่แล้วทำอะไรได้บ้าง</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="1.2">
+      <span class="step-no">§1.2</span>
+      <h3>คำถามที่ตอบได้ทันที — ระหว่างวินาทีที่ 1 ถึง 2 ลูกบอลเร็วเท่าไร</h3>
+
+      <p>คำถามนี้ตอบได้ด้วยวิธีที่ทุกคนเคยใช้มาตั้งแต่เด็ก คือเอาระยะทางที่ได้มาหารด้วยเวลาที่ใช้ไป ในช่วงนี้ลูกบอลเคลื่อนจากตำแหน่ง 1 เมตร ไปถึงตำแหน่ง 4 เมตร จึงได้ระยะเพิ่ม 3 เมตร และใช้เวลาไป 1 วินาที</p>
+
+      <div class="eq"><span class="frac"><span class="num">4 − 1</span><span class="den">2 − 1</span></span> = <span class="frac"><span class="num">3 เมตร</span><span class="den">1 วินาที</span></span> = 3 เมตรต่อวินาที</div>
+
+      <h4>ทำไมความเร็วถึงเป็นการเอาระยะมาหารด้วยเวลา</h4>
+
+      <p>คำว่า <b>เมตรต่อวินาที</b> บอกวิธีคิดไว้ในตัวมันเองแล้ว คำว่า <b>ต่อ</b> ในที่นี้แปลว่า <b>ต่อหนึ่งหน่วย</b> ดังนั้นการถามหาความเร็วก็คือการถามว่า ถ้าคิดเฉพาะเวลาหนึ่งวินาที จะได้ระยะทางกี่เมตร</p>
+
+      <p>ถ้าใช้เวลา 1 วินาทีแล้วได้ระยะ 3 เมตร ก็ตอบได้ทันทีว่า 3 เมตรต่อวินาที เพราะคำถามถามถึงหนึ่งวินาทีพอดีอยู่แล้ว แต่ถ้าใช้เวลา 2 วินาทีแล้วได้ระยะ 8 เมตร เราต้องเกลี่ยลงมาให้เหลือหนึ่งวินาทีก่อน คือเอา 8 หารด้วย 2 ได้ 4 เมตรต่อวินาที <b>การหารด้วยเวลาจึงคือการเกลี่ยระยะทางลงมาให้เหลือแค่หนึ่งหน่วยเวลา</b></p>
+
+      <p>และคำว่าเกลี่ยนี่เองคือเหตุผลที่ผลลัพธ์แบบนี้ถูกเรียกว่า <b>ค่าเฉลี่ย</b> เพราะมันปาดทั้งช่วงให้ราบเท่ากันหมด ทั้งที่ในความเป็นจริงลูกบอลไม่ได้เร็วเท่ากันสักเสี้ยววินาทีเดียวในช่วงนั้น</p>
+
+      <p>ผลลัพธ์ 3 เมตรต่อวินาทีจึงเป็นของจริงและใช้งานได้ แต่ต้องรู้ว่ามันเป็นของ<b>ทั้งช่วง</b> ไม่ใช่ของเวลาใดเวลาหนึ่ง ถ้ามีคนถามว่าเลข 3 ตัวนี้เป็นความเร็วตอนไหน คำตอบที่ตรงที่สุดคือมันไม่ได้เป็นความเร็วตอนไหนเลย มันเป็นค่าที่ผูกอยู่กับช่วงเวลาที่ยาวหนึ่งวินาทีทั้งช่วง</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>อัตราเฉลี่ยของช่วงวินาทีที่ 1 ถึง 2 เท่ากับ 3 เมตรต่อวินาที และรู้ว่าการหารนั้น<em>คือการเกลี่ย</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ตัวเลขนี้ผูกอยู่กับช่วงที่ยาวหนึ่งวินาที ไม่ได้ผูกอยู่กับเวลาจุดใดจุดหนึ่ง</span></div>
+        <div><b>ต่อไป</b><span>ถามคำถามเดิมใหม่ แต่เจาะจงลงไปที่เวลาจุดเดียว แล้วดูว่าวิธีนี้ยังใช้ได้ไหม</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="1.3">
+      <span class="step-no">§1.3</span>
+      <h3>คำถามที่ตอบไม่ได้ — ตอนวินาทีที่ 1 พอดีเป๊ะ ลูกบอลเร็วเท่าไร</h3>
+
+      <p>คำถามนี้ฟังดูคล้ายคำถามเมื่อกี้มาก ต่างกันแค่คำเดียวคือเปลี่ยนจากช่วงเวลาหนึ่งวินาที มาเป็นเวลาจุดเดียวคือวินาทีที่ 1 พอดี แต่ความต่างคำเดียวนี้ทำให้วิธีเดิมใช้ไม่ได้ทันที</p>
+
+      <p>ลองดูก่อนว่าทำไมเลข 3 ที่เพิ่งได้มาถึงไม่ใช่คำตอบ ตัวเลขนั้นเป็นค่าที่เกลี่ยตลอดช่วงตั้งแต่วินาทีที่ 1 ถึงวินาทีที่ 2 ในช่วงนั้นลูกบอลเร่งขึ้นตลอด ตอนเริ่มช่วงมันยังช้ากว่า 3 อยู่ ตอนจบช่วงมันเร็วกว่า 3 ไปแล้ว เลข 3 จึงเป็นตัวเลขที่ไม่ตรงกับความเร็วจริงที่ปลายไหนของช่วงเลยสักปลายเดียว</p>
+
+      <p>แล้วจะลองใช้ช่วงที่สั้นกว่านั้นได้ไหม ได้ และมันช่วยได้จริง แต่ปัญหาก็ยังเหมือนเดิมทุกประการ เพราะไม่ว่าจะเลือกช่วงสั้นแค่ไหน ตราบใดที่มันยังเป็นช่วง ผลลัพธ์ก็ยังเป็นค่าที่เกลี่ยของช่วงนั้นอยู่ดี</p>
+
+      <h4>ปัญหาที่แท้จริงอยู่ตรงโครงสร้างของสูตร</h4>
+
+      <p>วิธีคิดที่ใช้อยู่ต้องการตัวเลขสองชุดเสมอ คือตำแหน่งสองตำแหน่ง และเวลาสองเวลา แล้วจึงเอามาลบกันเพื่อดูว่าเปลี่ยนไปเท่าไร แต่คำว่า <b>ณ วินาทีที่ 1 พอดี</b> ให้เวลามาเวลาเดียว เมื่อมีเวลาเดียวก็มีตำแหน่งเดียว เมื่อมีตำแหน่งเดียวก็ไม่มีอะไรให้ลบ สูตรที่เราถืออยู่จึงไม่มีวัตถุดิบที่จะทำงานได้เลย</p>
+
+      <p>ที่น่าฉงนคือคำถามนี้ไม่ได้ไร้สาระแม้แต่น้อย รถทุกคันมีเข็มไมล์ที่ชี้บอกความเร็วอยู่ทุกเสี้ยววินาที ถ้าติดกล้องถ่ายหน้าปัดไว้แล้วหยุดภาพที่วินาทีที่ 1 พอดี เข็มก็ชี้อยู่ที่ตัวเลขหนึ่งอย่างชัดเจน แปลว่าปริมาณที่เรากำลังถามหามีอยู่จริงในโลก และมีค่าเดียวแน่นอน เพียงแต่เรายังไม่มีวิธีคำนวณมันออกมาจากตัวเลขที่จดไว้เท่านั้นเอง</p>
+
+      <p>คำถามข้อนี้คือคำถามของทั้งหน้านี้ ทุกขั้นตอนหลังจากนี้มีไว้เพื่อตอบมันเพียงข้อเดียว</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>รู้ชัดว่าวิธีเดิมพังเพราะอะไร — มันต้องการ<em>สองจุดเสมอ</em> แต่คำถามนี้ให้มาแค่จุดเดียว</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่มีเครื่องมือใดที่ให้คำตอบ ณ เวลาจุดเดียวได้</span></div>
+        <div><b>ต่อไป</b><span>ดูว่าคำถามนี้ยากขนาดไหนในสายตาคนที่พยายามตอบมันมาก่อนเรา</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="1.4">
+      <span class="step-no">§1.4</span>
+      <h3>คำถามข้อนี้ค้างอยู่ในประวัติศาสตร์มาสองพันปี</h3>
+
+      <p>ก่อนจะลงมือแก้ ควรรู้ไว้ว่าความอึดอัดที่เพิ่งเจอนั้นไม่ใช่เรื่องของคนไม่เก่งเลข มันเป็นปมที่คนฉลาดที่สุดหลายรุ่นติดกันมานาน และการรู้ว่าคนก่อนหน้าติดตรงไหน จะทำให้เห็นว่าทำไมขั้นตอนข้างหน้าถึงต้องระมัดระวังเป็นพิเศษในบางจุด</p>
+
+      <table class="data narrow">
+        <tr><th>ยุค</th><th>คนที่เกี่ยวข้อง</th><th class="wrap">สิ่งที่เกิดขึ้น</th></tr>
+        <tr><td>ราว 450 ปีก่อน ค.ศ.</td><td>เซโน</td><td class="wrap">ตั้งปริศนาลูกศรที่พุ่งอยู่ ว่าถ้าหยุดเวลาดูที่ขณะใดขณะหนึ่ง ลูกศรก็อยู่นิ่งกับที่ ณ ขณะนั้น แล้วการเคลื่อนที่ประกอบขึ้นจากขณะที่ไม่มีการเคลื่อนที่เลยได้อย่างไร</td></tr>
+        <tr><td>ราว ค.ศ. 1600</td><td>กาลิเลโอ</td><td class="wrap">วัดของที่กลิ้งลงทางลาดอย่างเป็นระบบ จนได้กฎว่าระยะทางโตตามเวลายกกำลังสอง แต่ยังไม่มีวิธีคำนวณความเร็ว ณ ขณะหนึ่งออกมาเป็นตัวเลข</td></tr>
+        <tr><td>ราว ค.ศ. 1670</td><td>นิวตันและไลบ์นิซ</td><td class="wrap">คิดวิธีคำนวณขึ้นได้สำเร็จทั้งคู่ในเวลาไล่เลี่ยกัน และมันใช้งานได้ผลจริง แต่วิธีนั้นตั้งอยู่บนปริมาณเล็กจิ๋วที่อธิบายไม่ได้ว่าคืออะไรกันแน่</td></tr>
+        <tr><td>ค.ศ. 1734</td><td>บิชอปเบิร์กลีย์</td><td class="wrap">เขียนโจมตีวิธีนั้นอย่างตรงจุด ว่าปริมาณเล็กจิ๋วที่ว่าถูกใช้เป็นตัวหารทั้งที่ต้องไม่เป็นศูนย์ แล้วอีกบรรทัดถัดมากลับถูกโยนทิ้งเหมือนเป็นศูนย์ เขาเรียกมันว่าผีของปริมาณที่ตายไปแล้ว</td></tr>
+        <tr><td>ค.ศ. 1820–1870</td><td>โคชีและไวเออร์ชตราส</td><td class="wrap">วางรากฐานใหม่ด้วยแนวคิดเรื่องลิมิต ซึ่งเลี่ยงการใช้ปริมาณเล็กจิ๋วนั้นได้ทั้งหมด และเป็นวิธีที่ยังใช้กันมาจนถึงทุกวันนี้</td></tr>
+      </table>
+
+      <p>ขอให้จำข้อโจมตีของเบิร์กลีย์ไว้ให้ดี เพราะปมที่เขาชี้คือปมเดียวกันกับที่เราจะเดินไปเจอเข้าจริง ๆ ในหน้านี้ คือมีตัวเลขตัวหนึ่งที่ต้องไม่เป็นศูนย์ในตอนหนึ่ง แล้วต้องหายไปในอีกตอนหนึ่ง ระหว่างทางเราจะต้องจัดการกับความย้อนแย้งข้อนี้ให้เรียบร้อยโดยไม่โกง ไม่อย่างนั้นคำตอบที่ได้ก็ไม่ต่างจากที่เบิร์กลีย์ตำหนิไว้</p>
+
+      <p class="trivia"><b>เกร็ดเรื่องสัญลักษณ์</b> นิวตันเรียกสิ่งที่เขาคำนวณได้ว่าฟลักซ์ชัน และเขียนด้วยจุดเหนือตัวอักษร ส่วนไลบ์นิซเรียกว่าดิฟเฟอเรนเชียล และเขียนเป็นเศษส่วนแบบที่คนยังใช้กันอยู่ ส่วนขีดเล็ก ๆ เหนือตัวอักษรที่หน้านี้จะใช้เขียนคำตอบนั้นมาทีหลังทั้งคู่ เป็นของลากรานจ์เมื่อราวปี ค.ศ. 1797 ทั้งสามแบบหมายถึงสิ่งเดียวกัน ต่างกันแค่ธรรมเนียมการเขียน</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>รู้ว่าปมของเรื่องนี้อยู่ที่ปริมาณซึ่ง<em>ต้องไม่เป็นศูนย์ตอนหาร แต่ต้องหายไปตอนสรุป</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่ได้เริ่มคำนวณอะไรเลย ทั้งบทนี้เป็นการตั้งโจทย์ล้วน ๆ</span></div>
+        <div><b>ต่อไป</b><span>ก่อนจะบีบช่วงเวลาให้สั้นลงได้ ต้องมีของอย่างหนึ่งที่ข้อมูลสี่แถวให้ไม่ได้เสียก่อน</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+  </section>
+
+  <!-- ============ SECTION 2 ============ -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">§2</span><h2>จากสี่จุดที่วัดมาได้ ไปเป็นสูตรที่ให้ค่าได้ทุกจุด</h2></div>
+    <p class="sec-lede">ทางแก้ที่นึกออกเป็นอันดับแรกคือใช้ช่วงเวลาที่สั้นลง บทนี้จะลองทำแบบนั้นดูจริง ๆ แล้วจะพบว่าตัวเลขสี่แถวที่วัดมาหมดแรงตั้งแต่ก้าวที่สอง สิ่งที่ต้องหามาแทนคือ<b>สูตร</b> และเมื่อจะใช้สูตรก็ต้องตอบให้ได้ว่าสูตรนั้นมาจากไหน เชื่อได้แค่ไหน และมันพังเมื่อไร บทนี้จบลงที่การทำความรู้จักตัวเลขประจำทางลาดที่ทำให้สูตรของเราหน้าตาเป็นอย่างที่เป็น</p>
+
+    <article class="step" data-id="2.1">
+      <span class="step-no">§2.1</span>
+      <h3>ลองใช้ช่วงที่สั้นลงดู แล้วจะพบว่าข้อมูลที่วัดมามีกำแพงกั้นอยู่</h3>
+
+      <p>เราค้างไว้ว่าการใช้ช่วงเวลาที่สั้นลงน่าจะช่วยได้ เพราะยิ่งช่วงสั้น ความเร็วภายในช่วงก็ยิ่งเปลี่ยนไปน้อย ค่าที่เกลี่ยได้ก็น่าจะใกล้ความจริง ณ จุดที่เราสนใจมากขึ้น ลองทำจริงดูโดยยังปักหลักอยู่ที่วินาทีที่ 1 เหมือนเดิม แต่คราวนี้มองไปข้างหน้าแค่ครึ่งวินาที คือดูช่วงตั้งแต่วินาทีที่ 1 ถึงวินาทีที่ 1.5</p>
+
+      <p>พอจะลงมือคำนวณจริงก็ติดทันที เพราะสูตรต้องการระยะทางที่วินาทีที่ 1.5 แต่ไม่มีใครวัดค่านั้นไว้ ตารางที่เรามีจดไว้แค่ที่วินาทีที่ 0, 1, 2 และ 3 เท่านั้น ตอนที่ลูกบอลกลิ้งผ่านวินาทีที่ 1.5 ไม่มีใครไปทาบไม้บรรทัดไว้ตรงนั้น</p>
+
+      <p>ผลก็คือช่วงที่สั้นที่สุดที่เราใช้ได้ ถูกกำหนดโดยความถี่ในการวัด ในตารางนี้จุดที่วัดห่างกันหนึ่งวินาที ช่วงที่สั้นที่สุดที่เป็นไปได้จึงเท่ากับหนึ่งวินาที ซึ่งก็คือช่วงเดิมที่เราทำไปแล้วนั่นเอง เดินต่อไม่ได้เลยแม้แต่ก้าวเดียว</p>
+
+      <p>แล้วถ้าขยันวัดให้ถี่ขึ้นล่ะ สมมติวัดทุก 0.1 วินาที เราก็จะใช้ช่วงยาว 0.1 วินาทีได้ แต่พอจะย่อลงเป็น 0.05 วินาทีก็ตันอีก เพราะต้องรู้ระยะทางที่วินาทีที่ 1.05 ซึ่งไม่ได้วัดไว้ ถึงจะวัดทุกหนึ่งในพันวินาที ก็เป็นแค่การเลื่อนกำแพงให้ไกลออกไป ไม่ได้ทำให้กำแพงหายไป <b>ตารางข้อมูลทุกใบมีช่องว่างที่เล็กที่สุดของมันเสมอ และต่ำกว่านั้นคือความมืด</b></p>
+
+      <div class="fig">
+        <svg viewBox="0 0 620 250" role="img" aria-label="&#3595;&#3657;&#3634;&#3618;: &#3586;&#3657;&#3629;&#3617;&#3641;&#3621;&#3626;&#3637;&#3656;&#3592;&#3640;&#3604;&#3607;&#3637;&#3656;&#3623;&#3633;&#3604;&#3617;&#3634;&#3652;&#3604;&#3657; &#3617;&#3637;&#3594;&#3656;&#3629;&#3591;&#3623;&#3656;&#3634;&#3591;&#3619;&#3632;&#3627;&#3623;&#3656;&#3634;&#3591;&#3592;&#3640;&#3604; &#3586;&#3623;&#3634;: &#3626;&#3641;&#3605;&#3619;&#3607;&#3637;&#3656;&#3651;&#3627;&#3657;&#3588;&#3656;&#3634;&#3652;&#3604;&#3657;&#3607;&#3640;&#3585;&#3592;&#3640;&#3604;&#3605;&#3656;&#3629;&#3648;&#3609;&#3639;&#3656;&#3629;&#3591;&#3585;&#3633;&#3609;" xmlns="http://www.w3.org/2000/svg">
+<line x1="24.4" y1="198.0" x2="265.8" y2="198.0" stroke="var(--rule2)" stroke-width="1.2"/>
+<line x1="38.0" y1="202.9" x2="38.0" y2="30.7" stroke="var(--rule2)" stroke-width="1.2"/>
+<text x="32" y="22.720000000000027" font-family="var(--f-mono)" font-size="11.5" fill="var(--ink3)" text-anchor="start" font-weight="400">s (&#3648;&#3617;&#3605;&#3619;)</text>
+<text x="265.8" y="218.0" font-family="var(--f-mono)" font-size="11.5" fill="var(--ink3)" text-anchor="end" font-weight="400">t (&#3623;&#3636;&#3609;&#3634;&#3607;&#3637;)</text>
+<text x="34" y="30" font-family="var(--f-body)" font-size="13.5" fill="var(--ink)" text-anchor="start" font-weight="500">&#3617;&#3637;&#3649;&#3588;&#3656;&#3605;&#3634;&#3619;&#3634;&#3591;&#3626;&#3637;&#3656;&#3649;&#3606;&#3623;</text>
+<text x="106" y="215.0" font-family="var(--f-mono)" font-size="11" fill="var(--ink3)" text-anchor="middle" font-weight="400">1</text>
+<text x="174" y="215.0" font-family="var(--f-mono)" font-size="11" fill="var(--ink3)" text-anchor="middle" font-weight="400">2</text>
+<text x="242" y="215.0" font-family="var(--f-mono)" font-size="11" fill="var(--ink3)" text-anchor="middle" font-weight="400">3</text>
+<line x1="344.4" y1="198.0" x2="585.8" y2="198.0" stroke="var(--rule2)" stroke-width="1.2"/>
+<line x1="358.0" y1="202.9" x2="358.0" y2="30.7" stroke="var(--rule2)" stroke-width="1.2"/>
+<text x="352" y="22.720000000000027" font-family="var(--f-mono)" font-size="11.5" fill="var(--ink3)" text-anchor="start" font-weight="400">s (&#3648;&#3617;&#3605;&#3619;)</text>
+<text x="585.8" y="218.0" font-family="var(--f-mono)" font-size="11.5" fill="var(--ink3)" text-anchor="end" font-weight="400">t (&#3623;&#3636;&#3609;&#3634;&#3607;&#3637;)</text>
+<text x="354" y="30" font-family="var(--f-body)" font-size="13.5" fill="var(--ink)" text-anchor="start" font-weight="500">&#3617;&#3637;&#3626;&#3641;&#3605;&#3619; s(t) = t&#178;</text>
+<text x="426" y="215.0" font-family="var(--f-mono)" font-size="11" fill="var(--ink3)" text-anchor="middle" font-weight="400">1</text>
+<text x="494" y="215.0" font-family="var(--f-mono)" font-size="11" fill="var(--ink3)" text-anchor="middle" font-weight="400">2</text>
+<text x="562" y="215.0" font-family="var(--f-mono)" font-size="11" fill="var(--ink3)" text-anchor="middle" font-weight="400">3</text>
+<circle cx="38.0" cy="198.0" r="5" fill="var(--math)"/>
+<circle cx="106.0" cy="181.6" r="5" fill="var(--math)"/>
+<circle cx="174.0" cy="132.4" r="5" fill="var(--math)"/>
+<circle cx="242.0" cy="50.4" r="5" fill="var(--math)"/>
+<text x="72.0" y="191.9" font-family="var(--f-body)" font-size="17" fill="var(--warn)" text-anchor="middle" font-weight="500">?</text>
+<text x="140.0" y="159.1" font-family="var(--f-body)" font-size="17" fill="var(--warn)" text-anchor="middle" font-weight="500">?</text>
+<text x="208.0" y="93.50000000000001" font-family="var(--f-body)" font-size="17" fill="var(--warn)" text-anchor="middle" font-weight="500">?</text>
+<text x="140.0" y="232" font-family="var(--f-body)" font-size="12.5" fill="var(--ink3)" text-anchor="middle" font-weight="400">&#3594;&#3656;&#3623;&#3591;&#3619;&#3632;&#3627;&#3623;&#3656;&#3634;&#3591;&#3592;&#3640;&#3604;&#3588;&#3639;&#3629;&#3588;&#3623;&#3634;&#3617;&#3617;&#3639;&#3604;</text>
+<path d="M358.0 198.0 L360.1 198.0 L362.3 197.9 L364.4 197.9 L366.6 197.7 L368.7 197.6 L370.9 197.4 L373.0 197.2 L375.1 197.0 L377.3 196.7 L379.4 196.4 L381.6 196.0 L383.7 195.7 L385.8 195.2 L388.0 194.8 L390.1 194.3 L392.3 193.8 L394.4 193.3 L396.6 192.7 L398.7 192.1 L400.8 191.5 L403.0 190.8 L405.1 190.1 L407.3 189.4 L409.4 188.6 L411.6 187.8 L413.7 187.0 L415.8 186.1 L418.0 185.2 L420.1 184.3 L422.3 183.4 L424.4 182.4 L426.5 181.3 L428.7 180.3 L430.8 179.2 L433.0 178.1 L435.1 176.9 L437.3 175.7 L439.4 174.5 L441.5 173.2 L443.7 172.0 L445.8 170.6 L448.0 169.3 L450.1 167.9 L452.2 166.5 L454.4 165.0 L456.5 163.6 L458.7 162.1 L460.8 160.5 L463.0 158.9 L465.1 157.3 L467.2 155.7 L469.4 154.0 L471.5 152.3 L473.7 150.5 L475.8 148.8 L478.0 147.0 L480.1 145.1 L482.2 143.3 L484.4 141.4 L486.5 139.4 L488.7 137.4 L490.8 135.4 L492.9 133.4 L495.1 131.3 L497.2 129.2 L499.4 127.1 L501.5 125.0 L503.7 122.8 L505.8 120.5 L507.9 118.3 L510.1 116.0 L512.2 113.6 L514.4 111.3 L516.5 108.9 L518.6 106.5 L520.8 104.0 L522.9 101.5 L525.1 99.0 L527.2 96.4 L529.4 93.9 L531.5 91.2 L533.6 88.6 L535.8 85.9 L537.9 83.2 L540.1 80.4 L542.2 77.6 L544.4 74.8 L546.5 72.0 L548.6 69.1 L550.8 66.2 L552.9 63.2 L555.1 60.3 L557.2 57.3 L559.3 54.2 L561.5 51.1 L563.6 48.0 L565.8 44.9 L567.9 41.7 L570.1 38.5 L572.2 35.3" fill="none" stroke="var(--math)" stroke-width="2.4"/>
+<circle cx="358.0" cy="198.0" r="4" fill="var(--math)"/>
+<circle cx="426.0" cy="181.6" r="4" fill="var(--math)"/>
+<circle cx="494.0" cy="132.4" r="4" fill="var(--math)"/>
+<circle cx="562.0" cy="50.4" r="4" fill="var(--math)"/>
+<line x1="460.0" y1="198.0" x2="460.0" y2="161.1" stroke="var(--done)" stroke-width="1.3" stroke-dasharray="4 3"/>
+<circle cx="460.0" cy="161.1" r="5.5" fill="var(--done)"/>
+<text x="470.0" y="155.1" font-family="var(--f-mono)" font-size="12.5" fill="var(--done)" text-anchor="start" font-weight="500">s(1.5) = 2.25</text>
+<text x="460.0" y="232" font-family="var(--f-body)" font-size="12.5" fill="var(--ink3)" text-anchor="middle" font-weight="400">&#3606;&#3634;&#3617;&#3588;&#3656;&#3634;&#3607;&#3637;&#3656;&#3648;&#3623;&#3621;&#3634;&#3651;&#3604;&#3585;&#3655;&#3605;&#3629;&#3610;&#3652;&#3604;&#3657;&#3607;&#3633;&#3609;&#3607;&#3637;</text>
+</svg>
+        <p class="figcap">ซ้าย คือทุกอย่างที่การวัดให้เราจริง ๆ — สี่จุด กับช่องว่างที่ไม่มีข้อมูล ขวา คือสิ่งที่เราต้องการ — ของที่ตอบได้ทุกเวลาที่ถาม รวมถึงเวลาที่ไม่มีใครเคยไปวัด</p>
+      </div>
+
+      <p>สิ่งที่เราต้องการจึงไม่ใช่ข้อมูลเพิ่ม แต่เป็นของอีกชนิดหนึ่งซึ่งทำงานคนละแบบกับตาราง เราต้องการ <b>เครื่องผลิตค่า</b> คือของที่ป้อนเวลาอะไรเข้าไปก็คืนระยะทางออกมาได้ทันที ไม่ว่าเวลานั้นจะเคยมีคนวัดไว้หรือไม่ อยากรู้ค่าที่วินาทีที่ 1.0001 ก็ต้องได้คำตอบโดยไม่ต้องกลับไปทำการทดลองใหม่</p>
+
+      <p class="trivia"><b>ข้อควรรู้ตามจริง</b> ในงานวิศวกรรมที่มีแต่ข้อมูลดิบจากเซ็นเซอร์ เขาก็ใช้อัตราเฉลี่ยของช่วงที่เล็กที่สุดเท่าที่วัดได้มาเป็นค่าประมาณ โดยยอมรับตรง ๆ ว่ามันเป็นแค่ค่าประมาณ กำแพงที่ว่านี้จึงไม่ใช่เรื่องสมมติในห้องเรียน มันคือข้อจำกัดจริงของการวัดทุกชนิด</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>รู้ว่าการย่อช่วงให้สั้นลงเรื่อย ๆ <em>เป็นไปไม่ได้เลยถ้ามีแต่ข้อมูลที่วัดมา</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่มีเครื่องผลิตค่าที่ว่า จึงยังย่อช่วงไม่ได้</span></div>
+        <div><b>ต่อไป</b><span>สร้างเครื่องผลิตค่าขึ้นมาจากตัวเลขสี่แถวที่มีอยู่</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="2.2">
+      <span class="step-no">§2.2</span>
+      <h3>เดาสูตรจากรูปแบบของตัวเลข แล้วยอมรับตามตรงว่ามันคือการเดา</h3>
+
+      <p>เครื่องผลิตค่าที่เราต้องการก็คือสูตร และวิธีหาสูตรจากตัวเลขที่มีอยู่ก็คือมองหารูปแบบ ลองวางเวลาไว้ข้างหนึ่งแล้ววางระยะทางไว้อีกข้างหนึ่ง</p>
+
+      <table class="data">
+        <tr><th>เวลา (วินาที)</th><th>ระยะที่วัดได้ (เมตร)</th><th>เวลาคูณตัวมันเอง</th></tr>
+        <tr><td>0</td><td>0</td><td>0 × 0 = 0</td></tr>
+        <tr><td>1</td><td>1</td><td>1 × 1 = 1</td></tr>
+        <tr><td>2</td><td>4</td><td>2 × 2 = 4</td></tr>
+        <tr><td>3</td><td>9</td><td>3 × 3 = 9</td></tr>
+      </table>
+
+      <p>คอลัมน์กลางกับคอลัมน์ขวาตรงกันทุกแถว ทุกแถวคือเวลาคูณด้วยตัวมันเอง เราจึงเดาว่าสูตรที่ใช้ได้น่าจะเป็นเวลายกกำลังสอง เขียนย่อว่า</p>
+
+      <div class="eq"><span class="v">s</span>(<span class="v">t</span>) = <span class="v">t</span>²</div>
+
+      <p>ตัวอักษร <span class="v">t</span> คือเวลาที่ผ่านไปหน่วยวินาที ส่วน <span class="v">s</span>(<span class="v">t</span>) อ่านว่าเอสของทีและหมายถึงระยะทางที่กลิ้งได้เมื่อเวลาผ่านไป <span class="v">t</span> วินาที วงเล็บในที่นี้ไม่ได้แปลว่าคูณ แต่แปลว่าป้อนค่าเข้าไป เช่น <span class="v">s</span>(2) หมายถึงป้อนเวลา 2 วินาทีเข้าไปแล้วรับระยะทางออกมา ซึ่งได้ 4 เมตร ตรงกับที่วัดไว้</p>
+
+      <p>ทีนี้เครื่องผลิตค่าก็ทำงานได้แล้ว อยากรู้ระยะทางที่วินาทีที่ 1.5 ก็ยกกำลังสองได้ 2.25 เมตร อยากรู้ที่วินาทีที่ 1.0001 ก็ได้ 1.00020001 เมตร โดยไม่ต้องกลับไปปล่อยลูกบอลใหม่</p>
+
+      <h4>สูตรนี้เชื่อได้แค่ไหน</h4>
+
+      <p>สิ่งที่เราเพิ่งทำคือการเดาแล้วเช็ค ไม่ใช่การพิสูจน์ ในทางคณิตศาสตร์เรียกสูตรที่เลือกมาอธิบายข้อมูลแบบนี้ว่า <b>แบบจำลอง</b> คำสำคัญคือคำว่าเลือก เพราะข้อมูลไม่ได้บังคับว่าต้องใช้สูตรไหน คนเป็นฝ่ายตัดสินใจเอง</p>
+
+      <p>และนี่คือจุดอ่อนที่ต้องพูดให้ชัด ข้อมูลสี่จุดสามารถถูกอธิบายด้วยสูตรได้มากกว่าหนึ่งสูตรเสมอ ลองดูสูตรทางเลือกที่สร้างขึ้นให้ผ่านสี่จุดเดิมเป๊ะ ๆ แต่แวะเบี่ยงออกไปนิดหน่อยระหว่างทาง</p>
+
+      <table class="data">
+        <tr><th>เวลา (วินาที)</th><th>ข้อมูลที่วัดมา</th><th>สูตร t²</th><th>สูตรทางเลือกอื่น</th></tr>
+        <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+        <tr><td>2</td><td>4</td><td>4</td><td>4</td></tr>
+        <tr><td>3</td><td>9</td><td>9</td><td>9</td></tr>
+        <tr><td>1.5</td><td>ไม่มีใครวัด</td><td>2.25</td><td>2.30</td></tr>
+      </table>
+
+      <p>สี่แถวบนตรงกันหมด แต่แถวล่างสุดซึ่งเป็นจุดที่ไม่มีใครวัด กลับให้คำตอบไม่เท่ากัน ข้อมูลที่เรามีจึงตัดสินไม่ได้ว่าสูตรไหนถูก และเรื่องนี้สำคัญมากสำหรับสิ่งที่เรากำลังจะทำ เพราะทั้งหน้านี้จะทำงานอยู่กับค่าที่ไม่มีใครวัดแทบทั้งหมด</p>
+
+      <p>อีกวิธีหนึ่งที่คนใช้เติมค่าระหว่างจุดคือลากเส้นตรงเชื่อมสองจุดที่ติดกันแล้วอ่านค่าตรงกลาง วิธีนี้เรียกว่าการประมาณค่าในช่วง ลองใช้กับวินาทีที่ 1.5 ดู คือลากเส้นตรงจากจุดที่ 1 วินาทีได้ 1 เมตร ไปยังจุดที่ 2 วินาทีได้ 4 เมตร แล้วอ่านค่ากึ่งกลางจะได้ 2.5 เมตร ซึ่งไม่เท่ากับ 2.25 เมตรที่สูตรให้ ต่างกันอยู่ 0.25 เมตร สาเหตุคือการลากเส้นตรงเท่ากับสมมติว่าลูกบอลวิ่งเรียบตลอดช่วงนั้น ทั้งที่ความจริงมันกำลังเร่งอยู่</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>เครื่องผลิตค่าที่ใช้งานได้จริง คือ <span class="v">s</span>(<span class="v">t</span>) = <span class="v">t</span>² และรู้ว่ามันคือ<em>แบบจำลองที่เราเลือกเอง</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่มีเหตุผลใดนอกจากสี่แถวนั้นที่จะยืนยันว่าควรเลือกสูตรนี้</span></div>
+        <div><b>ต่อไป</b><span>หาเหตุผลจากนอกตาราง มายืนยันว่าทำไมต้องเป็นเวลายกกำลังสอง</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="2.3">
+      <span class="step-no">§2.3</span>
+      <h3>ฟิสิกส์ของทางลาดยืนยันสูตรเดียวกัน และบอกด้วยว่าสูตรนี้พังเมื่อไร</h3>
+
+      <p>สูตรเวลายกกำลังสองไม่ได้ถูกแต่งขึ้นให้เลขสวย มันมีที่มาทางกายภาพชัดเจน และคนที่ขุดมันขึ้นมาคือกาลิเลโอเมื่อราวสี่ร้อยปีก่อน</p>
+
+      <p>สิ่งที่กาลิเลโออยากศึกษาจริง ๆ คือการตกของวัตถุ แต่สมัยนั้นยังไม่มีนาฬิกาที่จับเสี้ยววินาทีได้ ของที่ตกลงมาตรง ๆ เร็วเกินกว่าจะวัดทัน เขาจึงใช้ทางลาดชันน้อย ๆ เพื่อเจือจางแรงโน้มถ่วงให้ทุกอย่างช้าลงจนจับเวลาไหว วิธีนี้ทำให้เขาวัดได้ละเอียดพอจะเห็นกฎ และสิ่งที่เขาพบก็คือของที่เร่งขึ้นอย่างสม่ำเสมอจะได้ระยะทางตามสูตรนี้</p>
+
+      <div class="eq">ระยะทาง = <span class="frac"><span class="num">1</span><span class="den">2</span></span> × ความเร่ง × <span class="v">t</span>²</div>
+
+      <p>สังเกตว่า <span class="v">t</span>² อยู่ในสูตรนี้เสมอ ส่วนความเร่งเป็นเพียงตัวเลขที่คูณอยู่ข้างหน้า ทางลาดในบทเรียนนี้มีความเร่งเท่ากับ 2 หน่วยเป็นเมตรต่อวินาทีกำลังสอง เมื่อแทนลงไปจะได้</p>
+
+      <div class="eq plain"><span class="v">s</span>(<span class="v">t</span>) = <span class="frac"><span class="num">1</span><span class="den">2</span></span> × 2 × <span class="v">t</span>² = 1 × <span class="v">t</span>² = <span class="v">t</span>²</div>
+
+      <p>เลข 2 ที่เป็นความเร่งถูกครึ่งหนึ่งหักล้างไปพอดี เหลือเป็นเวลายกกำลังสองเปล่า ๆ นี่คือเหตุผลที่ตารางข้อมูลดิบของเราออกมาเป็นเลขสวยผิดปกติ เพราะทางลาดถูกเลือกมาให้ความเร่งเป็น 2 พอดี ถ้าเปลี่ยนไปใช้ทางลาดที่ชันกว่านี้จนความเร่งเป็น 5 สูตรจะกลายเป็น 2.5 คูณเวลายกกำลังสอง และตารางข้อมูลดิบจะกลายเป็น 0, 2.5, 10 และ 22.5 เมตร ซึ่งเลขไม่สวยเท่าเดิม แต่วิธีคิดทุกอย่างในหน้านี้ยังใช้ได้เหมือนเดิมทุกประการ</p>
+
+      <p>ตอนนี้เราจึงมีเหตุผลสองทางที่มาบรรจบกันที่สูตรเดียวกัน ทางแรกคือมองรูปแบบตัวเลขในตารางแล้วเดา ทางที่สองคือเริ่มจากกฎฟิสิกส์แล้วคำนวณลงมา การที่สองทางซึ่งไม่เกี่ยวกันเลยให้ผลตรงกัน คือสิ่งที่ทำให้เราเชื่อสูตรนี้ได้มากกว่าการเดาเฉย ๆ</p>
+
+      <h4>ความชันของทางลาดเข้ามาเกี่ยวข้องตรงไหน</h4>
+
+      <p>แรงโน้มถ่วงดึงดิ่งลงพื้นโลกเสมอ มันไม่เคยดึงไปตามแนวทางลาดเลยไม่ว่าทางลาดจะเอียงเท่าไร แต่ลูกบอลไปตามแนวที่ถูกดึงไม่ได้เพราะมีพื้นลาดขวางอยู่ มันจึงเหลือทางเดียวคือไหลไปตามผิวลาด คำถามคือแรงที่ดึงดิ่งลงก้อนนั้น มีกี่ส่วนที่ได้ทำงานจริง</p>
+
+      <div class="fig">
+        <svg viewBox="0 0 620 250" role="img" aria-label="&#3649;&#3612;&#3609;&#3616;&#3634;&#3614;&#3649;&#3618;&#3585;&#3649;&#3619;&#3591;&#3650;&#3609;&#3657;&#3617;&#3606;&#3656;&#3623;&#3591;&#3610;&#3609;&#3607;&#3634;&#3591;&#3621;&#3634;&#3604;&#3629;&#3629;&#3585;&#3648;&#3611;&#3655;&#3609;&#3626;&#3656;&#3623;&#3609;&#3607;&#3637;&#3656;&#3586;&#3609;&#3634;&#3609;&#3585;&#3633;&#3610;&#3614;&#3639;&#3657;&#3609;&#3621;&#3634;&#3604;&#3649;&#3621;&#3632;&#3626;&#3656;&#3623;&#3609;&#3607;&#3637;&#3656;&#3605;&#3633;&#3657;&#3591;&#3593;&#3634;&#3585;" xmlns="http://www.w3.org/2000/svg">
+<path d="M90 78 L90 210 L420 210 Z" fill="var(--math-bg)" stroke="var(--rule2)" stroke-width="1.4"/>
+<line x1="40" y1="210" x2="500" y2="210" stroke="var(--rule2)" stroke-width="1.2"/>
+<polyline points="374.0,210.0 374.1,207.8 374.2,205.6 374.5,203.5 374.8,201.3 375.3,199.2 375.9,197.1 376.5,195.0 377.3,192.9" fill="none" stroke="var(--ink3)" stroke-width="1.2"/>
+<text x="358" y="203" font-family="var(--f-math)" font-size="15" fill="var(--ink3)" text-anchor="middle" font-weight="400" font-style="italic">&#952;</text>
+<line x1="278" y1="153" x2="255" y2="214" stroke="var(--ink3)" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="232" y1="205.0" x2="255" y2="214" stroke="var(--ink3)" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="255.0" y1="144.0" x2="255.0" y2="214.0" stroke="var(--ink2)" stroke-width="2.6"/><path d="M255.0 214.0 L251.3 205.8 L258.7 205.8 Z" fill="var(--ink2)"/>
+<line x1="255.0" y1="144.0" x2="232.0" y2="205.0" stroke="var(--ink3)" stroke-width="2.0"/><path d="M232.0 205.0 L231.5 196.0 L238.3 198.6 Z" fill="var(--ink3)"/>
+<line x1="255.0" y1="144.0" x2="278.0" y2="153.0" stroke="var(--warn)" stroke-width="3.0"/><path d="M278.0 153.0 L269.0 153.4 L271.7 146.6 Z" fill="var(--warn)"/>
+<circle cx="255" cy="144" r="9" fill="var(--math)"/>
+<text x="289" y="160" font-family="var(--f-body)" font-size="12.5" fill="var(--warn)" text-anchor="start" font-weight="500">&#3626;&#3656;&#3623;&#3609;&#3607;&#3637;&#3656;&#3604;&#3633;&#3609;&#3651;&#3627;&#3657;&#3652;&#3627;&#3621;&#3621;&#3591;</text>
+<text x="289" y="177" font-family="var(--f-mono)" font-size="12.5" fill="var(--warn)" text-anchor="start" font-weight="400">= g &#215; sin &#952;</text>
+<text x="267" y="222" font-family="var(--f-body)" font-size="12.5" fill="var(--ink2)" text-anchor="start" font-weight="400">&#3649;&#3619;&#3591;&#3650;&#3609;&#3657;&#3617;&#3606;&#3656;&#3623;&#3591; &#8212; &#3604;&#3636;&#3656;&#3591;&#3621;&#3591;&#3648;&#3626;&#3617;&#3629;</text>
+<text x="223" y="199" font-family="var(--f-body)" font-size="12.5" fill="var(--ink3)" text-anchor="end" font-weight="400">&#3626;&#3656;&#3623;&#3609;&#3607;&#3637;&#3656;&#3585;&#3604;&#3621;&#3591;&#3614;&#3639;&#3657;&#3609;</text>
+<text x="223" y="216" font-family="var(--f-body)" font-size="12.5" fill="var(--ink3)" text-anchor="end" font-weight="400">&#3614;&#3639;&#3657;&#3609;&#3604;&#3633;&#3609;&#3585;&#3621;&#3633;&#3610; &#3652;&#3617;&#3656;&#3586;&#3618;&#3633;&#3610;</text>
+<text x="120" y="60" font-family="var(--f-body)" font-size="13" fill="var(--ink3)" text-anchor="start" font-weight="400">&#3618;&#3636;&#3656;&#3591;&#3594;&#3633;&#3609; &#3626;&#3656;&#3623;&#3609;&#3626;&#3637;&#3626;&#3657;&#3617;&#3618;&#3636;&#3656;&#3591;&#3618;&#3634;&#3623; &#3621;&#3641;&#3585;&#3610;&#3629;&#3621;&#3618;&#3636;&#3656;&#3591;&#3648;&#3619;&#3656;&#3591;&#3649;&#3619;&#3591;</text>
+</svg>
+        <p class="figcap">แรงโน้มถ่วงถูกแบ่งเป็นสองส่วน ส่วนที่ขนานไปกับผิวลาดคือส่วนที่ดันลูกบอลให้ไหลลง ส่วนที่ตั้งฉากเพียงกดลูกบอลแนบพื้นแล้วพื้นก็ดันกลับเท่ากันพอดี จึงไม่ทำให้อะไรขยับ</p>
+      </div>
+
+      <p>ลองเช็คกับสองกรณีสุดขั้วจะเห็นภาพทันที ถ้าพื้นราบสนิท แรงโน้มถ่วงยังดึงลงเต็มแรงเหมือนเดิม แต่โต๊ะขวางไว้ทั้งหมด ไม่มีส่วนไหนเหลือให้เคลื่อนที่ ลูกบอลจึงนิ่งสนิท ส่วนถ้าปล่อยตกกลางอากาศโดยไม่มีอะไรขวาง แรงโน้มถ่วงทั้งหมดก็กลายเป็นการเคลื่อนที่ ทางลาดคือสถานการณ์ตรงกลางระหว่างสองอันนี้ ยิ่งชันก็ยิ่งเหลือส่วนที่ได้เคลื่อนที่มากขึ้น</p>
+
+      <table class="data narrow">
+        <tr><th>มุมเอียง</th><th>สัดส่วนที่ได้ใช้จริง</th><th>ความเร่ง (ม./วิ.²)</th><th>สูตรระยะทาง</th></tr>
+        <tr><td>5°</td><td>0.09</td><td>0.85</td><td>s = 0.43 t²</td></tr>
+        <tr><td>15°</td><td>0.26</td><td>2.54</td><td>s = 1.27 t²</td></tr>
+        <tr><td>30°</td><td>0.50</td><td>4.90</td><td>s = 2.45 t²</td></tr>
+        <tr><td>90°</td><td>1.00</td><td>9.80</td><td>s = 4.90 t²</td></tr>
+      </table>
+
+      <p>ทุกแถวยังเป็นเวลายกกำลังสองเหมือนกันหมด เปลี่ยนแค่ตัวเลขข้างหน้า แถวล่างสุดที่ 90 องศาคือทางลาดตั้งฉากกับพื้น ซึ่งก็คือการปล่อยให้ตกอิสระนั่นเอง ได้ความเร่งเต็ม 9.8 ส่วนทางลาดของเราที่ให้ความเร่ง 2 นั้นเทียบได้กับมุมราว 12 องศา เป็นทางลาดที่ชันไม่มาก เดินขึ้นสบาย ๆ</p>
+
+      <p class="trivia"><b>เกร็ดที่คนมักไม่ทันคิด</b> ของที่กลิ้งกับของที่ไถลไม่เท่ากัน ลูกบอลที่กลิ้งต้องแบ่งพลังงานส่วนหนึ่งไปหมุนตัวเอง จึงไหลลงช้ากว่าของที่ไถลลื่น ๆ ลงมา สำหรับลูกบอลตันจะได้ความเร่งราวห้าในเจ็ดของค่าในตาราง แต่ห้าในเจ็ดก็ยังเป็นค่าคงที่อยู่ดี สูตรเวลายกกำลังสองจึงยังรอด เปลี่ยนแค่ตัวคูณอีกครั้งหนึ่งเท่านั้น</p>
+
+      <h4>สูตรนี้พังเมื่อไร</h4>
+
+      <p>เงื่อนไขที่แท้จริงของสูตรนี้ไม่ใช่คำว่าทางลาด แต่คือ <b>ความเร่งต้องคงที่</b> ทางลาดตรงเป็นเพียงวิธีทำให้มุมคงที่ ซึ่งทำให้ความเร่งคงที่อีกทอดหนึ่ง เรียงเป็นลูกโซ่ได้ว่า ทางลาดตรง ทำให้มุมคงที่ ทำให้ความเร่งคงที่ ทำให้ระยะทางโตแบบเวลายกกำลังสอง</p>
+
+      <p>เมื่อรู้ลูกโซ่นี้แล้วก็บอกได้ทันทีว่าสูตรจะพังเมื่อใด กรณีแรกคือทางลาดโค้ง เพราะมุมจะเปลี่ยนไปเรื่อย ๆ ระหว่างที่ลูกบอลกลิ้ง กรณีที่สองคือแรงต้านอากาศ ซึ่งเพิ่มขึ้นตามความเร็ว ทำให้ความเร่งค่อย ๆ ลดลงจนไม่คงที่ กรณีที่สามคือไม่ได้เริ่มจากหยุดนิ่ง ถ้ามีคนผลักส่งตอนปล่อย สูตรจะมีทั้งพจน์ที่เป็นเวลาเปล่า ๆ และพจน์ที่เป็นเวลายกกำลังสองปนกัน</p>
+
+      <p>การรู้ขอบเขตแบบนี้ไม่ได้ทำให้สูตรน่าเชื่อถือน้อยลง ตรงกันข้าม มันทำให้เรารู้ว่าในสถานการณ์ของเรานี้ใช้ได้เต็มที่ เพราะทางลาดตรง มุมคงที่ ปล่อยจากหยุดนิ่ง และความเร็วยังต่ำเกินกว่าที่แรงต้านอากาศจะมีผล</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>เหตุผลจากนอกตารางที่ยืนยันสูตร และ<em>ขอบเขตที่สูตรนี้ใช้ได้</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่ได้ทำความรู้จักตัวเลขความเร่งที่โผล่มาในสูตร ว่ามันคืออะไรและหน่วยของมันอ่านอย่างไร</span></div>
+        <div><b>ต่อไป</b><span>แกะความหมายของความเร่งและหน่วยของมัน เพราะมันคือปริมาณแบบเดียวกับที่เรากำลังตามหา</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="2.4">
+      <span class="step-no">§2.4</span>
+      <h3>ความเร่งคืออะไร และทำไมหน่วยของมันถึงมีคำว่าวินาทีสองครั้ง</h3>
+
+      <p>ตัวเลขความเร่งเพิ่งโผล่เข้ามาในสูตรของเรา และมันจะกลับมาอีกหลายครั้งข้างหน้า จึงควรทำความรู้จักให้ชัดตรงนี้เสียก่อน ความเร่งไม่ได้วัดว่าของเคลื่อนที่ไปได้ไกลแค่ไหน และไม่ได้วัดว่าของเคลื่อนที่เร็วแค่ไหนด้วย มันวัดว่า <b>ความเร็วเปลี่ยนไปเร็วแค่ไหน</b></p>
+
+      <p>วิธีที่เห็นภาพชัดที่สุดคือนึกถึงรถที่จอดติดไฟแดงอยู่ พอไฟเขียวคนขับก็เหยียบคันเร่งอย่างสม่ำเสมอ ในรถมีของสองอย่างที่เราจะคอยอ่านค่าไปพร้อมกัน อย่างแรกคือนาฬิกาจับเวลาที่กดตอนไฟเปลี่ยนเป็นสีเขียว อย่างที่สองคือเข็มไมล์บนหน้าปัด</p>
+
+      <table class="data">
+        <tr><th>นาฬิกาจับเวลาอ่านได้</th><th>เข็มไมล์อ่านได้</th></tr>
+        <tr><td>0 วินาที</td><td>0 เมตร/วินาที</td></tr>
+        <tr><td>1 วินาที</td><td>5 เมตร/วินาที</td></tr>
+        <tr><td>2 วินาที</td><td>10 เมตร/วินาที</td></tr>
+        <tr><td>3 วินาที</td><td>15 เมตร/วินาที</td></tr>
+      </table>
+
+      <p>เข็มไมล์เพิ่มขึ้นทีละ 5 ทุกหนึ่งวินาทีอย่างสม่ำเสมอ เราจึงบอกว่ารถคันนี้มีความเร่งเท่ากับ 5 และประโยคที่ถอดความหมายออกมาตรง ๆ ก็คือ ทุก ๆ หนึ่งวินาทีที่ผ่านไป ความเร็วจะเพิ่มขึ้นอีก 5 เมตรต่อวินาที ขอให้สังเกตว่าเราไม่ได้ดูเลยว่ารถวิ่งไปได้กี่เมตร เราดูแต่เข็มอย่างเดียว</p>
+
+      <h4>วินาทีสองตัวในหน่วยนั้นมาจากคนละที่</h4>
+
+      <p>ความสับสนทั้งหมดเรื่องหน่วยเมตรต่อวินาทีกำลังสองเกิดจากการที่คำว่าวินาทีปรากฏอยู่ในตารางข้างบนทั้งสองคอลัมน์ และมันเป็นวินาทีคนละตัวกันโดยสิ้นเชิง</p>
+
+      <p>วินาทีตัวแรกอยู่ในคอลัมน์ขวา ให้มองที่ช่องล่างสุดที่เขียนว่า 15 เมตร/วินาที เลข 15 นี้ไม่ได้บอกเวลา มันบอกว่าถ้ารถวิ่งด้วยความเร็วเท่านี้ค้างไว้ รถจะกินระยะทาง 15 เมตรในทุกหนึ่งวินาที คำว่าวินาทีในช่องนี้จึงติดมากับความหมายของความเร็ว หน้าที่ของมันคือบอกอัตราการกินระยะทาง</p>
+
+      <p>วินาทีตัวที่สองอยู่ในคอลัมน์ซ้าย เลข 3 ในแถวเดียวกันคือเวลาที่ผ่านไปนับจากไฟเขียว วินาทีตัวนี้เป็นวินาทีของนาฬิกาจับเวลา หน้าที่ของมันคือตอบว่าเรานั่งรอดูเข็มมานานแค่ไหนแล้ว ไม่เกี่ยวกับระยะทางที่รถวิ่งได้เลย</p>
+
+      <p>ความเร่งคือการเอาค่าที่อ่านจากคอลัมน์ขวา มาหารด้วยค่าที่อ่านจากคอลัมน์ซ้าย</p>
+
+      <div class="eq"><span class="frac"><span class="num">15 เมตร/วินาที</span><span class="den">3 วินาที</span></span> = 5 เมตร/วินาที/วินาที = 5 เมตร/วินาที²</div>
+
+      <p>คำว่าวินาทีจึงติดมาสองครั้ง ครั้งแรกมาจากหน่วยของเข็มไมล์ซึ่งนั่งอยู่ในตัวตั้ง ครั้งที่สองมาจากนาฬิกาจับเวลาซึ่งนั่งอยู่ในตัวหาร เมื่อขี้เกียจเขียนซ้ำจึงยุบเป็นยกกำลังสอง <b>เลขสองตัวนั้นคือจำนวนครั้งที่หารด้วยวินาที ไม่ใช่การเอาอะไรมาคูณตัวเอง</b> และนี่คือเหตุผลที่มันไม่ใช่เมตรกำลังสอง เพราะเมตรถูกหารอย่างเดียว ไม่เคยโผล่ซ้ำ</p>
+
+      <div class="fig">
+        <svg viewBox="0 0 620 262" role="img" aria-label="&#3610;&#3633;&#3609;&#3652;&#3604;&#3626;&#3634;&#3617;&#3594;&#3633;&#3657;&#3609; &#3619;&#3632;&#3618;&#3632;&#3607;&#3634;&#3591;&#3627;&#3634;&#3619;&#3604;&#3657;&#3623;&#3618;&#3623;&#3636;&#3609;&#3634;&#3607;&#3637;&#3652;&#3604;&#3657;&#3588;&#3623;&#3634;&#3617;&#3648;&#3619;&#3655;&#3623; &#3588;&#3623;&#3634;&#3617;&#3648;&#3619;&#3655;&#3623;&#3627;&#3634;&#3619;&#3604;&#3657;&#3623;&#3618;&#3623;&#3636;&#3609;&#3634;&#3607;&#3637;&#3629;&#3637;&#3585;&#3588;&#3619;&#3633;&#3657;&#3591;&#3652;&#3604;&#3657;&#3588;&#3623;&#3634;&#3617;&#3648;&#3619;&#3656;&#3591;" xmlns="http://www.w3.org/2000/svg">
+<rect x="20" y="18" width="250" height="56" rx="8" fill="var(--card)" stroke="var(--rule2)" stroke-width="1.3"/>
+<text x="36" y="42" font-family="var(--f-body)" font-size="15" fill="var(--ink)" text-anchor="start" font-weight="600">&#3619;&#3632;&#3618;&#3632;&#3607;&#3634;&#3591;</text>
+<text x="36" y="62" font-family="var(--f-mono)" font-size="13" fill="var(--math)" text-anchor="start" font-weight="400">&#3648;&#3617;&#3605;&#3619;</text>
+<text x="292" y="52" font-family="var(--f-body)" font-size="13" fill="var(--ink3)" text-anchor="start" font-weight="400">&#3648;&#3621;&#3586;&#3652;&#3617;&#3621;&#3660;&#3626;&#3632;&#3626;&#3617; &#8212; &#3623;&#3636;&#3656;&#3591;&#3617;&#3634;&#3649;&#3621;&#3657;&#3623;&#3585;&#3637;&#3656;&#3648;&#3617;&#3605;&#3619;</text>
+<rect x="20" y="105" width="250" height="56" rx="8" fill="var(--card)" stroke="var(--rule2)" stroke-width="1.3"/>
+<text x="36" y="129" font-family="var(--f-body)" font-size="15" fill="var(--ink)" text-anchor="start" font-weight="600">&#3588;&#3623;&#3634;&#3617;&#3648;&#3619;&#3655;&#3623;</text>
+<text x="36" y="149" font-family="var(--f-mono)" font-size="13" fill="var(--math)" text-anchor="start" font-weight="400">&#3648;&#3617;&#3605;&#3619; / &#3623;&#3636;&#3609;&#3634;&#3607;&#3637;</text>
+<text x="292" y="139" font-family="var(--f-body)" font-size="13" fill="var(--ink3)" text-anchor="start" font-weight="400">&#3648;&#3586;&#3655;&#3617;&#3652;&#3617;&#3621;&#3660; &#8212; &#3605;&#3629;&#3609;&#3609;&#3637;&#3657;&#3594;&#3637;&#3657;&#3607;&#3637;&#3656;&#3648;&#3607;&#3656;&#3634;&#3652;&#3619;</text>
+<rect x="20" y="192" width="250" height="56" rx="8" fill="var(--card)" stroke="var(--rule2)" stroke-width="1.3"/>
+<text x="36" y="216" font-family="var(--f-body)" font-size="15" fill="var(--ink)" text-anchor="start" font-weight="600">&#3588;&#3623;&#3634;&#3617;&#3648;&#3619;&#3656;&#3591;</text>
+<text x="36" y="236" font-family="var(--f-mono)" font-size="13" fill="var(--math)" text-anchor="start" font-weight="400">&#3648;&#3617;&#3605;&#3619; / &#3623;&#3636;&#3609;&#3634;&#3607;&#3637; / &#3623;&#3636;&#3609;&#3634;&#3607;&#3637;</text>
+<text x="292" y="226" font-family="var(--f-body)" font-size="13" fill="var(--ink3)" text-anchor="start" font-weight="400">&#3648;&#3586;&#3655;&#3617;&#3585;&#3635;&#3621;&#3633;&#3591;&#3585;&#3623;&#3634;&#3604;&#3586;&#3638;&#3657;&#3609;&#3648;&#3619;&#3655;&#3623;&#3649;&#3588;&#3656;&#3652;&#3627;&#3609;</text>
+<line x1="80" y1="74" x2="80" y2="100" stroke="var(--ink3)" stroke-width="1.6"/>
+<path d="M80 105 L75 95 L85 95 Z" fill="var(--ink3)"/>
+<text x="96" y="94" font-family="var(--f-mono)" font-size="13" fill="var(--ink2)" text-anchor="start" font-weight="500">&#247; &#3623;&#3636;&#3609;&#3634;&#3607;&#3637;</text>
+<line x1="80" y1="161" x2="80" y2="187" stroke="var(--ink3)" stroke-width="1.6"/>
+<path d="M80 192 L75 182 L85 182 Z" fill="var(--ink3)"/>
+<text x="96" y="181" font-family="var(--f-mono)" font-size="13" fill="var(--ink2)" text-anchor="start" font-weight="500">&#247; &#3623;&#3636;&#3609;&#3634;&#3607;&#3637;</text>
+<text x="20" y="254" font-family="var(--f-body)" font-size="12.5" fill="var(--ink3)" text-anchor="start" font-weight="400">&#3623;&#3636;&#3609;&#3634;&#3607;&#3637;&#3650;&#3612;&#3621;&#3656;&#3651;&#3609;&#3605;&#3635;&#3649;&#3627;&#3609;&#3656;&#3591;&#3605;&#3633;&#3623;&#3627;&#3634;&#3619;&#3626;&#3629;&#3591;&#3588;&#3619;&#3633;&#3657;&#3591; &#3592;&#3638;&#3591;&#3618;&#3640;&#3610;&#3648;&#3586;&#3637;&#3618;&#3609;&#3648;&#3611;&#3655;&#3609; &#3648;&#3617;&#3605;&#3619;/&#3623;&#3636;&#3609;&#3634;&#3607;&#3637;&#178;  &#8212; &#3648;&#3621;&#3586;&#3626;&#3629;&#3591;&#3629;&#3618;&#3641;&#3656;&#3610;&#3609;&#3623;&#3636;&#3609;&#3634;&#3607;&#3637; &#3652;&#3617;&#3656;&#3652;&#3604;&#3657;&#3629;&#3618;&#3641;&#3656;&#3610;&#3609;&#3648;&#3617;&#3605;&#3619;</text>
+</svg>
+        <p class="figcap">บันไดสามชั้นของการหารด้วยเวลา ทุกครั้งที่หารด้วยวินาทีเพิ่มหนึ่งครั้ง ความหมายของสิ่งที่ได้ก็เลื่อนขึ้นไปอีกชั้นหนึ่ง</p>
+      </div>
+
+      <p>ถ้าอ่านหน่วยนี้ออกมาเป็นภาษาพูดว่า <b>เมตรต่อวินาที ต่อวินาที</b> ก็ถูกต้องสมบูรณ์ นักฟิสิกส์อ่านกันแบบนี้จริง ๆ ส่วนคำว่าเมตรต่อวินาทีกำลังสองต่างหากที่เป็นเพียงรูปย่อไว้เขียนสั้น ๆ และเป็นตัวที่ทำให้คนงงมาตลอด</p>
+
+      <h4>หน่วยใช้ตรวจงานตัวเองได้</h4>
+
+      <p>เพราะหน่วยเก็บประวัติไว้ว่าเราทำอะไรกับตัวเลขมาบ้าง เราจึงใช้มันย้อนกลับมาตรวจได้ สมมติมีคนถามว่ารถที่เร่ง 5 เป็นเวลา 3 วินาที จะวิ่งได้ไกลกี่เมตร แล้วเผลอตอบว่า 5 คูณ 3 เท่ากับ 15 ลองเช็คหน่วยดู เอาเมตรต่อวินาทีกำลังสองคูณด้วยวินาที จะเหลือเมตรต่อวินาที ซึ่งเป็นหน่วยของความเร็ว ไม่ใช่ระยะทาง แค่นี้ก็รู้แล้วว่าตอบผิดประเภทโดยไม่ต้องไล่ดูตัวเลขเลย ส่วนคำตอบที่ถูกคือครึ่งหนึ่งของ 5 คูณ 3 ยกกำลังสอง เท่ากับ 22.5 เมตร ซึ่งพอเช็คหน่วยแล้ววินาทีตัดกันหมดพอดี เหลือเมตรล้วน ๆ วิธีนี้มีชื่อเรียกว่าการวิเคราะห์เชิงมิติ และนักฟิสิกส์ใช้ตรวจสมการยาว ๆ กันตลอดเวลา</p>
+
+      <p class="trivia"><b>เกร็ด</b> บันไดนี้ยังมีขั้นต่อไปอีก ถ้าหารด้วยวินาทีอีกรอบที่สามจะได้หน่วยเมตรต่อวินาทียกกำลังสาม เรียกว่าความกระตุก ซึ่งบอกว่าความเร่งเปลี่ยนเร็วแค่ไหน ไม่ใช่ของเล่นทางทฤษฎีเลย วิศวกรที่ออกแบบลิฟต์กับรถไฟฟ้าคุมค่านี้กันจริงจัง เพราะมันคือตัวที่ทำให้รู้สึกว่าออกตัวนุ่มหรือกระชาก</p>
+
+      <p>ข้อสังเกตสุดท้ายของขั้นนี้เป็นข้อที่จะย้อนกลับมาสำคัญมาก ความเร่งได้มาจากการเอาความเร็วมาหารด้วยเวลา แปลว่ามันก็เป็น <b>อัตราของอัตราอีกทีหนึ่ง</b> และถ้ามีคนถามหาความเร่ง ณ วินาทีใดวินาทีหนึ่งพอดี เราก็จะติดปัญหาแบบเดียวกันเป๊ะกับที่ติดอยู่ตอนนี้ นี่ไม่ใช่ปัญหาเฉพาะของความเร็ว แต่เป็นปัญหาของคำว่าอัตราทุกชนิด</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>ความหมายของความเร่งและหน่วยของมัน และรู้ว่าทางลาดของเรามีความเร่งเท่ากับ 2</span></div>
+        <div><b>ยังไม่ได้</b><span>ทั้งหมดนี้ยังเป็นเรื่องของช่วงเวลา ไม่ใช่ของขณะเดียว</span></div>
+        <div><b>ต่อไป</b><span>มีสูตรที่ผลิตค่าได้ทุกจุดแล้ว จึงถึงเวลาสร้างเครื่องมือที่ย่อช่วงเวลาได้ตามใจ</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+  </section>
+
+  <!-- ============ SECTION 3 ============ -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">§3</span><h2>สร้างเครื่องมือที่ย่อช่วงเวลาได้ตามใจ</h2></div>
+    <p class="sec-lede">การคำนวณที่ทำไปแล้วใช้ได้กับช่วงเวลาเดียวคือจากวินาทีที่ 1 ถึงวินาทีที่ 2 ถ้าอยากลองช่วงอื่นก็ต้องเขียนใหม่ทั้งชุดทุกครั้ง บทนี้จะเปลี่ยนการคำนวณครั้งเดียวนั้นให้กลายเป็น<b>เครื่องมือที่ปรับความยาวช่วงได้</b> โดยไม่มีอะไรใหม่ในเชิงคณิตศาสตร์เลย เป็นการตั้งชื่อและจัดระเบียบสิ่งที่ทำไปแล้วล้วน ๆ แต่ต้องทำให้เรียบร้อย เพราะทุกขั้นหลังจากนี้จะทำงานอยู่บนเครื่องมือชิ้นนี้</p>
+
+    <article class="step" data-id="3.1">
+      <span class="step-no">§3.1</span>
+      <h3>ตั้งชื่อสองสิ่งที่ต้องแยกออกจากกัน — จุดที่ปักหมุด กับ ความยาวของช่วง</h3>
+
+      <p>ในการคำนวณที่ผ่านมามีตัวเลขสองตัวที่ทำหน้าที่ต่างกันมาก แต่ถูกเขียนปนกันจนแยกไม่ออก ตัวแรกคือเวลาที่เราสนใจ ซึ่งในกรณีของเราคือวินาทีที่ 1 ตัวที่สองคือความยาวของช่วงที่มองไปข้างหน้า ซึ่งเผอิญเป็นหนึ่งวินาทีพอดีเลยดูกลืนกันไปหมด</p>
+
+      <p>เมื่อเราตั้งใจจะย่อช่วงลงเรื่อย ๆ ความต่างนี้จะกลายเป็นเรื่องใหญ่ทันที เพราะตัวแรกต้องอยู่นิ่ง ส่วนตัวที่สองต้องหดได้ จึงต้องมีชื่อเรียกแยกกัน</p>
+
+      <table class="data">
+        <tr><th>ชื่อ</th><th class="wrap">หมายถึงอะไร</th><th>ค่าในหน้านี้</th><th>หน่วย</th></tr>
+        <tr><td><span class="v">t</span></td><td class="wrap">เวลาที่ผ่านไปนับจากปล่อยลูกบอล ใช้เป็นชื่อทั่วไปของเวลา</td><td>เปลี่ยนได้ทุกค่า</td><td>วินาที</td></tr>
+        <tr><td><span class="v">s</span>(<span class="v">t</span>)</td><td class="wrap">ระยะทางที่กลิ้งได้เมื่อเวลาผ่านไป <span class="v">t</span> วินาที</td><td><span class="v">s</span>(<span class="v">t</span>) = <span class="v">t</span>²</td><td>เมตร</td></tr>
+        <tr><td><span class="v">a</span></td><td class="wrap">จุดเวลาที่เราอยากรู้ความเร็ว เป็นหมุดที่ปักไว้แล้วไม่ขยับ</td><td><span class="v">a</span> = 1</td><td>วินาที</td></tr>
+        <tr><td><span class="v">h</span></td><td class="wrap">ความยาวของช่วงเวลาที่มองไปข้างหน้าจากหมุด เป็นตัวที่เราปรับเอง</td><td>ลดลงเรื่อย ๆ</td><td>วินาที</td></tr>
+      </table>
+
+      <p>ทั้ง <span class="v">a</span> และ <span class="v">h</span> มีหน่วยเป็นวินาทีเหมือนกัน แต่บทบาทคนละอย่าง <span class="v">a</span> คือ<b>ตำแหน่ง</b>บนเส้นเวลา ส่วน <span class="v">h</span> คือ<b>ความยาว</b> เทียบกับถนนจะเห็นชัด <span class="v">a</span> เหมือนหลักกิโลเมตรที่ 1 ซึ่งเป็นจุดจุดหนึ่งบนถนน ส่วน <span class="v">h</span> เหมือนคำสั่งว่าให้เดินต่อไปอีก 500 เมตร ซึ่งเป็นระยะทาง ทั้งคู่วัดเป็นกิโลเมตรเหมือนกัน แต่อันหนึ่งบอกที่อยู่ อีกอันบอกความยาว</p>
+
+      <p>เมื่อเอามาบวกกัน <span class="v">a</span> + <span class="v">h</span> จะได้ตำแหน่งใหม่บนเส้นเวลา คือปลายอีกด้านของช่วงที่เรากำลังมองอยู่ ตำแหน่งบวกความยาวได้ตำแหน่ง เหมือนอยู่ที่หลักกิโลเมตรที่ 1 แล้วเดินต่อไปอีกครึ่งกิโลเมตร ก็ยังได้ตำแหน่งบนถนนอยู่ดี คือหลักกิโลเมตรที่ 1.5</p>
+
+      <div class="fig">
+        <svg viewBox="0 0 620 186" role="img" aria-label="&#3648;&#3626;&#3657;&#3609;&#3648;&#3623;&#3621;&#3634; &#3627;&#3617;&#3640;&#3604; a &#3629;&#3618;&#3641;&#3656;&#3607;&#3637;&#3656;&#3623;&#3636;&#3609;&#3634;&#3607;&#3637;&#3607;&#3637;&#3656; 1 &#3652;&#3617;&#3656;&#3586;&#3618;&#3633;&#3610; &#3626;&#3656;&#3623;&#3609;&#3649;&#3606;&#3610; h &#3627;&#3604;&#3626;&#3633;&#3657;&#3609;&#3621;&#3591;&#3648;&#3619;&#3639;&#3656;&#3629;&#3618; &#3654;" xmlns="http://www.w3.org/2000/svg">
+<line x1="40" y1="52" x2="600" y2="52" stroke="var(--rule2)" stroke-width="1.4"/>
+<line x1="72.9" y1="47" x2="72.9" y2="57" stroke="var(--rule2)" stroke-width="1"/>
+<text x="72.89999999999998" y="40" font-family="var(--f-mono)" font-size="11.5" fill="var(--ink3)" text-anchor="middle" font-weight="400">0.6</text>
+<line x1="176.1" y1="47" x2="176.1" y2="57" stroke="var(--rule2)" stroke-width="1"/>
+<text x="176.1" y="40" font-family="var(--f-mono)" font-size="11.5" fill="var(--ink3)" text-anchor="middle" font-weight="400">1</text>
+<line x1="305.1" y1="47" x2="305.1" y2="57" stroke="var(--rule2)" stroke-width="1"/>
+<text x="305.1" y="40" font-family="var(--f-mono)" font-size="11.5" fill="var(--ink3)" text-anchor="middle" font-weight="400">1.5</text>
+<line x1="434.1" y1="47" x2="434.1" y2="57" stroke="var(--rule2)" stroke-width="1"/>
+<text x="434.09999999999997" y="40" font-family="var(--f-mono)" font-size="11.5" fill="var(--ink3)" text-anchor="middle" font-weight="400">2</text>
+<line x1="563.1" y1="47" x2="563.1" y2="57" stroke="var(--rule2)" stroke-width="1"/>
+<text x="563.0999999999999" y="40" font-family="var(--f-mono)" font-size="11.5" fill="var(--ink3)" text-anchor="middle" font-weight="400">2.5</text>
+<text x="600" y="40" font-family="var(--f-mono)" font-size="11.5" fill="var(--ink3)" text-anchor="end" font-weight="400">&#3648;&#3623;&#3621;&#3634; (&#3623;&#3636;&#3609;&#3634;&#3607;&#3637;)</text>
+<line x1="176.1" y1="30" x2="176.1" y2="170" stroke="var(--math)" stroke-width="2"/>
+<circle cx="176.1" cy="52" r="6" fill="var(--math)"/>
+<text x="166.1" y="24" font-family="var(--f-body)" font-size="13" fill="var(--math)" text-anchor="start" font-weight="500">a = 1 &#3623;&#3636;&#3609;&#3634;&#3607;&#3637; &#183; &#3611;&#3633;&#3585;&#3627;&#3617;&#3640;&#3604;&#3652;&#3623;&#3657; &#3652;&#3617;&#3656;&#3586;&#3618;&#3633;&#3610;</text>
+<rect x="176.1" y="68" width="258.0" height="11" rx="3" fill="var(--warn)" opacity="0.85"/>
+<text x="444.1" y="78" font-family="var(--f-mono)" font-size="13" fill="var(--ink2)" text-anchor="start" font-weight="400">h = 1  &#8594;  a + h = 2</text>
+<rect x="176.1" y="94" width="129.0" height="11" rx="3" fill="var(--warn)" opacity="0.85"/>
+<text x="315.1" y="104" font-family="var(--f-mono)" font-size="13" fill="var(--ink2)" text-anchor="start" font-weight="400">h = 0.5  &#8594;  a + h = 1.5</text>
+<rect x="176.1" y="120" width="25.8" height="11" rx="3" fill="var(--warn)" opacity="0.85"/>
+<text x="211.9" y="130" font-family="var(--f-mono)" font-size="13" fill="var(--ink2)" text-anchor="start" font-weight="400">h = 0.1  &#8594;  a + h = 1.1</text>
+<rect x="176.1" y="146" width="2.6" height="11" rx="3" fill="var(--warn)" opacity="0.85"/>
+<text x="188.68" y="156" font-family="var(--f-mono)" font-size="13" fill="var(--ink2)" text-anchor="start" font-weight="400">h = 0.01  &#8594;  a + h = 1.01</text>
+</svg>
+        <p class="figcap">หมุดสีม่วงที่วินาทีที่ 1 อยู่ที่เดิมตลอด ไม่ขยับไปไหนสักครั้ง มีแต่แถบสีส้มซึ่งคือช่วงที่เรามองไปข้างหน้า ที่หดสั้นลงเรื่อย ๆ</p>
+      </div>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>ชื่อเรียกที่แยก<em>หมุดที่ไม่ขยับ</em> ออกจาก<em>ความยาวช่วงที่หดได้</em> อย่างเด็ดขาด</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่ได้เขียนวิธีคำนวณออกมาเป็นสูตรที่ใช้ชื่อเหล่านี้</span></div>
+        <div><b>ต่อไป</b><span>ประกอบสูตรอัตราเฉลี่ยขึ้นมาทีละชิ้นจากชื่อทั้งสี่นี้</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="3.2">
+      <span class="step-no">§3.2</span>
+      <h3>ประกอบสูตรทีละชิ้น จนได้เครื่องมือที่รับค่า h เข้าไปแล้วคืนอัตราเฉลี่ยออกมา</h3>
+
+      <p>สิ่งที่เราต้องการยังเป็นอันเดิมไม่มีอะไรใหม่ คือเอาระยะทางที่เปลี่ยนไป มาหารด้วยเวลาที่เปลี่ยนไป ต่างกันแค่ว่าคราวนี้จะเขียนโดยใช้ชื่อ <span class="v">a</span> กับ <span class="v">h</span> เพื่อให้ปรับความยาวช่วงได้ ประกอบทีละชิ้นดังนี้</p>
+
+      <p>ชิ้นที่หนึ่ง ต้นช่วงอยู่ที่เวลา <span class="v">a</span> เมื่อป้อนเวลานี้เข้าไปในสูตรระยะทางจะได้ตำแหน่งของลูกบอลตอนต้นช่วง เขียนว่า <span class="v">s</span>(<span class="v">a</span>) มีหน่วยเป็นเมตร</p>
+
+      <p>ชิ้นที่สอง ปลายช่วงอยู่ที่เวลา <span class="v">a</span> + <span class="v">h</span> เมื่อป้อนเวลานี้เข้าไปในสูตรเดียวกันจะได้ตำแหน่งของลูกบอลตอนปลายช่วง เขียนว่า <span class="v">s</span>(<span class="v">a</span>+<span class="v">h</span>) มีหน่วยเป็นเมตรเช่นกัน</p>
+
+      <p>ชิ้นที่สาม ระยะทางที่ลูกบอลกลิ้งได้จริงในช่วงนี้ คือเอาตำแหน่งปลายช่วงลบด้วยตำแหน่งต้นช่วง ได้เป็น <span class="v">s</span>(<span class="v">a</span>+<span class="v">h</span>) − <span class="v">s</span>(<span class="v">a</span>) หน่วยเป็นเมตรลบเมตร ก็ยังเป็นเมตร</p>
+
+      <p>ชิ้นที่สี่ เวลาที่ใช้ไปในช่วงนี้ คือเอาเวลาปลายช่วงลบด้วยเวลาต้นช่วง ได้เป็น (<span class="v">a</span> + <span class="v">h</span>) − <span class="v">a</span> ซึ่ง <span class="v">a</span> ตัดกันหมดเหลือเพียง <span class="v">h</span> พอดี นี่เป็นเหตุผลที่ตัวหารในสูตรสุดท้ายจะเหลือแค่ตัวเดียวสั้น ๆ</p>
+
+      <p>เอาชิ้นที่สามหารด้วยชิ้นที่สี่ ก็ได้เครื่องมือที่ต้องการ</p>
+
+      <div class="eq">
+        <span class="lbl">อัตราเฉลี่ยบนช่วงยาว h ที่เริ่มจากเวลา a</span>
+        <span class="frac"><span class="num"><span class="v">s</span>(<span class="v">a</span>+<span class="v">h</span>) − <span class="v">s</span>(<span class="v">a</span>)</span><span class="den"><span class="v">h</span></span></span>
+      </div>
+
+      <p>หน้าตาดูน่ากลัวกว่าเดิม แต่เนื้อในคือระยะทางหารด้วยเวลาอันเดิมเป๊ะ ๆ ที่เราทำไปแล้วตั้งแต่ต้น สิ่งเดียวที่เพิ่มเข้ามาคือความสามารถในการเปลี่ยนความยาวช่วงโดยไม่ต้องเขียนสูตรใหม่</p>
+
+      <p>ลองเช็คหน่วยของทั้งก้อนดู ข้างบนเป็นเมตรลบเมตรจึงได้เมตร ข้างล่างเป็นวินาที ผลลัพธ์จึงเป็นเมตรต่อวินาที ซึ่งเป็นหน่วยของความเร็วพอดี ถูกประเภทแล้ว</p>
+
+      <p class="note">มีกับดักหนึ่งที่หน่วยตรวจให้ไม่ได้ ถ้าเผลอเอา <span class="v">a</span> + <span class="v">h</span> ไปเป็นตัวหารแทน <span class="v">h</span> หน่วยก็ยังออกมาเป็นเมตรต่อวินาทีเหมือนกัน แต่ตัวเลขจะผิด เพราะสิ่งที่ต้องใช้หารคือความยาวของช่วง ไม่ใช่ตำแหน่งปลายช่วง จุดนี้ต้องเข้าใจความหมายเอาเอง หน่วยช่วยไม่ได้</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>เครื่องมือชิ้นเดียวที่<em>ปรับ h ได้ตามใจ</em> และให้ค่าออกมาเป็นเมตรต่อวินาทีเสมอ</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่ได้ลองแทนตัวเลขจริงลงไปสักค่า จึงยังไม่รู้ว่ามันให้ผลตรงกับที่คำนวณด้วยมือหรือไม่</span></div>
+        <div><b>ต่อไป</b><span>ทำความเข้าใจคำว่าอัตราให้ชัดก่อน เพราะคำนี้จะติดตัวเครื่องมือชิ้นนี้ไปตลอด</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="3.3">
+      <span class="step-no">§3.3</span>
+      <h3>ทำไมจึงเรียกว่าอัตราเฉลี่ย ทั้งที่ในเรื่องนี้มันคือความเร็วเฉลี่ย</h3>
+
+      <p>ในสถานการณ์ลูกบอลกลิ้งลงทางลาด คำว่าความเร็วเฉลี่ยชัดกว่าและเป็นคำที่ถูกต้อง ถ้าอ่านแล้วเข้าใจง่ายกว่าก็อ่านในใจแบบนั้นได้เลยไม่ผิดอะไร แต่หน้านี้จะใช้คำว่าอัตราเฉลี่ยเป็นหลัก และเหตุผลอยู่ที่ขอบเขตการใช้งานของเครื่องมือที่เพิ่งประกอบเสร็จ</p>
+
+      <p>คำว่าอัตราเป็นคำที่กว้างกว่า มันหมายถึงการเอาปริมาณอย่างหนึ่งที่เปลี่ยนไป มาหารด้วยปริมาณอีกอย่างหนึ่งที่เปลี่ยนไป โดยไม่ระบุว่าสองอย่างนั้นต้องเป็นอะไร ส่วนความเร็วเป็นกรณีเฉพาะกรณีเดียวของอัตรา คือกรณีที่ข้างบนเป็นระยะทางและข้างล่างเป็นเวลาพอดี พูดสั้น ๆ ว่าความเร็วทุกอันเป็นอัตรา แต่อัตราไม่จำเป็นต้องเป็นความเร็ว</p>
+
+      <p>เหตุผลที่ต้องมีคำกว้าง ๆ ไว้ใช้ก็เพราะเครื่องมือที่เราเพิ่งประกอบเสร็จนั้นไม่ได้ผูกอยู่กับลูกบอลหรือกับเวลาเลย มันทำงานกับอะไรก็ได้ที่มีค่าเปลี่ยนไปตามตัวแปรอีกตัวหนึ่ง</p>
+
+      <table class="data narrow">
+        <tr><th>สถานการณ์</th><th>ข้างบนคือ</th><th>ข้างล่างคือ</th><th>ผลลัพธ์เรียกว่า</th></tr>
+        <tr><td>ลูกบอลกลิ้ง</td><td>ระยะทาง (เมตร)</td><td>เวลา (วินาที)</td><td>ความเร็ว</td></tr>
+        <tr><td>ขับรถขึ้นเขา</td><td>ความสูง (เมตร)</td><td>ระยะแนวราบ (เมตร)</td><td>ความชัน</td></tr>
+        <tr><td>โรงงานผลิตสินค้า</td><td>ต้นทุน (บาท)</td><td>จำนวนชิ้น (ชิ้น)</td><td>ต้นทุนต่อชิ้น</td></tr>
+        <tr><td>ต้มน้ำบนเตา</td><td>อุณหภูมิ (องศา)</td><td>เวลา (วินาที)</td><td>อัตราการร้อนขึ้น</td></tr>
+        <tr><td>เติมน้ำใส่ถัง</td><td>ปริมาตร (ลิตร)</td><td>เวลา (วินาที)</td><td>อัตราการไหล</td></tr>
+      </table>
+
+      <p>ทั้งห้าแถวใช้สูตรก้อนเดียวกันหมด ต่างกันเพียงว่าตัวเลขนั้นแทนอะไร ขอให้สังเกตแถวที่สองเป็นพิเศษ กรณีขับรถขึ้นเขานั้นข้างล่างไม่ใช่เวลาเลย แต่เป็นระยะทางแนวราบ ผลลัพธ์จึงไม่ใช่ความเร็ว แต่เป็นความชันซึ่งบอกว่าถนนเอียงแค่ไหน ถ้าเราเรียกทุกอย่างว่าความเร็วเฉลี่ย แถวนี้จะกลายเป็นคำที่ผิดความหมายทันที</p>
+
+      <p>ผลที่ตามมาคือเรื่องที่คุ้มค่ามาก เมื่อเข้าใจวิธีคิดทั้งหมดจากลูกบอลแล้ว วิธีคิดชุดเดียวกันนี้จะยกไปใช้กับทุกแถวในตารางได้ทันทีโดยไม่ต้องเรียนใหม่ ถ้าผูกคำศัพท์ไว้กับลูกบอลตั้งแต่ต้น พอย้ายไปเรื่องอื่นก็ต้องมาเปลี่ยนคำกันอีกรอบ</p>
+
+      <p class="trivia"><b>เกร็ดเรื่องคำ</b> คำว่าอัตราความเร็วเฉลี่ยนั้นสื่อความหมายรู้เรื่องและไม่มีใครเข้าใจผิด แต่ในทางเทคนิคถือว่าซ้ำซ้อน เพราะคำว่าความเร็วมีความหมายของการหารด้วยเวลาอยู่ในตัวมันเองอยู่แล้ว · อนึ่ง ในวิชาฟิสิกส์ยังแยกละเอียดลงไปอีกระหว่างอัตราเร็วกับความเร็ว โดยอัตราเร็วสนใจแค่ว่าเคลื่อนที่ได้เร็วเท่าไร ส่วนความเร็วสนใจทิศทางด้วย สำหรับลูกบอลที่กลิ้งไปทางเดียวตลอดในหน้านี้ สองคำนี้ให้ค่าเท่ากัน จึงยังไม่จำเป็นต้องแยก</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>รู้ว่าเครื่องมือชิ้นนี้<em>ไม่ได้ผูกกับลูกบอล</em> ทุกอย่างที่ทำต่อจากนี้จึงยกไปใช้ที่อื่นได้</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่ได้ลงมือใช้เครื่องมือกับตัวเลขจริงสักครั้งเดียว</span></div>
+        <div><b>ต่อไป</b><span>ปักหมุดที่วินาทีที่ 1 แล้วลงมือย่อช่วงลงเรื่อย ๆ ทีละรอบ</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+  </section>
+
+  <!-- ============ SECTION 4 ============ -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">§4</span><h2>ลงมือย่อช่วงจริง แล้วอ่านสิ่งที่ตัวเลขกำลังบอก</h2></div>
+    <p class="sec-lede">บทนี้ไม่มีแนวคิดใหม่เลยแม้แต่ข้อเดียว มีแต่การแทนตัวเลขลงในเครื่องมือที่ประกอบไว้แล้ว ทีละรอบ โดยปักหมุดไว้ที่วินาทีที่ 1 แล้วให้ช่วงที่มองไปข้างหน้าสั้นลงทุกรอบ สิ่งที่ต้องจับตาไม่ใช่ตัวเลขแต่ละตัว แต่คือ<b>ทิศทางที่ตัวเลขทั้งชุดกำลังเคลื่อนไป</b> และสิ่งที่บทนี้จะทำให้เห็นคือรูปแบบหนึ่งซึ่งชัดจนน่าสงสัย</p>
+
+    <article class="step" data-id="4.1">
+      <span class="step-no">§4.1</span>
+      <h3>รอบที่หนึ่ง ให้ช่วงยาวหนึ่งวินาที เพื่อตรวจว่าเครื่องมือให้ผลตรงกับที่คำนวณด้วยมือ</h3>
+
+      <p>ก่อนจะย่อช่วง ควรตรวจก่อนว่าเครื่องมือที่ประกอบมานั้นให้คำตอบเดียวกับที่เราคำนวณด้วยมือไปแล้วหรือไม่ ตั้งหมุดที่ <span class="v">a</span> = 1 วินาที และให้ช่วงยาว <span class="v">h</span> = 1 วินาที ซึ่งก็คือช่วงตั้งแต่วินาทีที่ 1 ถึงวินาทีที่ 2 พอดี</p>
+
+      <p>หาระยะทางที่ปลายช่วงก่อน โดยป้อนเวลาปลายช่วงเข้าไปในสูตรระยะทาง</p>
+
+      <div class="eq plain"><span class="v">s</span>(<span class="v">a</span>+<span class="v">h</span>) = <span class="v">s</span>(1+1) = <span class="v">s</span>(2) = 2² = 4 เมตร</div>
+
+      <p>หาระยะทางที่ต้นช่วง โดยป้อนเวลาต้นช่วงเข้าไปในสูตรเดียวกัน</p>
+
+      <div class="eq plain"><span class="v">s</span>(<span class="v">a</span>) = <span class="v">s</span>(1) = 1² = 1 เมตร</div>
+
+      <p>เอาสองค่านี้ลบกันได้ระยะทางที่กลิ้งได้จริงในช่วงนี้ แล้วหารด้วยความยาวช่วง</p>
+
+      <div class="eq"><span class="frac"><span class="num">4 − 1</span><span class="den">1</span></span> = <span class="frac"><span class="num">3 เมตร</span><span class="den">1 วินาที</span></span> = 3 เมตรต่อวินาที</div>
+
+      <p>ได้ 3 เมตรต่อวินาที ตรงกับตัวเลขที่คำนวณด้วยมือไปแล้วตั้งแต่ต้นเรื่องทุกประการ ตรงนี้ไม่ใช่เรื่องบังเอิญและก็ไม่ใช่ความก้าวหน้าอะไรใหม่ แต่มันคือการยืนยันว่าเครื่องมือที่เพิ่งประกอบเสร็จนั้นไม่ได้ทำอะไรแปลกไปจากวิธีเดิม มันแค่เขียนวิธีเดิมในรูปที่ปรับความยาวช่วงได้</p>
+
+      <p>เมื่อมั่นใจแล้วว่าเครื่องมือใช้ได้ ก็ถึงเวลาทำสิ่งที่เครื่องมือนี้ทำได้แต่วิธีเดิมทำไม่ได้ นั่นคือเปลี่ยนค่า <span class="v">h</span></p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>เครื่องมือให้ผลตรงกับการคำนวณด้วยมือ จึง<em>เชื่อผลจากรอบถัด ๆ ไปได้</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ค่า 3 นี้ยังเป็นค่าของช่วงยาวหนึ่งวินาทีเต็ม ซึ่งยาวเกินกว่าจะเรียกว่าเป็นค่าของขณะใดขณะหนึ่ง</span></div>
+        <div><b>ต่อไป</b><span>หดช่วงลงครึ่งหนึ่ง แล้วดูว่าคำตอบขยับไปทางไหน</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="4.2">
+      <span class="step-no">§4.2</span>
+      <h3>รอบที่สองและสาม หดช่วงเหลือครึ่งวินาที แล้วเหลือหนึ่งในสิบวินาที</h3>
+
+      <p>คราวนี้หมุดยังอยู่ที่วินาทีที่ 1 เหมือนเดิมทุกรอบ เปลี่ยนเฉพาะความยาวช่วง ให้ <span class="v">h</span> = 0.5 วินาที ปลายช่วงจึงไปอยู่ที่วินาทีที่ 1.5</p>
+
+      <div class="eq plain"><span class="v">s</span>(1+0.5) = <span class="v">s</span>(1.5) = 1.5² = 2.25 เมตร</div>
+      <div class="eq"><span class="frac"><span class="num">2.25 − 1</span><span class="den">0.5</span></span> = <span class="frac"><span class="num">1.25 เมตร</span><span class="den">0.5 วินาที</span></span> = 2.5 เมตรต่อวินาที</div>
+
+      <p>ตัวเลขลดจาก 3 ลงมาเหลือ 2.5 และการลดลงนี้มีความหมายทางกายภาพชัดเจน ช่วงยาวหนึ่งวินาทีนั้นกินเวลาไปถึงตอนที่ลูกบอลเร่งจนเร็วมากแล้ว ค่าเฉลี่ยจึงถูกดึงขึ้นสูง พอตัดครึ่งท้ายที่เร็วจัดทิ้งไป เหลือแต่ครึ่งแรกที่ยังใกล้วินาทีที่ 1 ค่าเฉลี่ยที่ได้จึงต่ำลงและใกล้เคียงกับสิ่งที่เกิดขึ้นจริงตรงหมุดมากขึ้น</p>
+
+      <p>หดต่ออีก คราวนี้ให้ <span class="v">h</span> = 0.1 วินาที ปลายช่วงไปอยู่ที่วินาทีที่ 1.1</p>
+
+      <div class="eq plain"><span class="v">s</span>(1+0.1) = <span class="v">s</span>(1.1) = 1.1² = 1.21 เมตร</div>
+      <div class="eq"><span class="frac"><span class="num">1.21 − 1</span><span class="den">0.1</span></span> = <span class="frac"><span class="num">0.21 เมตร</span><span class="den">0.1 วินาที</span></span> = 2.1 เมตรต่อวินาที</div>
+
+      <p>ตรงนี้ขอให้สังเกตสิ่งหนึ่งที่สำคัญมาก ระยะทาง 2.25 เมตรที่วินาทีที่ 1.5 และ 1.21 เมตรที่วินาทีที่ 1.1 นั้น <b>ไม่มีใครวัดไว้เลยสักค่าเดียว</b> ไม่มีนาฬิกาเรือนไหนเคยหยุดที่วินาทีที่ 1.1 และไม่มีไม้บรรทัดอันไหนเคยไปทาบตรงนั้น ตัวเลขทั้งสองเกิดจากการป้อนเวลาเข้าไปในสูตรแล้วให้สูตรคืนค่าออกมา ถ้าเรามีแต่ตารางสี่แถวที่วัดมา การคำนวณสองรอบนี้จะทำไม่ได้เลยแม้แต่รอบเดียว</p>
+
+      <p>ตัวเลขที่ได้ตอนนี้คือ 3 แล้วก็ 2.5 แล้วก็ 2.1 มันลดลงทุกรอบจริง แต่ลดลงช้าลงเรื่อย ๆ ด้วย ซึ่งบอกใบ้ว่ามันไม่ได้กำลังจะดิ่งลงไปไม่มีที่สิ้นสุด</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>ค่าสามค่าที่ได้จากช่วงสามความยาว และรู้ว่า<em>ค่าเหล่านี้เกิดจากสูตร ไม่ใช่จากการวัด</em></span></div>
+        <div><b>ยังไม่ได้</b><span>สามค่ายังน้อยเกินกว่าจะบอกได้ว่ามันกำลังมุ่งไปที่เลขตัวใดตัวหนึ่งหรือไม่</span></div>
+        <div><b>ต่อไป</b><span>หดต่อให้เล็กกว่านี้อีกสองรอบ แล้ววางผลทั้งหมดเรียงกันดู</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="4.3">
+      <span class="step-no">§4.3</span>
+      <h3>หดต่อจนเหลือหนึ่งในพันวินาที แล้ววางผลทั้งหมดเรียงกันเพื่ออ่านรูปแบบ</h3>
+
+      <p>ทำต่ออีกสองรอบด้วยวิธีเดียวกันทุกประการ รอบที่สี่ให้ <span class="v">h</span> = 0.01 วินาที ได้ <span class="v">s</span>(1.01) = 1.0201 เมตร ระยะที่เปลี่ยนไปคือ 0.0201 เมตร หารด้วย 0.01 วินาที ได้ 2.01 เมตรต่อวินาที รอบที่ห้าให้ <span class="v">h</span> = 0.001 วินาที ได้ <span class="v">s</span>(1.001) = 1.002001 เมตร ระยะที่เปลี่ยนไปคือ 0.002001 เมตร หารด้วย 0.001 วินาที ได้ 2.001 เมตรต่อวินาที</p>
+
+      <p>วางผลทั้งห้ารอบเรียงกัน พร้อมกับแสดงระยะทางและเวลาที่ใช้ในแต่ละรอบให้ครบ</p>
+
+      <table class="data narrow">
+        <tr><th>h (วินาที)</th><th>ปลายช่วง</th><th>s(a+h) (เมตร)</th><th>ระยะที่เปลี่ยน (เมตร)</th><th>อัตราเฉลี่ย (ม./วิ)</th></tr>
+        <tr><td>1</td><td>2</td><td>4</td><td>3</td><td>3</td></tr>
+        <tr><td>0.5</td><td>1.5</td><td>2.25</td><td>1.25</td><td>2.5</td></tr>
+        <tr><td>0.1</td><td>1.1</td><td>1.21</td><td>0.21</td><td>2.1</td></tr>
+        <tr><td>0.01</td><td>1.01</td><td>1.0201</td><td>0.0201</td><td>2.01</td></tr>
+        <tr><td>0.001</td><td>1.001</td><td>1.002001</td><td>0.002001</td><td>2.001</td></tr>
+      </table>
+
+      <div class="log" id="logBox">
+        <p class="log-cap">ความยาวช่วงที่วัด (แถบยาว = ช่วงกว้าง) → อัตราเฉลี่ยที่ได้</p>
+        <div class="log-row"><span class="log-h">h = 1</span><span class="log-bar"><i style="--w:100%"></i></span><span class="log-r">3</span></div>
+        <div class="log-row"><span class="log-h">h = 0.5</span><span class="log-bar"><i style="--w:50%"></i></span><span class="log-r">2.5</span></div>
+        <div class="log-row"><span class="log-h">h = 0.1</span><span class="log-bar"><i style="--w:10%"></i></span><span class="log-r">2.1</span></div>
+        <div class="log-row"><span class="log-h">h = 0.01</span><span class="log-bar"><i style="--w:1%; min-width:2px"></i></span><span class="log-r">2.01</span></div>
+        <div class="log-row"><span class="log-h">h = 0.001</span><span class="log-bar"><i style="--w:0.1%; min-width:2px"></i></span><span class="log-r">2.001</span></div>
+        <div class="nline">
+          <div class="nline-axis"></div>
+          <div class="nline-tgt" style="left:8.33%"></div>
+          <div class="nline-tlab" style="left:8.33%">2</div>
+          <div class="nline-dot" style="left:91.67%"></div><div class="nline-lab" style="left:91.67%">3</div>
+          <div class="nline-dot" style="left:50%"></div><div class="nline-lab" style="left:50%">2.5</div>
+          <div class="nline-dot" style="left:16.67%"></div><div class="nline-lab" style="left:16.67%">2.1</div>
+          <div class="nline-dot" style="left:9.17%"></div>
+          <div class="nline-dot" style="left:8.42%"></div>
+        </div>
+      </div>
+
+      <p>เส้นล่างสุดคือเส้นจำนวน จุดสีม่วงคืออัตราเฉลี่ยที่ได้ในแต่ละรอบ ส่วนเส้นประคือเลข 2 สองจุดสุดท้ายที่ไม่มีป้ายกำกับคือ 2.01 กับ 2.001 ซึ่งเบียดกันจนแทบทับเส้นประไปแล้ว</p>
+
+      <h4>รูปแบบที่โผล่ออกมา</h4>
+
+      <p>ค่าทั้งห้าลดลงตามลำดับ แต่ไม่ได้ลดลงไปเรื่อย ๆ อย่างไร้ทิศทาง มันดูเหมือนมีพื้นรองอยู่ที่เลข 2 ลองเอาแต่ละค่ามาลบด้วย 2 เพื่อดูว่าเหลือเศษเท่าไร</p>
+
+      <table class="data">
+        <tr><th>h</th><th>อัตราเฉลี่ย</th><th>ส่วนที่เกินจาก 2</th></tr>
+        <tr><td>1</td><td>3</td><td>1</td></tr>
+        <tr><td>0.5</td><td>2.5</td><td>0.5</td></tr>
+        <tr><td>0.1</td><td>2.1</td><td>0.1</td></tr>
+        <tr><td>0.01</td><td>2.01</td><td>0.01</td></tr>
+        <tr><td>0.001</td><td>2.001</td><td>0.001</td></tr>
+      </table>
+
+      <p>คอลัมน์ซ้ายสุดกับคอลัมน์ขวาสุดเหมือนกันทุกแถว <b>ส่วนที่เกินจาก 2 เท่ากับ h พอดีเป๊ะ</b> ทุกครั้ง ถ้ารูปแบบนี้เป็นจริงเสมอ ก็แปลว่าอัตราเฉลี่ยที่จุดนี้เท่ากับ 2 บวกด้วยความยาวของช่วงที่เราเลือกใช้ และการทำให้ช่วงสั้นลงก็คือการทำให้ส่วนเกินนั้นเล็กลงตามไปด้วย</p>
+
+      <p>แต่ต้องพูดให้ตรงว่าสิ่งที่เห็นนี้ยังเป็นเพียงข้อสังเกตจากห้าแถวเท่านั้น เราเลือก <span class="v">h</span> มาเองห้าค่าและมันบังเอิญเป็นเลขกลม ๆ ทั้งห้าค่า ยังไม่มีอะไรรับประกันว่าถ้าเลือก <span class="v">h</span> เป็นค่าประหลาด ๆ อย่าง 0.037 แล้วรูปแบบนี้จะยังจริงอยู่ ข้อสังเกตกับข้อพิสูจน์เป็นคนละอย่างกัน</p>
+
+      
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>ข้อสังเกตที่คมมาก คือ<em>ส่วนที่เกินจาก 2 เท่ากับ h เสมอ</em> ในห้าแถวที่ลองมา</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่รู้ว่ารูปแบบนี้จริงกับ <span class="v">h</span> ทุกค่าหรือไม่ และยังไม่ได้แตะคำถามเดิมเลยว่าค่า ณ วินาทีที่ 1 พอดีคือเท่าไร</span></div>
+        <div><b>ต่อไป</b><span>ลองทำสิ่งที่ตรงไปตรงมาที่สุด คือให้ช่วงยาวเป็นศูนย์ไปเลย</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+  </section>
+
+  <!-- ============ SECTION 5 ============ -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">§5</span><h2>จุดที่วิธีตรงไปตรงมาพังลง และทางออกที่ไม่ใช่การคำนวณ</h2></div>
+    <p class="sec-lede">ถ้าต้องการค่า ณ เวลาจุดเดียว วิธีที่ตรงที่สุดคือให้ช่วงยาวเป็นศูนย์ไปเลย บทนี้จะลองทำแบบนั้นจริง ๆ แล้วดูให้ละเอียดว่ามันพังอย่างไร ทั้งในสมการ ในภาพบนกราฟ และในสถานการณ์จริง จากนั้นจะพบว่าทางออกไม่ได้อยู่ที่การหาวิธีคำนวณที่เก่งกว่าเดิม แต่อยู่ที่<b>การเปลี่ยนคำถาม</b> และนี่คือจุดพลิกของทั้งหน้านี้</p>
+
+    <article class="step" data-id="5.1">
+      <span class="step-no">§5.1</span>
+      <h3>ใส่ h = 0 ลงไปตรง ๆ แล้วดูว่าทำไมผลลัพธ์ถึงไม่ใช่แค่คำนวณยาก แต่คือไม่มีค่า</h3>
+
+      <p>คำว่า ณ วินาทีที่ 1 พอดี ฟังดูเหมือนกำลังบอกว่าให้ใช้ช่วงเวลาที่ไม่มีความยาวเลย ดังนั้นทางที่ตรงที่สุดคือใส่ <span class="v">h</span> = 0 ลงไปในเครื่องมือที่เราสร้างไว้ ลองแทนดูทีละบรรทัด</p>
+
+      <p>ปลายช่วงอยู่ที่เวลา 1 + 0 ซึ่งก็คือวินาทีที่ 1 เท่าเดิม ระยะทางที่ปลายช่วงจึงเป็น <span class="v">s</span>(1) = 1 เมตร ซึ่งเท่ากับระยะทางที่ต้นช่วงพอดี เมื่อเอามาลบกันจึงได้ศูนย์ ส่วนตัวหารคือ <span class="v">h</span> ซึ่งเราเพิ่งกำหนดให้เป็นศูนย์</p>
+
+      <div class="eq"><span class="frac"><span class="num"><span class="v">s</span>(1+0) − <span class="v">s</span>(1)</span><span class="den">0</span></span> = <span class="frac"><span class="num">1 − 1</span><span class="den">0</span></span> = <span class="frac"><span class="num">0</span><span class="den">0</span></span></div>
+
+      <p>สิ่งที่ได้ไม่ใช่ตัวเลขที่เล็กมาก ไม่ใช่ตัวเลขที่ใหญ่มาก และไม่ใช่ค่าที่คำนวณยาก แต่คือ <b>ไม่มีค่า</b> และเหตุผลไม่ได้เป็นเพราะมีกฎห้ามไว้ แต่เป็นเพราะความหมายของการหารเอง</p>
+
+      <h4>การหารถามอะไรกันแน่</h4>
+
+      <p>การหารคือการถามย้อนกลับของการคูณ เวลาเขียนว่า 6 หารด้วย 2 เท่ากับเท่าไร คำถามที่แท้จริงคือ <b>อะไรคูณ 2 แล้วได้ 6</b> คำตอบคือ 3 และมีตัวเดียวเท่านั้นในโลกที่ใช้ได้ นี่คือเหตุผลที่การหารให้ข้อมูลกับเราได้ เพราะมันคัดจนเหลือคำตอบเดียว</p>
+
+      <p>ทีนี้ลองถามแบบเดียวกันกับ 0 หารด้วย 0 คำถามคืออะไรคูณ 0 แล้วได้ 0 ปัญหาคือ 3 ก็ได้ เพราะสามคูณศูนย์ได้ศูนย์ 7 ก็ได้ 1000 ก็ได้ ทุกจำนวนในโลกล้วนเป็นคำตอบที่ถูกต้องเท่ากันหมด ปัญหาจึงไม่ใช่ว่าหาคำตอบไม่เจอ แต่คือ <b>เจอมากเกินไปจนเลือกไม่ได้</b> เมื่อทุกเลขเป็นคำตอบได้เท่ากัน การคำนวณนั้นก็ไม่ได้บอกอะไรเราเลยแม้แต่นิดเดียว</p>
+
+      <p class="trivia"><b>ข้อควรแยกให้ออก</b> การเอาศูนย์ไปหารเลขอื่นเช่น 5 หารด้วย 0 ก็ไม่มีคำตอบเหมือนกัน แต่ด้วยเหตุผลตรงกันข้าม กรณีนั้นถามว่าอะไรคูณศูนย์แล้วได้ห้า ซึ่งไม่มีจำนวนใดทำได้เลยสักตัว กรณีหนึ่งไม่มีคำตอบเพราะไม่มีตัวไหนใช้ได้ อีกกรณีไม่มีคำตอบเพราะทุกตัวใช้ได้หมด และด้วยเหตุนี้ผลของ 0 หารด้วย 0 จึงไม่ใช่อนันต์ด้วย</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>รู้ว่าการใส่ <span class="v">h</span> = 0 ให้ผลเป็น 0 ส่วน 0 ซึ่ง<em>ไม่มีค่าเพราะมีคำตอบมากเกินไป</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่รู้ว่านี่เป็นเพียงความอึดอัดของสัญลักษณ์ หรือเป็นข้อจำกัดของสถานการณ์จริง</span></div>
+        <div><b>ต่อไป</b><span>ดูเรื่องเดียวกันนี้ในภาพบนกราฟและในโลกจริง เพื่อดูว่ามันพังเหมือนกันไหม</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="5.2">
+      <span class="step-no">§5.2</span>
+      <h3>เรื่องเดียวกันนี้เมื่อดูบนกราฟและในโลกจริง ก็พังด้วยเหตุผลเดียวกัน</h3>
+
+      <p>ถ้าเอาสูตรระยะทางมาวาดเป็นกราฟ โดยให้แกนนอนเป็นเวลาและแกนตั้งเป็นระยะทาง เส้นที่ได้จะเป็นเส้นโค้งหงายขึ้น ความชันของมันจะมากขึ้นเรื่อย ๆ ตามเวลา ซึ่งก็คือภาพของการที่ลูกบอลกลิ้งเร็วขึ้นนั่นเอง</p>
+
+      <p>บนกราฟนี้ การคำนวณอัตราเฉลี่ยมีความหมายทางเรขาคณิตที่ตรงตัวมาก เราจิ้มจุดสองจุดลงบนเส้นโค้ง จุดแรกคือตำแหน่งของลูกบอลที่เวลาต้นช่วง จุดที่สองคือที่เวลาปลายช่วง แล้วลากเส้นตรงเชื่อมสองจุดนั้น การเอาระยะทางที่เปลี่ยนไปมาหารด้วยเวลาที่ใช้ ก็คือการหาความชันของเส้นตรงเส้นนั้นพอดี</p>
+
+      <div class="fig">
+        <svg viewBox="0 0 620 258" role="img" aria-label="&#3595;&#3657;&#3634;&#3618;: &#3648;&#3626;&#3657;&#3609;&#3605;&#3619;&#3591;&#3621;&#3634;&#3585;&#3612;&#3656;&#3634;&#3609;&#3592;&#3640;&#3604;&#3626;&#3629;&#3591;&#3592;&#3640;&#3604;&#3610;&#3609;&#3585;&#3619;&#3634;&#3615;&#3652;&#3604;&#3657;&#3648;&#3626;&#3657;&#3609;&#3648;&#3604;&#3637;&#3618;&#3623; &#3586;&#3623;&#3634;: &#3648;&#3617;&#3639;&#3656;&#3629;&#3626;&#3629;&#3591;&#3592;&#3640;&#3604;&#3607;&#3633;&#3610;&#3585;&#3633;&#3609;&#3648;&#3627;&#3621;&#3639;&#3629;&#3592;&#3640;&#3604;&#3648;&#3604;&#3637;&#3618;&#3623; &#3621;&#3634;&#3585;&#3648;&#3626;&#3657;&#3609;&#3652;&#3604;&#3657;&#3609;&#3633;&#3610;&#3652;&#3617;&#3656;&#3606;&#3657;&#3623;&#3609;" xmlns="http://www.w3.org/2000/svg">
+<path d="M40.0 212.0 L42.7 212.0 L45.3 211.9 L48.0 211.8 L50.7 211.7 L53.3 211.5 L56.0 211.3 L58.7 211.0 L61.3 210.7 L64.0 210.4 L66.7 210.0 L69.3 209.5 L72.0 209.1 L74.6 208.6 L77.3 208.0 L80.0 207.4 L82.6 206.8 L85.3 206.1 L88.0 205.4 L90.6 204.7 L93.3 203.9 L96.0 203.0 L98.6 202.1 L101.3 201.2 L104.0 200.3 L106.6 199.3 L109.3 198.2 L112.0 197.2 L114.6 196.0 L117.3 194.9 L119.9 193.7 L122.6 192.4 L125.3 191.2 L127.9 189.8 L130.6 188.5 L133.3 187.1 L135.9 185.6 L138.6 184.1 L141.3 182.6 L143.9 181.0 L146.6 179.4 L149.3 177.8 L151.9 176.1 L154.6 174.4 L157.3 172.6 L159.9 170.8 L162.6 168.9 L165.3 167.0 L167.9 165.1 L170.6 163.1 L173.2 161.1 L175.9 159.1 L178.6 157.0 L181.2 154.8 L183.9 152.6 L186.6 150.4 L189.2 148.2 L191.9 145.9 L194.6 143.5 L197.2 141.1 L199.9 138.7 L202.6 136.3 L205.2 133.8 L207.9 131.2 L210.6 128.6 L213.2 126.0 L215.9 123.3 L218.6 120.6 L221.2 117.9 L223.9 115.1 L226.5 112.3 L229.2 109.4 L231.9 106.5 L234.5 103.5 L237.2 100.5 L239.9 97.5 L242.5 94.4 L245.2 91.3 L247.9 88.2 L250.5 85.0 L253.2 81.7" fill="none" stroke="var(--math)" stroke-width="2.2" opacity="0.75"/>
+<line x1="30" y1="212.0" x2="290" y2="212.0" stroke="var(--rule2)" stroke-width="1.1"/>
+<text x="30" y="32" font-family="var(--f-body)" font-size="13.5" fill="var(--ink)" text-anchor="start" font-weight="500">h = 0.6 &#8212; &#3626;&#3629;&#3591;&#3592;&#3640;&#3604; &#3652;&#3604;&#3657;&#3648;&#3626;&#3657;&#3609;&#3648;&#3604;&#3637;&#3618;&#3623;</text>
+<path d="M362.0 212.0 L364.7 212.0 L367.3 211.9 L370.0 211.8 L372.7 211.7 L375.3 211.5 L378.0 211.3 L380.7 211.0 L383.3 210.7 L386.0 210.4 L388.6 210.0 L391.3 209.5 L394.0 209.1 L396.6 208.6 L399.3 208.0 L402.0 207.4 L404.6 206.8 L407.3 206.1 L410.0 205.4 L412.6 204.7 L415.3 203.9 L418.0 203.0 L420.6 202.1 L423.3 201.2 L426.0 200.3 L428.6 199.3 L431.3 198.2 L434.0 197.2 L436.6 196.0 L439.3 194.9 L441.9 193.7 L444.6 192.4 L447.3 191.2 L449.9 189.8 L452.6 188.5 L455.3 187.1 L457.9 185.6 L460.6 184.1 L463.3 182.6 L465.9 181.0 L468.6 179.4 L471.3 177.8 L473.9 176.1 L476.6 174.4 L479.3 172.6 L481.9 170.8 L484.6 168.9 L487.3 167.0 L489.9 165.1 L492.6 163.1 L495.2 161.1 L497.9 159.1 L500.6 157.0 L503.2 154.8 L505.9 152.6 L508.6 150.4 L511.2 148.2 L513.9 145.9 L516.6 143.5 L519.2 141.1 L521.9 138.7 L524.6 136.3 L527.2 133.8 L529.9 131.2 L532.6 128.6 L535.2 126.0 L537.9 123.3 L540.6 120.6 L543.2 117.9 L545.9 115.1 L548.5 112.3 L551.2 109.4 L553.9 106.5 L556.5 103.5 L559.2 100.5 L561.9 97.5 L564.5 94.4 L567.2 91.3 L569.9 88.2 L572.5 85.0 L575.2 81.7" fill="none" stroke="var(--math)" stroke-width="2.2" opacity="0.75"/>
+<line x1="352" y1="212.0" x2="612" y2="212.0" stroke="var(--rule2)" stroke-width="1.1"/>
+<text x="352" y="32" font-family="var(--f-body)" font-size="13.5" fill="var(--ink)" text-anchor="start" font-weight="500">h = 0 &#8212; &#3592;&#3640;&#3604;&#3648;&#3604;&#3637;&#3618;&#3623; &#3648;&#3621;&#3639;&#3629;&#3585;&#3648;&#3626;&#3657;&#3609;&#3652;&#3617;&#3656;&#3652;&#3604;&#3657;</text>
+<line x1="114.0" y1="204.2" x2="240.4" y2="106.3" stroke="var(--warn)" stroke-width="2.4"/>
+<line x1="144.0" y1="181.0" x2="206.4" y2="181.0" stroke="var(--ink3)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<line x1="206.4" y1="181.0" x2="206.4" y2="132.6" stroke="var(--ink3)" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text x="175.2" y="198" font-family="var(--f-math)" font-size="13" fill="var(--ink3)" text-anchor="middle" font-weight="400" font-style="italic">h</text>
+<text x="214.4" y="160.82" font-family="var(--f-body)" font-size="12" fill="var(--ink3)" text-anchor="start" font-weight="400">&#3619;&#3632;&#3618;&#3632;&#3607;&#3637;&#3656;&#3648;&#3611;&#3621;&#3637;&#3656;&#3618;&#3609;</text>
+<circle cx="144.0" cy="181.0" r="6" fill="var(--math)"/>
+<circle cx="206.4" cy="132.6" r="6" fill="var(--warn)"/>
+<text x="132" y="201" font-family="var(--f-body)" font-size="13.5" fill="var(--math)" text-anchor="end" font-weight="600">P</text>
+<text x="216.4" y="124.63999999999999" font-family="var(--f-body)" font-size="13.5" fill="var(--warn)" text-anchor="start" font-weight="600">Q</text>
+<text x="30" y="246" font-family="var(--f-body)" font-size="12.5" fill="var(--ink3)" text-anchor="start" font-weight="400">&#3588;&#3623;&#3634;&#3617;&#3594;&#3633;&#3609;&#3586;&#3629;&#3591;&#3648;&#3626;&#3657;&#3609;&#3626;&#3637;&#3626;&#3657;&#3617; = &#3629;&#3633;&#3605;&#3619;&#3634;&#3648;&#3593;&#3621;&#3637;&#3656;&#3618;&#3586;&#3629;&#3591;&#3594;&#3656;&#3623;&#3591;&#3609;&#3633;&#3657;&#3609;&#3614;&#3629;&#3604;&#3637;</text>
+<line x1="416.0" y1="198.5" x2="516.0" y2="163.5" stroke="var(--warn)" stroke-width="1.6" opacity="0.45"/>
+<line x1="416.0" y1="220.0" x2="516.0" y2="142.0" stroke="var(--warn)" stroke-width="1.6" opacity="0.55"/>
+<line x1="433.1" y1="227.0" x2="498.9" y2="135.0" stroke="var(--warn)" stroke-width="1.6" opacity="0.45"/>
+<line x1="446.8" y1="227.0" x2="485.2" y2="135.0" stroke="var(--warn)" stroke-width="1.6" opacity="0.45"/>
+<line x1="455.8" y1="227.0" x2="476.2" y2="135.0" stroke="var(--warn)" stroke-width="1.6" opacity="0.4"/>
+<circle cx="466.0" cy="181.0" r="7" fill="var(--math)"/>
+<text x="480" y="207" font-family="var(--f-body)" font-size="13" fill="var(--warn)" text-anchor="start" font-weight="500">Q &#3607;&#3633;&#3610; P</text>
+<text x="352" y="246" font-family="var(--f-body)" font-size="12.5" fill="var(--ink3)" text-anchor="start" font-weight="400">&#3648;&#3626;&#3657;&#3609;&#3652;&#3627;&#3609;&#3585;&#3655;&#3612;&#3656;&#3634;&#3609;&#3592;&#3640;&#3604;&#3609;&#3637;&#3657;&#3652;&#3604;&#3657;&#3607;&#3633;&#3657;&#3591;&#3609;&#3633;&#3657;&#3609; &#8212; &#3605;&#3619;&#3591;&#3585;&#3633;&#3610;&#3607;&#3637;&#3656; 0 &#247; 0 &#3617;&#3637;&#3588;&#3635;&#3605;&#3629;&#3610;&#3652;&#3604;&#3657;&#3607;&#3640;&#3585;&#3648;&#3621;&#3586;</text>
+</svg>
+        <p class="figcap">ซ้าย เมื่อมีสองจุด เส้นตรงที่ลากผ่านทั้งสองจุดมีได้เส้นเดียวเท่านั้น ความชันจึงมีค่าเดียว ขวา เมื่อช่วงยาวเป็นศูนย์ จุดที่สองเลื่อนมาทับจุดแรกจนเหลือจุดเดียว และเส้นตรงที่ลากผ่านจุดเดียวนั้นมีได้นับไม่ถ้วน</p>
+      </div>
+
+      <p>ภาพขวาคือสิ่งเดียวกันกับ 0 ส่วน 0 ทุกประการ เพียงแต่พูดด้วยภาษาของรูปทรง เมื่อเหลือจุดเดียว เส้นตรงที่ผ่านจุดนั้นได้มีอยู่นับไม่ถ้วน ความชันจึงเป็นเท่าไรก็ได้ ไม่ใช่เพราะเราหาไม่เจอ แต่เพราะจุดเดียวไม่ได้บังคับอะไรเลย เหมือนกับที่ทุกจำนวนคูณศูนย์แล้วได้ศูนย์เหมือนกันหมด</p>
+
+      <h4>ในโลกจริงก็เป็นแบบเดียวกัน</h4>
+
+      <p>ลองถอยกลับไปดูสถานการณ์จริง ถ้าไม่ให้เวลาผ่านไปเลยแม้แต่นิดเดียว ลูกบอลก็ไม่ได้ขยับไปไหน ข้อมูลทั้งหมดที่เราถืออยู่ในมือจึงมีเพียงว่ามันเคลื่อนที่ไป 0 เมตร ในเวลา 0 วินาที ซึ่งเป็นประโยคที่จริงเสมอไม่ว่าลูกบอลจะเร็วแค่ไหน มันจริงกับลูกบอลที่หยุดนิ่ง จริงกับลูกบอลที่กลิ้งช้า และจริงกับลูกบอลที่พุ่งด้วยความเร็วสูง ประโยคที่จริงกับทุกกรณีเท่ากันหมดย่อมแยกกรณีเหล่านั้นออกจากกันไม่ได้</p>
+
+      <p>เทียบให้เห็นภาพก็เหมือนภาพถ่ายนิ่งภาพเดียว ในภาพถ่ายรถที่จอดอยู่กับรถที่กำลังวิ่งด้วยความเร็วสูง อาจดูไม่ต่างกันเลย ถ้าอยากรู้ว่ารถวิ่งเร็วแค่ไหนต้องมีภาพอย่างน้อยสองภาพที่ถ่ายห่างกันเป็นเวลาหนึ่ง แล้วดูว่ารถขยับไปเท่าไรระหว่างสองภาพนั้น <b>ความเร็วไม่ได้อยู่ในภาพเดียว มันอยู่ในความต่างระหว่างสองภาพ</b></p>
+
+      <p>ปมนี้คือปมเดียวกับที่เซโนตั้งไว้เมื่อสองพันกว่าปีก่อนเรื่องลูกศรที่พุ่งอยู่ ถ้าหยุดเวลาดูที่ขณะใดขณะหนึ่ง ลูกศรก็อยู่นิ่งกับที่ ณ ขณะนั้น เพราะขณะเดียวไม่มีการเคลื่อนที่ให้ดู เราจึงพูดได้อย่างมั่นใจว่าความล้มเหลวที่เจอนี้ไม่ได้เกิดจากพีชคณิตที่ใช้ไม่เก่งพอ ข้อมูลที่ต้องการมันไม่มีอยู่ในจุดเดียวจริง ๆ</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>ยืนยันจากสามทางว่าที่ <span class="v">h</span> = 0 นั้น<em>ไม่มีข้อมูลอยู่จริง</em> ทั้งในสมการ บนกราฟ และในสถานการณ์</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่มีทางไปต่อ เพราะคำถามที่ตั้งไว้แต่แรกดูเหมือนจะไม่มีคำตอบ</span></div>
+        <div><b>ต่อไป</b><span>ยอมรับว่าคำถามเดิมตอบไม่ได้ แล้วเปลี่ยนไปถามคำถามที่ตอบได้แทน</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="5.3">
+      <span class="step-no">§5.3</span>
+      <h3>จุดพลิกของทั้งเรื่อง — เลิกถามค่าที่ h = 0 แล้วหันไปถามว่าค่าทั้งหมดกำลังเล็งไปที่ไหน</h3>
+
+      <p>ทางออกที่ใช้กันอยู่ทุกวันนี้ไม่ได้เกิดจากการหาวิธีคำนวณที่แยบยลกว่าเดิม และไม่ได้เกิดจากการหาตัวเลขวิเศษที่เล็กกว่าทุกจำนวนแต่ไม่เป็นศูนย์ด้วย มันเกิดจากการยอมรับว่าคำถามเดิมนั้นตอบไม่ได้จริง ๆ แล้วเปลี่ยนไปถามคำถามใหม่ที่ตอบได้ วางสองคำถามไว้ข้างกันจะเห็นว่ามันต่างกันสิ้นเชิง</p>
+
+      <table class="data narrow">
+        <tr><th>&nbsp;</th><th class="wrap">คำถามเดิม</th><th class="wrap">คำถามใหม่</th></tr>
+        <tr><td>ถามว่า</td><td class="wrap">ผลหารมีค่าเท่าไรตอนที่ h เป็นศูนย์</td><td class="wrap">เมื่อ h เล็กลงเรื่อย ๆ ผลหารเหล่านั้นกำลังเล็งไปที่เลขตัวไหน</td></tr>
+        <tr><td>ต้องแทน h = 0 ไหม</td><td class="wrap">ต้อง</td><td class="wrap">ไม่ต้องเลยสักครั้ง</td></tr>
+        <tr><td>ใช้ข้อมูลจากไหน</td><td class="wrap">จากจุดเดียว ซึ่งไม่มีข้อมูล</td><td class="wrap">จากค่าที่ h ไม่เป็นศูนย์ ซึ่งคำนวณได้ปกติทุกค่า</td></tr>
+        <tr><td>มีคำตอบไหม</td><td class="wrap">ไม่มี</td><td class="wrap">มี</td></tr>
+      </table>
+
+      <p>ความต่างสำคัญอยู่ที่แถวที่สอง คำถามใหม่ไม่เคยแตะค่า <span class="v">h</span> = 0 เลยแม้แต่ครั้งเดียว มันสนใจแค่บริเวณรอบ ๆ ศูนย์เท่านั้น คือสนใจว่าเมื่อ <span class="v">h</span> เข้าใกล้ศูนย์มากขึ้นเรื่อย ๆ โดยไม่เคยไปถึง ค่าที่คำนวณได้มีพฤติกรรมอย่างไร ตัวศูนย์เองถูกกันออกไปตั้งแต่ต้นและไม่มีวันถูกใช้</p>
+
+      <p>วิธีนี้จึงตอบข้อกล่าวหาที่เบิร์กลีย์เขียนโจมตีไว้ได้พอดี เพราะเราไม่ได้ใช้ตัวเลขที่ทำตัวเป็นศูนย์บ้างไม่เป็นศูนย์บ้างแล้วแต่ตอน ตลอดทั้งกระบวนการ <span class="v">h</span> เป็นจำนวนธรรมดาที่ไม่เป็นศูนย์เสมอ การหารด้วยมันจึงถูกกฎทุกครั้ง</p>
+
+      <p>แต่การเปลี่ยนคำถามก็มาพร้อมงานที่หนักขึ้น เพราะคำว่าเล็งไปที่เลขตัวไหนนั้น จะตอบให้หนักแน่นได้ก็ต่อเมื่อเรารู้ว่าเกิดอะไรขึ้นกับ <span class="v">h</span> <b>ทุกค่า</b> ไม่ใช่แค่ห้าค่าที่เราเลือกมาเอง ห้าแถวนั้นอาจบังเอิญเรียงสวยก็ได้ ตราบใดที่ยังแทนตัวเลขทีละตัว เราก็จะได้ห้าแถว สิบแถว ร้อยแถว แต่ไม่มีวันได้ทุกค่า</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>คำถามใหม่ที่<em>ตอบได้และไม่ต้องแตะศูนย์เลย</em> คือถามว่าค่าทั้งหมดกำลังเล็งไปที่ไหน</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังตอบคำถามใหม่นั้นไม่ได้ เพราะการแทนตัวเลขทีละค่าไม่มีวันครอบคลุม <span class="v">h</span> ทุกค่า</span></div>
+        <div><b>ต่อไป</b><span>หาวิธีคำนวณที่จัดการ <span class="v">h</span> ทุกค่าพร้อมกันในครั้งเดียว</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+  </section>
+
+  <!-- ============ SECTION 6 ============ -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">§6</span><h2>จัดการ h ทุกค่าพร้อมกันด้วยพีชคณิต</h2></div>
+    <p class="sec-lede">ทางเดียวที่จะพูดถึง <span class="v">h</span> ทุกค่าพร้อมกันได้ คือ<b>ไม่แทนตัวเลขลงไปเลย</b> แล้วปล่อยให้ <span class="v">h</span> ค้างไว้เป็นตัวอักษรตลอดการคำนวณ ผลที่ได้จะไม่ใช่ตัวเลขตัวเดียว แต่เป็นนิพจน์สั้น ๆ ที่ใช้ได้กับ <span class="v">h</span> ทุกค่าในคราวเดียว บทนี้จะทำแบบนั้นทีละบรรทัด และระหว่างทางจะเจอขั้นตอนหนึ่งที่ทำได้ก็เพราะเราเลือกไม่แตะศูนย์มาตั้งแต่ต้น</p>
+
+    <article class="step" data-id="6.1">
+      <span class="step-no">§6.1</span>
+      <h3>ปักหมุดไว้ที่ a = 1 แต่ปล่อย h ไว้เป็นตัวอักษร แล้วหาระยะทางที่เปลี่ยนไป</h3>
+
+      <p>เริ่มจากหาระยะทางที่ปลายช่วง โดยป้อนเวลา 1 + <span class="v">h</span> เข้าไปในสูตรระยะทาง สูตรนั้นสั่งให้ยกกำลังสองสิ่งที่ป้อนเข้าไป จึงได้</p>
+
+      <div class="eq plain"><span class="v">s</span>(1+<span class="v">h</span>) = (1+<span class="v">h</span>)²</div>
+
+      <p>ก้อนนี้กระจายออกมาได้ ยกกำลังสองคือการคูณตัวเองสองครั้ง ดังนั้น (1+<span class="v">h</span>)² ก็คือ (1+<span class="v">h</span>) คูณกับ (1+<span class="v">h</span>) และเวลาคูณวงเล็บสองอัน ต้องเอาทุกตัวในวงเล็บหน้าไปคูณกับทุกตัวในวงเล็บหลัง ซึ่งได้ทั้งหมดสี่คู่</p>
+
+      <table class="data">
+        <tr><th>คู่ที่</th><th>คูณอะไรกับอะไร</th><th>ได้</th></tr>
+        <tr><td>1</td><td>1 × 1</td><td>1</td></tr>
+        <tr><td>2</td><td>1 × h</td><td>h</td></tr>
+        <tr><td>3</td><td>h × 1</td><td>h</td></tr>
+        <tr><td>4</td><td>h × h</td><td>h²</td></tr>
+      </table>
+
+      <p>รวมทั้งสี่คู่เข้าด้วยกันได้ 1 + <span class="v">h</span> + <span class="v">h</span> + <span class="v">h</span>² ตรงกลางมี <span class="v">h</span> อยู่สองตัวที่เหมือนกัน รวบเข้าด้วยกันได้เป็น 2<span class="v">h</span> จึงเหลือ</p>
+
+      <div class="eq"><span class="v">s</span>(1+<span class="v">h</span>) = 1 + 2<span class="v">h</span> + <span class="v">h</span>²</div>
+
+      <p>ลองเช็คด้วยตัวเลขจริงสักค่าเพื่อความสบายใจ ให้ <span class="v">h</span> = 0.1 ข้างซ้ายได้ 1.1 ยกกำลังสองเท่ากับ 1.21 ส่วนข้างขวาได้ 1 บวก 0.2 บวก 0.01 เท่ากับ 1.21 เท่ากันพอดี</p>
+
+      <p>ต่อไปหาระยะทางที่ลูกบอลกลิ้งได้จริงในช่วงนี้ โดยเอาระยะทางที่ปลายช่วงลบด้วยระยะทางที่ต้นช่วง ซึ่งต้นช่วงคือ <span class="v">s</span>(1) = 1 เมตร</p>
+
+      <div class="eq">(1 + 2<span class="v">h</span> + <span class="v">h</span>²) − 1 = 2<span class="v">h</span> + <span class="v">h</span>²</div>
+
+      <p>เลข 1 ที่เป็นระยะทางตอนต้นช่วงตัดกันหายไปพอดี เหลือสองพจน์ที่ล้วนมี <span class="v">h</span> ติดอยู่ ซึ่งสมเหตุสมผล เพราะถ้าช่วงสั้นมาก ระยะทางที่กลิ้งได้ก็ต้องน้อยตามไปด้วย</p>
+
+      <p>สองพจน์นี้ทำตัวไม่เหมือนกันเมื่อ <span class="v">h</span> เล็กลง พจน์แรกลดลงตามสัดส่วนตรง ๆ ส่วนพจน์ที่สองลดลงเร็วกว่ามาก เพราะเป็นการเอาเลขเล็กมาคูณกันเอง เช่นเมื่อ <span class="v">h</span> เป็น 0.01 พจน์แรกจะเป็น 0.02 ขณะที่พจน์ที่สองเหลือเพียง 0.0001 ซึ่งเล็กกว่ากันสองร้อยเท่า</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>ระยะทางที่เปลี่ยนไปในรูปที่<em>ใช้ได้กับ <span class="v">h</span> ทุกค่า</em> คือ 2<span class="v">h</span> + <span class="v">h</span>²</span></div>
+        <div><b>ยังไม่ได้</b><span>นี่ยังเป็นระยะทางหน่วยเมตร ยังไม่ได้หารด้วยเวลา จึงยังไม่ใช่อัตรา</span></div>
+        <div><b>ต่อไป</b><span>หารด้วยความยาวช่วง เพื่อให้ได้อัตราเฉลี่ยในรูปที่ใช้ได้กับทุกค่าเช่นกัน</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="6.2">
+      <span class="step-no">§6.2</span>
+      <h3>หารด้วย h แล้วตัดทิ้ง — ขั้นตอนที่ทำได้ก็เพราะเราไม่เคยยอมให้ h เป็นศูนย์</h3>
+
+      <p>เอาระยะทางที่เปลี่ยนไปมาหารด้วยความยาวของช่วง ซึ่งก็คือ <span class="v">h</span> ตามเครื่องมือที่ประกอบไว้</p>
+
+      <div class="eq"><span class="frac"><span class="num">2<span class="v">h</span> + <span class="v">h</span>²</span><span class="den"><span class="v">h</span></span></span></div>
+
+      <p>ข้างบนมีสองพจน์และทั้งสองพจน์มี <span class="v">h</span> เป็นตัวประกอบอยู่ด้วยกัน จึงดึง <span class="v">h</span> ออกมาไว้ข้างนอกวงเล็บได้</p>
+
+      <div class="eq plain"><span class="frac"><span class="num"><span class="v">h</span>(2 + <span class="v">h</span>)</span><span class="den"><span class="v">h</span></span></span></div>
+
+      <p>ตอนนี้มี <span class="v">h</span> อยู่ทั้งข้างบนและข้างล่าง จึงตัดกันได้ เหลือเพียง</p>
+
+      <div class="eq">อัตราเฉลี่ยที่ <span class="v">a</span> = 1 เท่ากับ 2 + <span class="v">h</span> เสมอ</div>
+
+      <p>ขั้นตอนการตัด <span class="v">h</span> ทิ้งนี้คือหัวใจของทั้งบท และเป็นจุดที่ต้องระวังที่สุด <b>การตัดตัวประกอบที่เหมือนกันบนล่างทิ้งนั้นทำได้ก็ต่อเมื่อสิ่งที่ตัดนั้นไม่เป็นศูนย์</b> ถ้า <span class="v">h</span> เป็นศูนย์ การตัดนี้จะกลายเป็นการตัดศูนย์ทิ้ง ซึ่งทำไม่ได้ด้วยเหตุผลเดียวกับที่ 0 หารด้วย 0 ไม่มีคำตอบ</p>
+
+      <p>เราจึงผ่านขั้นนี้ไปได้อย่างสบายใจ เพราะเราตั้งใจกันไว้แล้วว่าจะไม่แตะค่าศูนย์เลย ตลอดการคำนวณนี้ <span class="v">h</span> เป็นจำนวนธรรมดาที่ไม่เป็นศูนย์ จะเล็กแค่ไหนก็ได้ แต่ไม่ใช่ศูนย์ ข้อจำกัดที่ดูเหมือนเป็นอุปสรรคในตอนแรก กลับกลายเป็นใบอนุญาตที่ทำให้ขั้นตอนนี้ถูกต้อง</p>
+
+      <h4>ตรวจกับตัวเลขที่คำนวณไว้แล้วทีละแถว</h4>
+
+      <p>ผลที่ได้ควรตรงกับตัวเลขที่คำนวณด้วยการแทนค่าทีละรอบก่อนหน้านี้ทุกแถว ถ้าไม่ตรงแปลว่าพีชคณิตผิด</p>
+
+      <table class="data">
+        <tr><th>h</th><th>คำนวณทีละขั้นได้</th><th>สูตร 2 + h ให้</th><th>ตรงกันไหม</th></tr>
+        <tr><td>1</td><td>3</td><td>2 + 1 = 3</td><td class="tick">ตรง</td></tr>
+        <tr><td>0.5</td><td>2.5</td><td>2 + 0.5 = 2.5</td><td class="tick">ตรง</td></tr>
+        <tr><td>0.1</td><td>2.1</td><td>2 + 0.1 = 2.1</td><td class="tick">ตรง</td></tr>
+        <tr><td>0.01</td><td>2.01</td><td>2 + 0.01 = 2.01</td><td class="tick">ตรง</td></tr>
+        <tr><td>0.001</td><td>2.001</td><td>2 + 0.001 = 2.001</td><td class="tick">ตรง</td></tr>
+      </table>
+
+      <p>ตรงกันทั้งห้าแถว ข้อสังเกตที่เราตั้งไว้ว่าส่วนเกินจาก 2 เท่ากับ <span class="v">h</span> พอดีนั้น จึงไม่ใช่เรื่องบังเอิญของเลขกลม ๆ ห้าค่าอีกต่อไป ตอนนี้มันเป็นผลที่พิสูจน์แล้วว่าจริงกับ <span class="v">h</span> ทุกค่า ไม่ว่าจะเป็น 0.037 หรือค่าประหลาดแค่ไหนก็ตาม</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>อัตราเฉลี่ยที่หมุดนี้เท่ากับ 2 + <span class="v">h</span> <em>เสมอ</em> พิสูจน์แล้ว ไม่ใช่แค่สังเกตจากห้าแถว</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่ได้ตอบว่าค่านี้เล็งไปที่เลขอะไร และยังไม่รู้ว่านิพจน์ใหม่นี้แทนของเดิมได้สนิทแค่ไหน</span></div>
+        <div><b>ต่อไป</b><span>เทียบนิพจน์ใหม่กับผลหารเดิมให้ครบทุกค่า รวมทั้งค่าที่ศูนย์ด้วย</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="6.3">
+      <span class="step-no">§6.3</span>
+      <h3>นิพจน์ใหม่กับผลหารเดิมตรงกันทุกค่า ยกเว้นจุดเดียวเท่านั้น</h3>
+
+      <p>ตรงนี้ต้องแยกให้ออกว่าเรามีของอยู่สองชิ้น ไม่ใช่ชิ้นเดียว ชิ้นแรกคือผลหารเดิมซึ่งเป็นเศษส่วนที่มี <span class="v">h</span> อยู่ในตัวหาร ชิ้นที่สองคือนิพจน์สั้น ๆ ที่เพิ่งได้มาคือ 2 + <span class="v">h</span> ทั้งสองชิ้นให้ค่าเท่ากันทุกครั้งที่ลองมา แต่มันไม่ใช่ของชิ้นเดียวกัน และความต่างจะโผล่ออกมาที่จุดเดียวเท่านั้น</p>
+
+      <table class="data">
+        <tr><th>ค่าของ h</th><th class="wrap">ผลหารเดิม</th><th class="wrap">นิพจน์ 2 + h</th></tr>
+        <tr><td>1</td><td>3</td><td>3</td></tr>
+        <tr><td>0.1</td><td>2.1</td><td>2.1</td></tr>
+        <tr><td>0.001</td><td>2.001</td><td>2.001</td></tr>
+        <tr><td>−0.1</td><td>1.9</td><td>1.9</td></tr>
+        <tr><td>0</td><td class="cross">ไม่นิยาม</td><td>2</td></tr>
+      </table>
+
+      <p>แถวล่างสุดคือจุดที่ทั้งสองชิ้นแยกทางกัน ผลหารเดิมที่ <span class="v">h</span> เป็นศูนย์กลายเป็น 0 ส่วน 0 ซึ่งไม่มีค่า ส่วนนิพจน์ 2 + <span class="v">h</span> นั้นคำนวณได้สบายมาก แทนศูนย์ลงไปก็ได้ 2 ทันทีโดยไม่มีอะไรผิดกฎ</p>
+
+      <p>เรื่องนี้อาจฟังดูเหมือนเราหาช่องโกง แต่ไม่ใช่ และเหตุผลอยู่ที่คำถามที่เราเลือกถามไว้ คำถามที่เราตั้งใหม่นั้นสนใจเฉพาะบริเวณรอบ ๆ ศูนย์ ไม่เคยสนใจตัวศูนย์เอง และในบริเวณรอบ ๆ ศูนย์ทั้งหมดนั้น ของสองชิ้นนี้ให้ค่าเท่ากันเป๊ะทุกค่าไม่มีข้อยกเว้น <b>เราจึงมีสิทธิ์ใช้ชิ้นที่อ่านง่ายกว่าเป็นตัวแทนในการตอบคำถามได้</b></p>
+
+      <p>ข้อควรระวังคือเรายังไม่ได้พูดว่าคำตอบคือ 2 เพราะแทนศูนย์ลงไปในนิพจน์ใหม่แล้วได้ 2 นั่นเป็นการอ้างที่ยังไม่ถูกต้อง เนื่องจากค่าที่ศูนย์ของนิพจน์ใหม่ไม่ได้มาจากลูกบอลหรือจากการวัดใด ๆ มันมาจากนิพจน์ที่เราเขียนขึ้นมาเองเท่านั้น สิ่งที่ต้องทำต่อคือดูให้ออกว่าค่าจริง ๆ ที่ <span class="v">h</span> ไม่เป็นศูนย์นั้น กำลังมุ่งหน้าไปที่เลขตัวใด</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>นิพจน์ที่อ่านง่ายและ<em>ใช้แทนของเดิมได้ทุกค่าที่เราสนใจ</em> ต่างกันแค่ที่ศูนย์ซึ่งเราไม่ใช้อยู่แล้ว</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่ได้ตอบคำถามที่ตั้งใหม่ ว่าค่าทั้งหมดกำลังเล็งไปที่เลขตัวไหน</span></div>
+        <div><b>ต่อไป</b><span>อ่านคำตอบออกมาจากนิพจน์นี้ แล้วดูว่ามีค่า <span class="v">h</span> ตัวไหนไปถึงเลขนั้นได้จริงหรือไม่</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+  </section>
+
+  <!-- ============ SECTION 7 ============ -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">§7</span><h2>อ่านคำตอบออกมา แล้วตั้งชื่อให้มัน</h2></div>
+    <p class="sec-lede">ตอนนี้เรามีนิพจน์ที่บอกอัตราเฉลี่ยสำหรับ <span class="v">h</span> ทุกค่าแล้ว บทนี้จะอ่านคำตอบออกมาจากนิพจน์นั้น โดยเริ่มจากข้อสังเกตที่ฟังดูน่าอึดอัดว่า<b>ไม่มีค่า h ตัวไหนเลยที่ให้คำตอบนั้นเป๊ะ ๆ</b> จากนั้นจะบีบเข้าหาคำตอบจากทั้งสองฝั่งเพื่อยืนยันว่ามันมีอยู่จริง แล้วจึงเขียนความคิดทั้งหมดนี้ด้วยสัญลักษณ์และตั้งชื่อให้มันเป็นทางการ</p>
+
+    <article class="step" data-id="7.1">
+      <span class="step-no">§7.1</span>
+      <h3>ไม่มีค่า h ตัวไหนในโลกที่ทำให้อัตราเฉลี่ยเท่ากับ 2 พอดี</h3>
+
+      <p>อัตราเฉลี่ยที่หมุดวินาทีที่ 1 เท่ากับ 2 + <span class="v">h</span> เสมอ ลองถามคำถามตรง ๆ ว่ามีค่า <span class="v">h</span> ตัวไหนบ้างที่ทำให้ผลลัพธ์ออกมาเป็น 2 พอดีเป๊ะ</p>
+
+      <p>ถ้าจะให้ 2 + <span class="v">h</span> เท่ากับ 2 ก็ต้องให้ <span class="v">h</span> เป็นศูนย์เท่านั้น ไม่มีทางอื่น แต่ศูนย์คือค่าเดียวที่ใช้ไม่ได้ เพราะมันทำให้ทั้งสูตรพังตั้งแต่ต้น คำตอบจึงเป็นว่า <b>ไม่มีเลยสักตัวเดียว</b></p>
+
+      <p>ไล่ดูก็ได้ ใช้ <span class="v">h</span> เท่ากับหนึ่งในล้านก็ได้ 2.000001 ใช้เล็กกว่านั้นอีกพันเท่าก็ได้ 2.000000001 เข้าใกล้จนน่าตกใจ แต่ไม่เคยเป็น 2 สักครั้ง เพราะมันจะเป็น 2 บวกเศษเล็ก ๆ เสมอ และเศษนั้นก็คือ <span class="v">h</span> เอง ซึ่งเราไม่ยอมให้เป็นศูนย์</p>
+
+      <p>ตรงนี้คือจุดที่ต้องเปลี่ยนวิธีมองอย่างจริงจัง <b>เลข 2 ไม่ใช่ค่าที่ได้จากการคำนวณช่องใดช่องหนึ่ง แต่เป็นเลขที่ค่าทั้งหมดกำลังมุ่งหน้าไปหา</b> มันไม่ได้อยู่ในรายการคำตอบที่เราคำนวณได้ มันอยู่ตรงปลายทางที่รายการนั้นชี้ไป</p>
+
+      <p>ความคิดแบบนี้ไม่ใช่ของแปลกใหม่เลย ลองดูลำดับเลขที่ทุกคนคุ้นเคย</p>
+
+      <div class="eq plain">0.9 &nbsp;·&nbsp; 0.99 &nbsp;·&nbsp; 0.999 &nbsp;·&nbsp; 0.9999 &nbsp;·&nbsp; …</div>
+
+      <p>ไม่มีตัวไหนในลำดับนี้เท่ากับ 1 เลยสักตัว ทุกตัวน้อยกว่า 1 อยู่เสมอ แต่ทุกคนดูออกทันทีว่ามันเล็งไปที่ 1 และไม่มีใครเสนอเลขอื่นเป็นเป้าหมายได้ เพราะเลขอื่นทุกตัวจะถูกลำดับนี้เดินผ่านไปในที่สุด สถานการณ์ของเราเหมือนกันทุกประการ ต่างกันแค่ลำดับของเราเดินลงมาจากข้างบนแทนที่จะไต่ขึ้นจากข้างล่าง</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>เป้าหมายที่ชัดเจนคือเลข 2 พร้อมความเข้าใจว่ามันเป็น<em>เลขที่ค่าทั้งหมดมุ่งไปหา ไม่ใช่เลขที่ค่าใดค่าหนึ่งไปถึง</em></span></div>
+        <div><b>ยังไม่ได้</b><span>เราดูจากฝั่งเดียวเท่านั้น คือมองไปข้างหน้าจากหมุด ยังไม่รู้ว่ามองย้อนกลับแล้วจะได้เลขเดียวกันไหม</span></div>
+        <div><b>ต่อไป</b><span>บีบเข้าหาเลขเดิมจากอีกฝั่งหนึ่ง เพื่อดูว่าทั้งสองฝั่งตกลงกันได้หรือไม่</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="7.2">
+      <span class="step-no">§7.2</span>
+      <h3>บีบเข้าหาจากอีกฝั่งหนึ่งด้วย เพราะคำตอบจะใช้ได้ก็ต่อเมื่อสองฝั่งตรงกัน</h3>
+
+      <p>ตลอดที่ผ่านมาเราให้ <span class="v">h</span> เป็นบวกเสมอ ซึ่งหมายถึงการยืนอยู่ที่วินาทีที่ 1 แล้วมองไปข้างหน้าสู่อนาคต แต่ในความเป็นจริงเรามองย้อนกลับไปทางอดีตก็ได้ และการมองย้อนกลับนั้นทำได้ด้วยการให้ <span class="v">h</span> ติดลบ ลองแทนค่า <span class="v">h</span> = −0.5 วินาที ดูทีละขั้น</p>
+
+      <p>ขั้นแรก หาว่าปลายช่วงอยู่ที่ไหน การบวกด้วยจำนวนลบก็คือการถอยหลัง ปลายช่วงจึงไปอยู่ที่เวลา 1 + (−0.5) = 0.5 วินาที ซึ่งเป็นเวลาก่อนหน้าหมุด ช่วงที่เรากำลังมองจึงเป็นช่วงตั้งแต่วินาทีที่ 0.5 ถึงวินาทีที่ 1</p>
+
+      <p>ขั้นที่สอง หาระยะทางที่ปลายช่วง ได้ <span class="v">s</span>(0.5) = 0.5² = 0.25 เมตร</p>
+
+      <p>ขั้นที่สาม หาระยะทางที่เปลี่ยนไป ได้ 0.25 − 1 = −0.75 เมตร ค่านี้ติดลบและมีความหมายชัดเจน เครื่องหมายลบกำลังบอกว่าจุดที่เรามองไปนั้นลูกบอลยังกลิ้งมาได้ไม่ไกลเท่าที่หมุด ระยะทางจึงหายไป 0.75 เมตรเมื่อเทียบกับที่วินาทีที่ 1</p>
+
+      <p>ขั้นที่สี่ เวลาที่เปลี่ยนไปคือ <span class="v">h</span> = −0.5 วินาที ซึ่งติดลบเช่นกัน ด้วยความหมายเดียวกันคือเรากำลังมองย้อนไปทางอดีต</p>
+
+      <div class="eq"><span class="frac"><span class="num">−0.75 เมตร</span><span class="den">−0.5 วินาที</span></span> = 1.5 เมตรต่อวินาที</div>
+
+      <p>จำนวนลบหารด้วยจำนวนลบได้ผลเป็นบวกเสมอ ผลลัพธ์ 1.5 จึงเป็นค่าบวกและสมเหตุสมผล เพราะความเร็วเฉลี่ยของลูกบอลที่กลิ้งไปข้างหน้าย่อมต้องเป็นบวก ไม่ว่าเราจะเลือกยืนมองช่วงนั้นจากปลายไหนก็ตาม และค่านี้ตรงกับนิพจน์ 2 + <span class="v">h</span> พอดี เพราะ 2 + (−0.5) เท่ากับ 1.5</p>
+
+      <p>ทำแบบเดียวกันกับค่าอื่น แล้ววางผลจากทั้งสองฝั่งไว้เทียบกัน</p>
+
+      <table class="data">
+        <tr><th>h (มองย้อนอดีต)</th><th>ได้</th><th>h (มองไปอนาคต)</th><th>ได้</th></tr>
+        <tr><td>−0.5</td><td>1.5</td><td>0.5</td><td>2.5</td></tr>
+        <tr><td>−0.1</td><td>1.9</td><td>0.1</td><td>2.1</td></tr>
+        <tr><td>−0.01</td><td>1.99</td><td>0.01</td><td>2.01</td></tr>
+        <tr><td>−0.001</td><td>1.999</td><td>0.001</td><td>2.001</td></tr>
+      </table>
+
+      <p>ฝั่งซ้ายไต่ขึ้นมาจากข้างล่างเข้าหาเลข 2 ส่วนฝั่งขวาไต่ลงมาจากข้างบนเข้าหาเลข 2 เช่นกัน ทั้งสองฝั่งบีบเข้าหาเลขเดียวกันโดยไม่มีฝั่งไหนแตะถึง</p>
+
+      <p>การที่สองฝั่งชี้ไปที่เลขตัวเดียวกันไม่ใช่เรื่องเล็ก มันคือเงื่อนไขที่ทำให้เรามีสิทธิ์ประกาศว่าเลข 2 เป็นคำตอบ ลองนึกดูว่าถ้าฝั่งหนึ่งชี้ไปที่ 2 แต่อีกฝั่งชี้ไปที่ 5 เราจะไม่มีทางเลือกได้เลยว่าควรยกให้ตัวไหนเป็นความเร็ว ณ วินาทีที่ 1 และในกรณีเช่นนั้นก็ต้องถือว่าหาคำตอบไม่ได้ สำหรับลูกบอลลูกนี้สองฝั่งตรงกันทุกระดับความละเอียด เลข 2 จึงเป็นคำตอบที่ไม่มีข้อโต้แย้ง</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>การยืนยันว่าเลข 2 <em>ถูกบีบเข้าหาจากทั้งสองฝั่ง</em> จึงเป็นคำตอบที่มีอยู่จริงและมีเพียงตัวเดียว</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่มีวิธีเขียนความคิดทั้งหมดนี้ให้สั้นและสื่อสารกับคนอื่นได้</span></div>
+        <div><b>ต่อไป</b><span>เขียนความคิดนี้ด้วยสัญลักษณ์ที่คนทั้งโลกใช้กัน</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="7.3">
+      <span class="step-no">§7.3</span>
+      <h3>สัญลักษณ์ที่ใช้เขียนประโยคว่า “ค่าเหล่านี้กำลังเล็งไปที่เลขนี้”</h3>
+
+      <p>ประโยคที่เราต้องการเขียนคือ เมื่อ <span class="v">h</span> เล็กลงเรื่อย ๆ เข้าใกล้ศูนย์ อัตราเฉลี่ยที่คำนวณได้จะมุ่งเข้าหาเลข 2 ประโยคยาว ๆ นี้เขียนย่อได้ดังนี้</p>
+
+      <div class="eq">
+        <span class="lbl">คำตอบของหน้านี้ เขียนเต็มรูป</span>
+        lim<sub style="font-size:.62em">&thinsp;<span class="v">h</span> → 0</sub>&nbsp;
+        <span class="frac"><span class="num"><span class="v">s</span>(1+<span class="v">h</span>) − <span class="v">s</span>(1)</span><span class="den"><span class="v">h</span></span></span>
+        &nbsp;= 2
+      </div>
+
+      <p>อ่านทีละส่วน คำว่า <b>lim</b> ย่อมาจากคำว่าลิมิต แปลตรงตัวว่าค่าจำกัดหรือปลายทาง หน้าที่ของมันคือประกาศว่าสิ่งที่กำลังจะบอกต่อไปนี้ ไม่ใช่ค่าที่คำนวณได้จากการแทนค่า แต่เป็นค่าที่บรรดาผลลัพธ์ทั้งหลายมุ่งหน้าไปหา</p>
+
+      <p>ตัวห้อยที่เขียนว่า <span class="v">h</span> → 0 อ่านว่าเมื่อ <span class="v">h</span> เข้าใกล้ศูนย์ ลูกศรตัวนี้แปลว่า <b>เข้าใกล้</b> ไม่ได้แปลว่าเท่ากับ นี่คือจุดที่สัญลักษณ์นี้ระวังให้เราโดยอัตโนมัติ เพราะมันไม่เคยสั่งให้ใครแทนศูนย์ลงไปเลย มันสั่งให้ดูพฤติกรรมรอบ ๆ ศูนย์เท่านั้น</p>
+
+      <p>ก้อนเศษส่วนที่ตามมาคือสิ่งที่เราเฝ้าดูพฤติกรรมของมัน ซึ่งก็คือเครื่องมือคำนวณอัตราเฉลี่ยที่ประกอบไว้ตั้งแต่ต้น โดยปักหมุดไว้ที่วินาทีที่ 1 ส่วนเลข 2 ทางขวาของเครื่องหมายเท่ากับ คือปลายทางที่อ่านออกมาได้</p>
+
+      <p class="note">ข้อควรระวังเรื่องเครื่องหมายเท่ากับในบรรทัดนี้ มันไม่ได้บอกว่าเศษส่วนก้อนนั้นเท่ากับ 2 เพราะเราเห็นมาแล้วว่าไม่มีค่า <span class="v">h</span> ตัวไหนทำให้มันเท่ากับ 2 ได้ สิ่งที่เท่ากับ 2 คือ<b>ลิมิต</b> ซึ่งเป็นของทั้งก้อนรวมคำว่า lim เข้าไปด้วย พูดง่าย ๆ คือ ปลายทางของมันเท่ากับ 2 ไม่ใช่ตัวมันเท่ากับ 2</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>วิธีเขียนและวิธีอ่านประโยคลิมิต พร้อมรู้ว่าสัญลักษณ์นี้<em>ไม่เคยสั่งให้แทนศูนย์</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ตัวเลข 2 ที่ได้มายังไม่มีชื่อเรียก และยังไม่ได้ตรวจกับความรู้ทางฟิสิกส์ว่าถูกต้องหรือไม่</span></div>
+        <div><b>ต่อไป</b><span>ตั้งชื่อให้คำตอบนี้ และตรวจสอบมันด้วยเส้นทางที่สองที่ไม่เกี่ยวกับการบีบ <span class="v">h</span> เลย</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="7.4">
+      <span class="step-no">§7.4</span>
+      <h3>ตั้งชื่อคำตอบว่าอนุพันธ์ แล้วตรวจด้วยฟิสิกส์ว่าเลข 2 นี้ถูกจริง</h3>
+
+      <p>เราเดินทางมาจนได้เลขตัวหนึ่งที่บรรดาอัตราเฉลี่ยทั้งหมดมุ่งไปหา ขั้นสุดท้ายคือการตัดสินใจอย่างหนึ่งซึ่งเป็นการตัดสินใจของมนุษย์ล้วน ๆ ไม่ใช่การคำนวณ นั่นคือเรา <b>นิยาม</b> ว่าเลขตัวนี้แหละคือความเร็ว ณ วินาทีที่ 1</p>
+
+      <p>ที่ต้องเรียกว่าเป็นการนิยามก็เพราะความเร็ว ณ ขณะหนึ่งนั้น เดิมทีไม่มีความหมายทางคณิตศาสตร์เลย เราเห็นกันไปแล้วว่าจุดเดียวไม่มีข้อมูล สิ่งที่เราทำคือหยิบเลขที่สมเหตุสมผลที่สุดเพียงตัวเดียวที่มี แล้วประกาศว่าจะให้เลขตัวนี้เป็นความหมายของคำว่าความเร็ว ณ ขณะหนึ่ง และเหตุผลที่การประกาศนี้ยอมรับกันได้ก็เพราะมันเป็นตัวเลือกเดียวที่เข้าได้กับข้อมูลทุกด้าน ทั้งฝั่งที่มองไปข้างหน้าและฝั่งที่มองย้อนกลับ</p>
+
+      <p>เลขที่ได้จากการทำแบบนี้เรียกว่า <b>อนุพันธ์</b> ของฟังก์ชันระยะทาง ณ จุดนั้น เขียนด้วยขีดเล็ก ๆ เหนือชื่อฟังก์ชัน แล้ววงเล็บระบุจุดต่อท้าย</p>
+
+      <div class="eq"><span class="v">s</span>′(1) = 2 เมตรต่อวินาที</div>
+
+      <p>ขีดเล็ก ๆ นั้นอ่านออกเสียงว่าไพรม์ เวลาพูดกันจริง ๆ คนจะพูดว่าเอสไพรม์หนึ่งเท่ากับสอง ไม่ค่อยมีใครพูดยาวว่าลิมิตเมื่อเอชเข้าใกล้ศูนย์</p>
+
+      <h4>ภาพบนกราฟของคำตอบนี้</h4>
+
+      <p>ย้อนกลับไปที่ภาพเส้นโค้งกับเส้นตรงที่ลากผ่านสองจุด เมื่อเราหดช่วงลงเรื่อย ๆ จุดที่สองก็ไถลเข้ามาใกล้จุดแรกมากขึ้น และเส้นตรงที่ลากผ่านสองจุดนั้นก็ค่อย ๆ หมุนตามไปด้วย สิ่งที่เกิดขึ้นคือมันไม่ได้หมุนไปเรื่อย ๆ อย่างไร้ทิศทาง แต่หมุนเข้าหาเส้นตรงเส้นหนึ่งโดยเฉพาะ เส้นนั้นเรียกว่า <b>เส้นสัมผัส</b> คือเส้นที่แตะเส้นโค้งที่จุดนั้นพอดีโดยไม่ตัดผ่าน และความชันของเส้นสัมผัสก็คือเลข 2 ที่เราเพิ่งหาได้</p>
+
+      <p>ขอให้สังเกตว่าเส้นสัมผัสไม่ได้ถูกสร้างขึ้นจากสองจุดเหมือนเส้นก่อนหน้า มันเป็นเส้นที่ปรากฏขึ้นมาเป็นปลายทางของการหมุน เช่นเดียวกับที่เลข 2 เป็นปลายทางของตัวเลขทั้งชุด สองอย่างนี้คือเรื่องเดียวกันที่พูดด้วยภาษาต่างกัน</p>
+
+      <h4>ตรวจด้วยเส้นทางที่สองซึ่งไม่เกี่ยวกันเลย</h4>
+
+      <p>ทั้งหมดที่ทำมาเราใช้แต่ข้อมูลระยะทางล้วน ๆ โดยไม่เคยหยิบกฎฟิสิกส์ข้อไหนมาใช้ในการคำนวณเลย ทีนี้ลองหาคำตอบเดียวกันด้วยอีกเส้นทางหนึ่งเพื่อเทียบ</p>
+
+      <p>ทางลาดของเรามีความเร่งเท่ากับ 2 เมตรต่อวินาทีกำลังสอง ซึ่งแปลว่าทุกหนึ่งวินาทีที่ผ่านไป ความเร็วจะเพิ่มขึ้นอีก 2 เมตรต่อวินาที ลูกบอลเริ่มจากหยุดนิ่งคือความเร็วศูนย์ ดังนั้นเมื่อผ่านไปหนึ่งวินาที ความเร็วต้องเป็น 2 เมตรต่อวินาที</p>
+
+      <table class="data">
+        <tr><th>เวลา (วินาที)</th><th>ความเร็วตามฟิสิกส์ (ม./วิ)</th><th>ที่มา</th></tr>
+        <tr><td>0</td><td>0</td><td>ปล่อยจากหยุดนิ่ง</td></tr>
+        <tr><td>1</td><td>2</td><td>เพิ่มขึ้น 2 ต่อวินาที</td></tr>
+        <tr><td>2</td><td>4</td><td>เพิ่มขึ้นอีก 2</td></tr>
+        <tr><td>3</td><td>6</td><td>เพิ่มขึ้นอีก 2</td></tr>
+      </table>
+
+      <p>แถวที่เวลาเท่ากับ 1 ให้ความเร็ว 2 เมตรต่อวินาที ตรงกับเลขที่เราบีบ <span class="v">h</span> ออกมาได้ทุกประการ นี่เป็นหลักฐานที่หนักแน่นมาก เพราะสองเส้นทางนี้ไม่ได้ยืมอะไรจากกันเลยแม้แต่ขั้นเดียว ทางหนึ่งเริ่มจากตัวเลขระยะทางที่จดไว้แล้วบีบช่วงให้เล็กลง อีกทางเริ่มจากกฎการเคลื่อนที่ของวัตถุที่มีความเร่งคงที่ การที่ทั้งสองทางมาบรรจบที่เลขเดียวกันยืนยันว่าวิธีบีบ <span class="v">h</span> ที่เราใช้นั้นให้คำตอบที่ถูกต้องจริง ไม่ใช่แค่เล่นกลกับสัญลักษณ์</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>คำตอบของคำถามที่ตั้งไว้ตั้งแต่ต้น คือ <span class="v">s</span>′(1) = 2 เมตรต่อวินาที <em>พร้อมชื่อเรียก ภาพบนกราฟ และการตรวจสอบจากอีกเส้นทาง</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ทั้งหมดนี้ใช้ได้ที่วินาทีที่ 1 จุดเดียวเท่านั้น ถ้าเปลี่ยนจุดก็ต้องเริ่มคำนวณใหม่หมด</span></div>
+        <div><b>ต่อไป</b><span>ขยายผลให้ใช้ได้กับทุกจุดในคราวเดียว</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+  </section>
+
+  <!-- ============ SECTION 8 ============ -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">§8</span><h2>จากคำตอบจุดเดียว ไปเป็นสูตรที่ตอบได้ทุกจุด</h2></div>
+    <p class="sec-lede">คำตอบที่ได้มาใช้ได้ที่วินาทีที่ 1 จุดเดียว ถ้าอยากรู้ที่วินาทีอื่นก็ต้องเริ่มคำนวณใหม่ทั้งชุด บทนี้จะทำสองอย่าง คือลองคำนวณที่จุดอื่นจริงหนึ่งครั้งเพื่อดูว่าขั้นตอนเปลี่ยนไปแค่ไหน แล้วใช้วิธีเดียวกับที่เคยใช้กับ <span class="v">h</span> มาจัดการกับจุดที่ถามด้วย ผลที่ได้จะไม่ใช่ตัวเลขอีกต่อไป แต่เป็น<b>สูตรตัวใหม่ที่รับเวลาเข้าไปแล้วคืนความเร็วออกมา</b> และบทนี้จะปิดท้ายด้วยการเปรียบเทียบที่ทำให้เห็นว่าตกลงแล้วลิมิตมีไว้ทำอะไรกันแน่</p>
+
+    <article class="step" data-id="8.1">
+      <span class="step-no">§8.1</span>
+      <h3>ลองย้ายหมุดไปที่วินาทีที่ 3 เพื่อดูว่าขั้นตอนไหนเปลี่ยนบ้าง</h3>
+
+      <p>ทำซ้ำทั้งชุดโดยเปลี่ยนแค่ตำแหน่งหมุด จากวินาทีที่ 1 เป็นวินาทีที่ 3 ทุกอย่างที่เหลือเหมือนเดิมหมด ลูกบอลลูกเดิม ทางลาดเดิม สูตรระยะทางเดิม</p>
+
+      <p>เริ่มจากหาระยะทางที่ปลายช่วง โดยป้อนเวลา 3 + <span class="v">h</span> เข้าไปในสูตรระยะทางแล้วกระจายวงเล็บออกด้วยวิธีเดียวกับที่ทำไปแล้ว คือเอาทุกตัวในวงเล็บหน้าคูณกับทุกตัวในวงเล็บหลัง ได้ 3 คูณ 3 เป็น 9 ได้ 3 คูณ <span class="v">h</span> สองครั้งรวมเป็น 6<span class="v">h</span> และได้ <span class="v">h</span> คูณ <span class="v">h</span> เป็น <span class="v">h</span>²</p>
+
+      <div class="eq plain"><span class="v">s</span>(3+<span class="v">h</span>) = (3+<span class="v">h</span>)² = 9 + 6<span class="v">h</span> + <span class="v">h</span>²</div>
+
+      <p>ลบด้วยระยะทางที่ต้นช่วงซึ่งคือ <span class="v">s</span>(3) = 9 เมตร แล้วหารด้วยความยาวช่วง จากนั้นดึงตัวร่วมออกมาแล้วตัดทิ้งแบบเดียวกัน ซึ่งทำได้เพราะ <span class="v">h</span> ยังไม่เป็นศูนย์เหมือนเดิม</p>
+
+      <div class="eq"><span class="frac"><span class="num">6<span class="v">h</span> + <span class="v">h</span>²</span><span class="den"><span class="v">h</span></span></span> = <span class="frac"><span class="num"><span class="v">h</span>(6 + <span class="v">h</span>)</span><span class="den"><span class="v">h</span></span></span> = 6 + <span class="v">h</span></div>
+
+      <p>อัตราเฉลี่ยที่หมุดวินาทีที่ 3 จึงเท่ากับ 6 + <span class="v">h</span> เสมอ และเมื่อ <span class="v">h</span> ถูกบีบให้เล็กลงเข้าใกล้ศูนย์จากทั้งสองฝั่ง ค่าที่ได้ก็มุ่งเข้าหาเลข 6 โดยไม่มีค่าไหนแตะถึง เขียนคำตอบได้ว่า <span class="v">s</span>′(3) = 6 เมตรต่อวินาที</p>
+
+      <p>สิ่งที่ควรสังเกตคือไม่มีขั้นตอนใดเปลี่ยนไปเลยแม้แต่ขั้นเดียว เปลี่ยนแค่เลข 1 เป็นเลข 3 แล้วตัวเลขที่ตามมาก็เปลี่ยนตาม ผลลัพธ์คือ 6 ซึ่งมากกว่า 2 อยู่สามเท่า และสมเหตุสมผลเพราะที่วินาทีที่ 3 ลูกบอลเร่งมานานกว่าจึงต้องเร็วกว่า</p>
+
+      <p>เมื่อทำหลายจุดเข้าก็เริ่มเห็นบางอย่าง ลองวางผลของแต่ละจุดเรียงกัน</p>
+
+      <table class="data">
+        <tr><th>จุดที่ถาม</th><th>อัตราเฉลี่ยที่ได้</th><th>คำตอบ</th></tr>
+        <tr><td>a = 0.5</td><td>1 + h</td><td>s′(0.5) = 1</td></tr>
+        <tr><td>a = 1</td><td>2 + h</td><td>s′(1) = 2</td></tr>
+        <tr><td>a = 2</td><td>4 + h</td><td>s′(2) = 4</td></tr>
+        <tr><td>a = 3</td><td>6 + h</td><td>s′(3) = 6</td></tr>
+      </table>
+
+      <p>คอลัมน์ขวาไล่เป็น 1, 2, 4 และ 6 เทียบกับจุดที่ถามซึ่งเป็น 0.5, 1, 2 และ 3 จะเห็นว่าคำตอบเท่ากับสองเท่าของจุดที่ถามพอดีทุกแถว ข้อสังเกตนี้ยังเป็นแค่ข้อสังเกตจากสี่แถว เหมือนกับที่เคยสังเกตเรื่องส่วนเกินเท่ากับ <span class="v">h</span> มาแล้วครั้งหนึ่ง และวิธีเปลี่ยนข้อสังเกตให้เป็นข้อพิสูจน์ก็เป็นวิธีเดิมนั่นเอง</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>คำตอบที่จุดอื่น และเห็นว่า<em>ขั้นตอนไม่เปลี่ยนเลย เปลี่ยนแค่ตัวเลขที่ใส่ลงไป</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ยังต้องคำนวณใหม่ทุกครั้งที่เปลี่ยนจุด และข้อสังเกตเรื่องสองเท่ายังไม่ได้พิสูจน์</span></div>
+        <div><b>ต่อไป</b><span>ปล่อยจุดที่ถามไว้เป็นตัวอักษร แล้วคำนวณครั้งเดียวให้ครอบคลุมทุกจุด</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="8.2">
+      <span class="step-no">§8.2</span>
+      <h3>ปล่อยจุดที่ถามไว้เป็นตัวอักษรด้วย จนได้สูตรที่รับเวลาแล้วคืนความเร็ว</h3>
+
+      <p>วิธีเดียวกับที่ใช้จัดการ <span class="v">h</span> ทุกค่าพร้อมกัน ใช้ได้กับจุดที่ถามด้วย นั่นคือไม่ต้องแทนตัวเลขลงไปว่าจะถามที่วินาทีไหน แต่ปล่อยชื่อ <span class="v">a</span> ค้างไว้ตลอดการคำนวณ</p>
+
+      <p>เริ่มจากระยะทางที่ปลายช่วง กระจายวงเล็บด้วยกฎเดิมคือทุกตัวคูณทุกตัว ได้ <span class="v">a</span> คูณ <span class="v">a</span> เป็น <span class="v">a</span>² ได้ <span class="v">a</span> คูณ <span class="v">h</span> สองครั้งรวมเป็น 2<span class="v">ah</span> และได้ <span class="v">h</span> คูณ <span class="v">h</span> เป็น <span class="v">h</span>²</p>
+
+      <div class="eq plain"><span class="v">s</span>(<span class="v">a</span>+<span class="v">h</span>) = (<span class="v">a</span>+<span class="v">h</span>)² = <span class="v">a</span>² + 2<span class="v">ah</span> + <span class="v">h</span>²</div>
+
+      <p>ลบด้วยระยะทางที่ต้นช่วงซึ่งคือ <span class="v">a</span>² ก้อนนั้นตัดกันหายไปพอดี เหลือ 2<span class="v">ah</span> + <span class="v">h</span>² แล้วหารด้วยความยาวช่วง ดึง <span class="v">h</span> เป็นตัวร่วมแล้วตัดทิ้ง</p>
+
+      <div class="eq"><span class="frac"><span class="num">2<span class="v">ah</span> + <span class="v">h</span>²</span><span class="den"><span class="v">h</span></span></span> = <span class="frac"><span class="num"><span class="v">h</span>(2<span class="v">a</span> + <span class="v">h</span>)</span><span class="den"><span class="v">h</span></span></span> = 2<span class="v">a</span> + <span class="v">h</span></div>
+
+      <p>เมื่อ <span class="v">h</span> ถูกบีบเข้าใกล้ศูนย์ เศษที่ค้างอยู่ก็หมดความสำคัญ เหลือเพียงพจน์หน้า</p>
+
+      <div class="eq"><span class="v">s</span>′(<span class="v">a</span>) = 2<span class="v">a</span></div>
+
+      <p>ผลนี้ตรงกับตัวเลขที่คำนวณทีละจุดมาแล้วทุกแถว ที่ <span class="v">a</span> เป็น 1 ได้ 2 ที่เป็น 3 ได้ 6 ที่เป็น 0.5 ได้ 1 และสำคัญกว่านั้นคือมันใช้ได้กับจุดที่ไม่เคยคำนวณมาก่อนด้วย เช่นถามที่วินาทีที่ 2.4 ก็ตอบได้ทันทีว่า 4.8 เมตรต่อวินาที ทั้งที่วินาทีนั้นไม่ได้อยู่ในตารางข้อมูลดิบ และไม่เคยมีใครคำนวณไว้</p>
+
+      <p>ขอให้สังเกตว่าสิ่งที่ได้มาคราวนี้ไม่ใช่ตัวเลขตัวเดียวอีกต่อไป แต่เป็น <b>สูตรอีกอันหนึ่ง</b> ตอนเริ่มต้นเรามีสูตรที่รับเวลาแล้วคืนระยะทาง ตอนนี้เรามีสูตรตัวที่สองที่รับเวลาแล้วคืนความเร็ว สูตรตัวที่สองนี้เรียกว่า <b>ฟังก์ชันอนุพันธ์</b> ของสูตรตัวแรก</p>
+
+      <p class="note">ระวังความบังเอิญหนึ่งจุด เลข 2 ที่โผล่ออกมาข้างหน้า <span class="v">a</span> ไม่ได้เกี่ยวกับความเร่งที่เท่ากับ 2 แม้ตัวเลขจะตรงกันพอดี เลขตัวนี้มาจากการกระจายวงเล็บยกกำลังสอง ซึ่งให้พจน์กลางเป็นสองเท่าเสมอไม่ว่าจะเป็นการเคลื่อนที่แบบใด ถ้าเปลี่ยนสูตรระยะทางเป็นอย่างอื่นก็จะได้เลขข้างหน้าเป็นอย่างอื่น</p>
+
+      <h4>คำที่จะได้ยินและความหมายของมัน</h4>
+
+      <p>ตอนนี้มีคำอยู่หลายคำที่พูดถึงเรื่องเดียวกันจากคนละมุม จึงควรจัดให้เข้าที่</p>
+
+      <table class="data narrow">
+        <tr><th>คำ</th><th class="wrap">หมายถึงอะไร</th><th class="wrap">ใช้ตอนไหน</th></tr>
+        <tr><td>ลิมิตเมื่อ h เข้าใกล้ 0</td><td class="wrap">ขั้นตอนการบีบช่วงให้เล็กลงแล้วดูปลายทาง</td><td class="wrap">ตอนกำลังคำนวณ</td></tr>
+        <tr><td>อนุพันธ์ที่จุด 3</td><td class="wrap">ตัวเลขที่ได้ออกมาจากการบีบนั้น</td><td class="wrap">ตอนพูดถึงคำตอบตัวเดียว</td></tr>
+        <tr><td>ฟังก์ชันอนุพันธ์</td><td class="wrap">สูตรทั้งก้อนที่ตอบได้ทุกจุด</td><td class="wrap">ตอนพูดถึงสูตร ไม่ระบุจุด</td></tr>
+        <tr><td>ความเร็วขณะหนึ่ง</td><td class="wrap">ชื่อทางฟิสิกส์ของอนุพันธ์ เมื่อของที่หาคือระยะทางเทียบเวลา</td><td class="wrap">ตอนพูดถึงการเคลื่อนที่</td></tr>
+      </table>
+
+      <p>เทียบให้เห็นภาพ คำว่าลิมิตกับอนุพันธ์ต่างกันคล้ายกับคำว่าหารกับผลหาร คำแรกคือวิธีการที่เราลงมือทำ คำหลังคือตัวเลขที่ได้ออกมา ส่วนประโยคว่าอนุพันธ์ของ <span class="v">s</span> ที่จุด 3 เท่ากับ 6 กับประโยคว่าความเร็วขณะวินาทีที่ 3 เท่ากับ 6 เมตรต่อวินาที นั้นพูดถึงตัวเลขเดียวกันทุกประการ ต่างกันเพียงว่าคำแรกเป็นภาษาคณิตศาสตร์ซึ่งใช้ได้กับทุกสถานการณ์ ส่วนคำหลังเป็นภาษาฟิสิกส์ซึ่งใช้ได้เฉพาะเมื่อพูดถึงการเคลื่อนที่</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>ฟังก์ชันอนุพันธ์ <span class="v">s</span>′(<span class="v">a</span>) = 2<span class="v">a</span> ซึ่ง<em>ตอบได้ทุกจุดโดยไม่ต้องคำนวณใหม่</em> พร้อมศัพท์ที่ใช้เรียกครบชุด</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่ชัดว่าตกลงแล้วขั้นตอนการบีบนั้นจำเป็นเสมอไปหรือไม่ และมันไปกำจัดอะไรทิ้ง</span></div>
+        <div><b>ต่อไป</b><span>เทียบกับลูกบอลอีกลูกที่ไม่เร่งเลย เพื่อดูว่าลิมิตมีไว้ทำอะไรกันแน่</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="8.3">
+      <span class="step-no">§8.3</span>
+      <h3>เศษ h ที่ค้างอยู่คือลายนิ้วมือของความเร่ง และลิมิตมีไว้ลบมันทิ้ง</h3>
+
+      <p>ลองเปลี่ยนสถานการณ์ดูสักครั้ง สมมติมีลูกบอลอีกลูกที่กลิ้งบนพื้นราบด้วยความเร็วคงที่ ไม่มีอะไรมาเร่งมันเลย จดตำแหน่งได้ว่าที่วินาทีที่ 0 อยู่ที่ 0 เมตร วินาทีที่ 1 อยู่ที่ 5 เมตร วินาทีที่ 2 อยู่ที่ 10 เมตร และวินาทีที่ 3 อยู่ที่ 15 เมตร คือเพิ่มทีละ 5 เท่ากันตลอด สูตรของลูกบอลลูกนี้คือ <span class="v">s</span>(<span class="v">t</span>) = 5<span class="v">t</span></p>
+
+      <p>เอาเข้าเครื่องมือตัวเดิม โดยปักหมุดที่จุดใดก็ได้แล้วปล่อยไว้เป็น <span class="v">a</span> ตามเคย ระยะทางที่ปลายช่วงคือ 5 คูณกับ <span class="v">a</span> + <span class="v">h</span> ซึ่งกระจายได้เป็น 5<span class="v">a</span> + 5<span class="v">h</span> ลบด้วยระยะทางที่ต้นช่วงซึ่งคือ 5<span class="v">a</span> ก้อนนั้นตัดกันหมด เหลือ 5<span class="v">h</span> แล้วหารด้วย <span class="v">h</span></p>
+
+      <div class="eq"><span class="frac"><span class="num">5(<span class="v">a</span>+<span class="v">h</span>) − 5<span class="v">a</span></span><span class="den"><span class="v">h</span></span></span> = <span class="frac"><span class="num">5<span class="v">h</span></span><span class="den"><span class="v">h</span></span></span> = 5</div>
+
+      <p>ได้ 5 เปล่า ๆ <b>ไม่มี h ติดมาเลยแม้แต่ตัวเดียว</b> ลองแทนตัวเลขจริงดูก็ได้ ใช้ช่วงยาว 100 วินาทีก็ได้ 5 ใช้ช่วงยาว 0.001 วินาทีก็ได้ 5 ใช้ช่วงกว้างมโหฬารแค่ไหนก็ยังได้ 5 เพราะลูกบอลลูกนี้วิ่งเรียบจริง ๆ วัดช่วงไหนยาวเท่าไรก็ได้คำตอบเดิมเสมอ</p>
+
+      <p>วางสองกรณีเทียบกันจะเห็นประเด็นทันที</p>
+
+      <table class="data narrow">
+        <tr><th>&nbsp;</th><th>ลูกบอลบนทางลาด</th><th>ลูกบอลบนพื้นราบ</th></tr>
+        <tr><td>สูตรระยะทาง</td><td>s = t²</td><td>s = 5t</td></tr>
+        <tr><td>อัตราเฉลี่ยที่จุด a</td><td>2a + h</td><td>5</td></tr>
+        <tr><td>มี h ค้างไหม</td><td>มี</td><td>ไม่มี</td></tr>
+        <tr><td>คำตอบขึ้นกับความยาวช่วงไหม</td><td>ขึ้น</td><td>ไม่ขึ้น</td></tr>
+        <tr><td>ต้องบีบ h ไหม</td><td>ต้อง</td><td>ไม่ต้อง</td></tr>
+        <tr><td>เร่งไหม</td><td>เร่ง</td><td>ไม่เร่ง</td></tr>
+      </table>
+
+      <p>สองแถวล่างสุดจับคู่กันพอดี และนี่คือคำตอบว่าลิมิตมีไว้ทำอะไร <b>เศษ h ที่ค้างอยู่ในอัตราเฉลี่ย คือร่องรอยของการที่ความเร็วเปลี่ยนไประหว่างช่วงที่วัด</b> ถ้าความเร็วไม่เปลี่ยน ค่าเฉลี่ยกับค่าจริงก็เท่ากันอยู่แล้วตั้งแต่ต้น ไม่มีอะไรต้องแก้ ดราม่าเรื่องบีบ <span class="v">h</span> เข้าใกล้ศูนย์หายไปทันทีเพราะไม่มีอะไรต้องบีบ</p>
+
+      <p>แต่พอความเร็วเปลี่ยนระหว่างช่วง ค่าเฉลี่ยจะเบี่ยงออกจากค่าจริงเสมอ และขนาดของความเบี่ยงนั้นก็คือเศษ <span class="v">h</span> ที่ค้างอยู่นั่นเอง ยิ่งช่วงยาว ความเบี่ยงยิ่งมาก ยิ่งช่วงสั้น ความเบี่ยงยิ่งน้อย ลิมิตจึงไม่ใช่พิธีกรรมทางสัญลักษณ์ แต่เป็น <b>เครื่องมือที่มีหน้าที่เดียวคือกำจัดความเบี่ยงก้อนนั้นออกไปให้หมดโดยไม่ต้องแตะศูนย์</b></p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>คำตอบว่าลิมิตมีไว้ทำอะไร — <em>ลบส่วนที่เบี่ยงซึ่งเกิดจากความเร็วเปลี่ยนภายในช่วง</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่ได้สรุปว่าตัวเลขที่ได้มาทั้งหมดนี้ควรถูกเข้าใจว่าเป็นอะไรกันแน่</span></div>
+        <div><b>ต่อไป</b><span>สรุปความหมายของอนุพันธ์ ขอบเขตที่ใช้ได้ และที่ทางของมันในเรื่องอื่น</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+  </section>
+
+  <!-- ============ SECTION 9 ============ -->
+  <section class="sec">
+    <div class="sec-head"><span class="sec-no">§9</span><h2>ตกลงแล้วเราได้อะไรมา ใช้ได้แค่ไหน และมันไปโผล่ที่ไหนอีก</h2></div>
+    <p class="sec-lede">คำตอบและวิธีคำนวณครบแล้ว บทสุดท้ายนี้จึงไม่ใช่การทบทวน แต่เป็นการวางสิ่งที่ได้มาให้ถูกที่ สามเรื่องตามลำดับคือ ตกลงแล้วอนุพันธ์เป็นข้อมูลเกี่ยวกับอะไรกันแน่ มัน<b>ใช้ไม่ได้</b>เมื่อไร และเรื่องเดียวกันนี้ไปปรากฏที่ไหนอีกบ้างนอกจากลูกบอล</p>
+
+    <article class="step" data-id="9.1">
+      <span class="step-no">§9.1</span>
+      <h3>อนุพันธ์ไม่ได้ซ่อนอยู่ในจุดนั้น มันเป็นข้อมูลเกี่ยวกับบริเวณรอบ ๆ จุด</h3>
+
+      <p>ถ้าจะเก็บอะไรกลับไปจากหน้านี้เพียงข้อเดียว ควรเป็นข้อนี้ ความเร็ว ณ จุดเดียวไม่ได้ซ่อนอยู่ในจุดนั้นจริง ๆ เราพิสูจน์เรื่องนี้ไปแล้วสามทาง ทางแรกคือเมื่อมองจุดเดียวโดด ๆ สูตรให้ 0 ส่วน 0 ซึ่งไม่มีค่า ทางที่สองคือบนกราฟ จุดเดียวมีเส้นตรงลากผ่านได้นับไม่ถ้วน ทางที่สามคือในโลกจริง ภาพถ่ายนิ่งภาพเดียวแยกรถที่จอดกับรถที่วิ่งไม่ออก</p>
+
+      <p>สิ่งที่เราเรียกว่าอนุพันธ์จึงเป็นข้อมูลคนละชนิดกับที่คนมักเข้าใจ <b>มันเป็นข้อมูลเกี่ยวกับพฤติกรรมรอบ ๆ จุดนั้น ไม่ใช่ข้อมูลที่อยู่ในจุดนั้น</b> วิธีที่เราได้มันมาก็บอกอยู่แล้ว เราไม่เคยดูจุดเดียวเลยสักครั้ง เราเก็บข้อมูลจากช่วงที่เล็กลงเรื่อย ๆ ทั้งจากฝั่งอนาคตและฝั่งอดีต แล้วดูว่าคำตอบทั้งหมดนั้นสมคบกันชี้ไปที่เลขตัวไหน เลขตัวนั้นคือคำตอบเดียวที่สมเหตุสมผล เราจึงยกให้มันเป็นอัตรา ณ จุดนั้น</p>
+
+      <p>เมื่อมองแบบนี้ ปริศนาลูกศรของเซโนก็คลายออกเอง เซโนถูกต้องทุกประการที่บอกว่า ณ ขณะหนึ่ง ลูกศรไม่แสดงการเคลื่อนที่ให้เห็นเลย ข้อผิดพลาดอยู่ที่สมมติฐานที่ซ่อนอยู่ต่างหาก คือการคิดว่าการเคลื่อนที่จะต้องเป็นสมบัติที่บรรจุอยู่ในขณะเดียว <b>การเคลื่อนที่ไม่ใช่สมบัติของขณะ แต่เป็นสมบัติของบริเวณรอบ ๆ ขณะนั้น</b> และคำว่าความเร็ว ณ ขณะหนึ่งก็คือชื่อย่อของประโยคยาว ๆ ประโยคนี้เท่านั้นเอง</p>
+
+      <p>ประเด็นเดียวกันนี้อธิบายด้วยว่าทำไมเรื่องนี้ถึงค้างอยู่ในประวัติศาสตร์นานขนาดนั้น ตราบใดที่ยังพยายามหาค่าที่บรรจุอยู่ในขณะเดียว ก็จะเจอ 0 ส่วน 0 ทุกครั้งไม่มีทางเลี่ยง ทางออกไม่ได้มาจากการคำนวณที่เก่งขึ้น แต่มาจากการยอมเปลี่ยนคำถามให้ไปถามเรื่องบริเวณรอบ ๆ แทน</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>การจัดวางความคิดใหม่ที่ทำให้ทั้งหน้านี้เข้าที่ — <em>อนุพันธ์คือข้อมูลของบริเวณรอบจุด</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่ได้พูดว่าเครื่องมือนี้ใช้ไม่ได้เมื่อไร ซึ่งจำเป็นพอ ๆ กับการรู้ว่ามันใช้ได้เมื่อไร</span></div>
+        <div><b>ต่อไป</b><span>ระบุขอบเขตของทุกอย่างที่ทำมาอย่างตรงไปตรงมา</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="9.2">
+      <span class="step-no">§9.2</span>
+      <h3>ขอบเขตของสิ่งที่เราเพิ่งทำ และกรณีที่หาอนุพันธ์ไม่ได้เลย</h3>
+
+      <p>ข้อแรกที่ต้องพูดให้ตรงคือ เลข 2 ที่ได้มานั้นเป็นอนุพันธ์ของ<b>สูตร</b> ไม่ใช่ของลูกบอลตัวจริง สูตรเวลายกกำลังสองเป็นแบบจำลองที่เราเลือกมาใช้ ถ้าของจริงจดมาได้เป็น 0 แล้ว 0.98 แล้ว 4.05 แล้ว 8.91 เพราะไม้บรรทัดกับนาฬิกามีความคลาดเคลื่อนเสมอ เราก็จะหาสูตรที่ลากผ่านใกล้จุดพวกนั้นที่สุดแล้วทำงานกับสูตรแทน คำตอบที่ได้จึงใกล้ความจริงเท่าที่แบบจำลองใกล้ความจริง ไม่มากกว่านั้น</p>
+
+      <p>ข้อที่สอง สูตรของเราผูกอยู่กับเงื่อนไขที่ว่าความเร่งคงที่ ซึ่งได้มาจากทางลาดตรงและความเร็วที่ยังต่ำพอที่แรงต้านอากาศจะไม่มีผล ถ้าออกนอกเงื่อนไขนี้ เช่นทางลาดโค้งหรือเร็วจนอากาศต้าน สูตรก็เปลี่ยน และตัวเลข 2<span class="v">a</span> ก็ใช้ไม่ได้อีกต่อไป แต่ขอให้สังเกตว่าสิ่งที่พังคือสูตรระยะทาง ไม่ใช่วิธีการ วิธีบีบช่วงที่เราเรียนมาทั้งหน้ายังใช้ได้เหมือนเดิมทุกประการ เพียงแต่พีชคณิตในขั้นกลางจะเปลี่ยนไปตามสูตรใหม่</p>
+
+      <p>ข้อที่สาม ถ้ามีแต่ข้อมูลดิบโดยไม่มีสูตร การบีบช่วงให้เล็กลงเรื่อย ๆ ทำไม่ได้เลยตามที่เห็นกันไปแล้ว ในงานจริงที่มีแต่ค่าจากเซ็นเซอร์ วิศวกรจึงใช้อัตราเฉลี่ยของช่วงที่เล็กที่สุดเท่าที่วัดได้มาเป็นค่าประมาณของอนุพันธ์ โดยรู้ตัวว่ามันเป็นค่าประมาณ ความแม่นยำจึงขึ้นกับความถี่ในการวัดโดยตรง</p>
+
+      <h4>บางจุดไม่มีอนุพันธ์เลย และนั่นก็เป็นข้อมูลอย่างหนึ่ง</h4>
+
+      <p>ทุกอย่างที่ทำมาตั้งอยู่บนเงื่อนไขข้อเดียวคือ การบีบจากฝั่งอนาคตกับฝั่งอดีตต้องชี้ไปที่เลขตัวเดียวกัน ถ้าสองฝั่งไม่ตรงกัน ก็ไม่มีเลขตัวไหนที่มีสิทธิ์เป็นคำตอบ และเราต้องพูดตรง ๆ ว่าจุดนั้นหาอนุพันธ์ไม่ได้</p>
+
+      <p>กรณีแบบนี้ไม่ใช่เรื่องประหลาดในธรรมชาติ ลองนึกถึงลูกบอลที่กลิ้งไปชนกำแพงแล้วสะท้อนกลับทันที ณ วินาทีที่ชนพอดี ถ้ามองย้อนไปทางอดีตจะได้ความเร็วเป็นบวกเพราะลูกบอลกำลังพุ่งเข้าหากำแพง แต่ถ้ามองไปข้างหน้าจะได้ความเร็วเป็นลบเพราะมันกำลังถอยกลับ สองฝั่งไม่มีทางตกลงกันได้ กราฟระยะทางที่จุดนั้นจะหักเป็นมุมแหลม และคำถามว่าความเร็ว ณ วินาทีที่ชนพอดีคือเท่าไรก็ไม่มีคำตอบเดียว</p>
+
+      <p>การที่วิธีนี้ตอบว่าไม่มีคำตอบในกรณีเช่นนั้น ไม่ใช่จุดอ่อนของวิธี แต่เป็นความซื่อสัตย์ของมัน เพราะในสถานการณ์จริงก็ไม่มีคำตอบเดียวจริง ๆ</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>ขอบเขตทั้งสี่ข้อ และรู้ว่า<em>เงื่อนไขเดียวที่ทุกอย่างตั้งอยู่คือสองฝั่งต้องตรงกัน</em></span></div>
+        <div><b>ยังไม่ได้</b><span>ยังเห็นวิธีนี้ทำงานอยู่กับลูกบอลกับเวลาเท่านั้น</span></div>
+        <div><b>ต่อไป</b><span>ดูว่าเครื่องมือชิ้นเดียวกันนี้ไปปรากฏที่ไหนอีก และมันต่อกับอะไร</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+
+    <article class="step" data-id="9.3">
+      <span class="step-no">§9.3</span>
+      <h3>เครื่องมือชิ้นเดียวกันนี้ทำงานอยู่ในเรื่องอื่นอีกมาก และมันปิดวงกลับมาที่จุดเริ่มต้น</h3>
+
+      <p>ไม่มีขั้นตอนไหนในหน้านี้ที่ต้องรู้ว่าตัวเลขที่ใส่เข้าไปเป็นระยะทางหรือเวลา ทุกขั้นทำงานกับตัวเลขล้วน ๆ ผลก็คือทุกสถานการณ์ที่มีปริมาณหนึ่งเปลี่ยนไปตามอีกปริมาณหนึ่ง จะใช้เครื่องมือชุดนี้ได้ทันทีโดยไม่ต้องเรียนใหม่ เปลี่ยนแค่ชื่อเรียกของผลลัพธ์</p>
+
+      <table class="data narrow">
+        <tr><th>สถานการณ์</th><th class="wrap">อัตราเฉลี่ยบนช่วง</th><th class="wrap">อัตรา ณ จุดเดียว (อนุพันธ์)</th></tr>
+        <tr><td>ลูกบอลกลิ้ง</td><td class="wrap">ความเร็วเฉลี่ยตลอดช่วงเวลา</td><td class="wrap">ความเร็วขณะหนึ่ง คือเลขบนเข็มไมล์</td></tr>
+        <tr><td>ขับรถขึ้นเขา</td><td class="wrap">ความชันเฉลี่ยของถนนช่วงหนึ่ง</td><td class="wrap">ความชันของถนน ณ จุดที่ยืนอยู่</td></tr>
+        <tr><td>โรงงานผลิตสินค้า</td><td class="wrap">ต้นทุนเฉลี่ยของล็อตหนึ่ง</td><td class="wrap">ต้นทุนของการผลิตเพิ่มอีกหนึ่งชิ้น</td></tr>
+        <tr><td>น้ำร้อนตั้งทิ้งไว้</td><td class="wrap">อุณหภูมิที่ลดลงเฉลี่ยต่อนาที</td><td class="wrap">อัตราการเย็นตัว ณ นาทีนั้น</td></tr>
+      </table>
+
+      <p>แถวสุดท้ายมีเรื่องน่าสนใจซ่อนอยู่ น้ำร้อนเย็นตัวเร็วตอนแรกแล้วช้าลงเรื่อย ๆ อัตราเฉลี่ยตลอดหนึ่งชั่วโมงจึงบอกอะไรได้ไม่มาก ส่วนอัตรา ณ ขณะหนึ่งนั้นเปลี่ยนไปทุกนาที และมันคือสิ่งที่กฎการเย็นตัวของนิวตันพูดถึงโดยตรง</p>
+
+      <h4>บันไดของหน่วยที่ค้างไว้ ปิดครบวงตรงนี้</h4>
+
+      <p>ตอนที่เราแกะหน่วยของความเร่ง เราไล่บันไดสามชั้นคือ ระยะทาง หารด้วยเวลาได้ความเร็ว แล้วความเร็วหารด้วยเวลาอีกครั้งได้ความเร่ง ตอนนั้นทั้งสองชั้นยังเป็นค่าเฉลี่ยบนช่วง ทีนี้เรามีเครื่องมือที่ทำให้แต่ละชั้นเป็นค่า ณ จุดเดียวได้แล้ว</p>
+
+      <p>ชั้นแรกเราทำไปแล้ว จากสูตรระยะทางได้สูตรความเร็ว คือ <span class="v">s</span>′(<span class="v">a</span>) = 2<span class="v">a</span> ลองทำชั้นที่สองต่อ คือเอาสูตรความเร็วนี้เข้าเครื่องมือเดิมอีกรอบ อัตราเฉลี่ยของการเปลี่ยนความเร็วคือเอาความเร็วที่ปลายช่วงลบด้วยความเร็วที่ต้นช่วง แล้วหารด้วยความยาวช่วง</p>
+
+      <div class="eq"><span class="frac"><span class="num">2(<span class="v">a</span>+<span class="v">h</span>) − 2<span class="v">a</span></span><span class="den"><span class="v">h</span></span></span> = <span class="frac"><span class="num">2<span class="v">h</span></span><span class="den"><span class="v">h</span></span></span> = 2</div>
+
+      <p>ได้ 2 เปล่า ๆ ไม่มี <span class="v">h</span> ค้าง ซึ่งแปลว่าความเร็วเปลี่ยนอย่างสม่ำเสมอจริงตามที่ควรจะเป็น และเลข 2 ที่ออกมานี้ก็คือ <b>ความเร่งของทางลาด</b> ซึ่งเป็นตัวเลขเดียวกันกับที่เราเอามาใช้ตั้งแต่ต้นเรื่องตอนที่ยืมมาจากฟิสิกส์</p>
+
+      <p>นี่คือการปิดวงที่สวยมาก เราเริ่มจากการรับตัวเลขความเร่งเข้ามาจากภายนอกเพื่อสร้างสูตรระยะทาง แล้วเดินผ่านการบีบช่วงสองรอบ จนได้ตัวเลขเดิมนั้นกลับออกมาโดยไม่ได้ใส่มันเข้าไปอีกเลย ผลการทำแบบนี้สองรอบมีชื่อเรียกว่า <b>อนุพันธ์อันดับสอง</b> และในทางฟิสิกส์มันก็คือความเร่งนั่นเอง</p>
+
+      <p class="trivia"><b>เรื่องที่ควรรู้ไว้ก่อนไปเจอ</b> ในตำราแคลคูลัสจะมีกฎสำเร็จรูปสำหรับหาอนุพันธ์เต็มไปหมด เช่นกฎที่บอกว่าอนุพันธ์ของ <span class="v">t</span> ยกกำลัง <span class="v">n</span> เท่ากับ <span class="v">n</span> คูณ <span class="v">t</span> ยกกำลัง <span class="v">n</span> ลบหนึ่ง ซึ่งพอลองใช้กับ <span class="v">t</span>² ก็ได้ 2<span class="v">t</span> ตรงกับที่เราคำนวณมาทั้งหน้าพอดี กฎเหล่านั้นไม่ใช่ของใหม่และไม่ใช่ของวิเศษ มันคือการบีบ <span class="v">h</span> แบบเดียวกับที่เราเพิ่งทำ ซึ่งมีคนทำไว้ครั้งเดียวแล้วจดผลไว้ให้ใช้ซ้ำ คนที่ท่องกฎโดยไม่เคยเห็นที่มาจะใช้มันได้ แต่จะไม่รู้ว่าทำไมมันพังในบางกรณี</p>
+
+      <div class="crux">
+        <div><b>ได้แล้ว</b><span>เห็นว่าเครื่องมือนี้<em>ใช้ได้กับทุกเรื่องที่มีอัตรา</em> และเห็นบันไดของหน่วยปิดครบวงกลับมาที่ความเร่ง</span></div>
+        <div><b>ยังไม่ได้</b><span>ยังไม่ได้ลองกับสูตรระยะทางแบบอื่นนอกจากยกกำลังสองและเส้นตรง</span></div>
+        <div><b>ต่อไป</b><span>เลือกทิศทางที่อยากไปต่อจากกล่องท้ายหน้า</span></div>
+      </div>
+
+      <div class="extras"></div>
+      <div class="acts"></div>
+    </article>
+  </section>
+
+  <!-- ============ POST-LESSON ============ -->
+  <div class="postbox">
+    <h2>พูดคุยหลังบทเรียน</h2>
+    <p class="pintro">อยากแลกเปลี่ยนความเห็นหรือคุยต่อยอดเกี่ยวกับเรื่องที่เรียนไปไหม จะเป็นความเห็นที่ไม่เห็นด้วย ข้อสงสัยที่ยังค้างอยู่ เรื่องที่มันไปพ้องกับอะไรที่คุณรู้อยู่แล้ว หรือคำถามที่ไม่ได้อยู่ในขั้นไหนโดยเฉพาะก็ได้ ช่องนี้ไม่ได้ล็อก ใช้ได้ทุกเมื่อ และคำตอบจะคุยกันในแชท ไม่ต้องกลับมาที่หน้านี้</p>
+    <textarea id="discussText" placeholder="เช่น ผมยังติดใจตรงที่ว่า... / เรื่องนี้มันเหมือนกับ... / ถ้าเปลี่ยนเงื่อนไขเป็น... จะเป็นยังไง"></textarea>
+    <div class="mrow">
+      <button class="btn btn-p" id="discussCopy">คัดลอกข้อความ</button>
+      <span id="discussMsg" style="font-size:13px; color:var(--done)"></span>
+    </div>
+  </div>
+
+  <!-- ============ NEXT ============ -->
+  <div class="next locked" id="nextBox">
+    <h2>ไปต่อทางไหนดี</h2>
+    <p id="nextHint">ปลดล็อกเมื่อกดยืนยันเข้าใจแล้วครบทุกขั้น</p>
+    <div class="opts">
+      <button class="opt" data-q="/handoff บทเรียน &quot;ความเร็ว ณ วินาทีนั้นพอดี&quot; จบแล้ว บทต่อไปจะเรียนเรื่อง หาอนุพันธ์ของสูตรอื่น เช่น t³ และ 1/t จนเห็นที่มาของกฎสำเร็จรูป&#10;[หน้าเรียนอนุพันธ์ — สรุปส่งต่อท้ายบทเรียน]&#10;ทิศทางที่เลือก: หาอนุพันธ์ของสูตรอื่น เช่น t³ และ 1/t จนเห็นที่มาของกฎสำเร็จรูป&#10;ไฟล์หน้าเรียน: derivative-lesson-2.html">
+        ลองกับสูตรอื่นบ้าง แล้วดูว่าทางลัดเกิดขึ้นได้อย่างไร
+        <em>ทำวิธีเดิมซ้ำกับ t³ และ 1/t จนเห็นรูปแบบที่กลายมาเป็นกฎสำเร็จรูปในตำรา</em>
+      </button>
+      <button class="opt" data-q="/handoff บทเรียน &quot;ความเร็ว ณ วินาทีนั้นพอดี&quot; จบแล้ว บทต่อไปจะเรียนเรื่อง การอ่านกราฟด้วยอนุพันธ์ เครื่องหมายบวกลบ และจุดสูงสุดต่ำสุด&#10;[หน้าเรียนอนุพันธ์ — สรุปส่งต่อท้ายบทเรียน]&#10;ทิศทางที่เลือก: การอ่านกราฟด้วยอนุพันธ์ เครื่องหมายบวกลบ และจุดสูงสุดต่ำสุด&#10;ไฟล์หน้าเรียน: derivative-lesson-2.html">
+        อ่านกราฟด้วยอนุพันธ์
+        <em>เครื่องหมายของอนุพันธ์บอกว่ากำลังขึ้นหรือลง และจุดที่มันเป็นศูนย์คือจุดอะไร</em>
+      </button>
+      <button class="opt" data-q="/handoff บทเรียน &quot;ความเร็ว ณ วินาทีนั้นพอดี&quot; จบแล้ว บทต่อไปจะเรียนเรื่อง กรณีที่หาอนุพันธ์ไม่ได้ กราฟหักมุม กราฟกระโดด และความต่อเนื่อง&#10;[หน้าเรียนอนุพันธ์ — สรุปส่งต่อท้ายบทเรียน]&#10;ทิศทางที่เลือก: กรณีที่หาอนุพันธ์ไม่ได้ กราฟหักมุม กราฟกระโดด และความต่อเนื่อง&#10;ไฟล์หน้าเรียน: derivative-lesson-2.html">
+        กรณีที่หาอนุพันธ์ไม่ได้
+        <em>กราฟหักมุม กราฟกระโดด และความต่อเนื่องเกี่ยวข้องกับเรื่องนี้อย่างไร</em>
+      </button>
+      <button class="opt" data-q="/handoff บทเรียน &quot;ความเร็ว ณ วินาทีนั้นพอดี&quot; จบแล้ว บทต่อไปจะเรียนเรื่อง การเดินย้อนกลับจากความเร็วไปหาระยะทาง&#10;[หน้าเรียนอนุพันธ์ — สรุปส่งต่อท้ายบทเรียน]&#10;ทิศทางที่เลือก: การเดินย้อนกลับจากความเร็วไปหาระยะทาง&#10;ไฟล์หน้าเรียน: derivative-lesson-2.html">
+        เดินย้อนกลับทาง
+        <em>ถ้ารู้ความเร็วทุกขณะแล้วอยากได้ระยะทางกลับคืนมา ต้องทำอย่างไร</em>
+      </button>
+      <button class="opt" data-q="/handoff บทเรียน &quot;ความเร็ว ณ วินาทีนั้นพอดี&quot; จบแล้ว บทต่อไปจะเรียนเรื่อง อัตรา ณ จุดเดียวในเรื่องที่ไม่ใช่การเคลื่อนที่ เช่น ต้นทุนส่วนเพิ่มและอัตราการเย็นตัว&#10;[หน้าเรียนอนุพันธ์ — สรุปส่งต่อท้ายบทเรียน]&#10;ทิศทางที่เลือก: อัตรา ณ จุดเดียวในเรื่องที่ไม่ใช่การเคลื่อนที่ เช่น ต้นทุนส่วนเพิ่มและอัตราการเย็นตัว&#10;ไฟล์หน้าเรียน: derivative-lesson-2.html">
+        ใช้กับเรื่องที่ไม่ใช่การเคลื่อนที่
+        <em>ต้นทุนส่วนเพิ่ม อัตราการเย็นตัว อัตราการเติบโต ล้วนเป็นเรื่องเดียวกัน</em>
+      </button>
+      <button class="opt" id="optFree">
+        อยากถามเรื่องอื่น
+        <em>พิมพ์เอง</em>
+      </button>
+    </div>
+  </div>
+
+  </main>
+
+  <!-- ============ ASIDE ============ -->
+  <aside id="aside">
+    <div class="panel">
+      <div class="panel-top">
+        <h4>ที่เปิดดูได้ตลอด</h4>
+        <button class="panel-toggle" id="asideToggle" aria-label="เปิดปิดแผงข้าง">▾</button>
+      </div>
+      <div class="aside-body">
+        <p class="asec">ตัวแปร</p>
+        <div class="vrow"><span class="vname">t</span><span class="vdesc">เวลาที่ผ่านไป หน่วยวินาที</span></div>
+        <div class="vrow"><span class="vname">s(t)</span><span class="vdesc">ระยะทางที่กลิ้งได้เมื่อเวลาผ่านไป t</span><span class="vval">ในหน้านี้ s(t) = t²</span></div>
+        <div class="vrow"><span class="vname">a</span><span class="vdesc">จุดเวลาที่อยากรู้ความเร็ว ปักหมุดไว้ ไม่ขยับ</span><span class="vval">ส่วนใหญ่ในหน้านี้ a = 1</span></div>
+        <div class="vrow"><span class="vname">h</span><span class="vdesc">ความยาวช่วงที่มองออกไปจากหมุด ปรับได้ แต่ไม่เป็นศูนย์</span><span class="vval">1 → 0.5 → 0.1 → …</span></div>
+        <div class="vrow"><span class="vname">s′(a)</span><span class="vdesc">อนุพันธ์ คือความเร็ว ณ เวลา a พอดี</span><span class="vval">ในหน้านี้ s′(a) = 2a</span></div>
+        <p class="asec">คำศัพท์</p>
+        <div class="vrow"><span class="gname">อัตราเฉลี่ย</span><span class="vdesc">ค่าที่เปลี่ยนไปข้างบน หารด้วยค่าที่เปลี่ยนไปข้างล่าง ผูกอยู่กับช่วง ไม่ใช่กับจุด</span></div>
+        <div class="vrow"><span class="gname">แบบจำลอง</span><span class="vdesc">สูตรที่เราเลือกมาใช้อธิบายข้อมูล ไม่ใช่ตัวความจริงเอง</span></div>
+        <div class="vrow"><span class="gname">ความเร่ง</span><span class="vdesc">ความเร็วเปลี่ยนไปเร็วแค่ไหน หน่วยคือเมตรต่อวินาที ต่อวินาที</span><span class="vval">ทางลาดในหน้านี้ = 2</span></div>
+        <div class="vrow"><span class="gname">ลิมิต</span><span class="vdesc">เลขที่ค่าทั้งหมดกำลังมุ่งไปหา ไม่ใช่เลขที่ค่าใดค่าหนึ่งไปถึง</span></div>
+        <div class="vrow"><span class="gname">อนุพันธ์</span><span class="vdesc">อัตรา ณ จุดเดียว ได้จากการบีบช่วงจนเข้าใกล้ศูนย์ทั้งสองฝั่ง</span></div>
+        <div class="vrow"><span class="gname">เส้นสัมผัส</span><span class="vdesc">เส้นตรงที่เส้นลากผ่านสองจุดหมุนเข้าไปหา ความชันของมันคืออนุพันธ์</span></div>
+      </div>
+      <div class="panel-eq">
+        <span class="lbl">สูตรหลัก</span>
+        <div class="eq"><span class="frac"><span class="num"><span class="v">s</span>(<span class="v">a</span>+<span class="v">h</span>) − <span class="v">s</span>(<span class="v">a</span>)</span><span class="den"><span class="v">h</span></span></span></div>
+      </div>
+    </div>
+  </aside>
+  </div>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div class="scrim" id="askScrim">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="askTitle">
+    <p class="sub" id="askStep">ขั้นที่ —</p>
+    <h3 id="askTitle">ตรงไหนที่ยังไม่เข้าใจ</h3>
+    <textarea id="askText" placeholder="เช่น ไม่เข้าใจว่าทำไมตัด h ทิ้งได้ / บรรทัดนี้มาจากไหน / คำว่าเข้าใกล้แปลว่าอะไร"></textarea>
+    <div class="mrow">
+      <button class="btn btn-p" id="askCopy">คัดลอกคำถาม</button>
+      <button class="btn" id="askClose">ปิด</button>
+      <span id="askMsg" style="font-size:13px; color:var(--done)"></span>
+    </div>
+    <p class="hint">คัดลอกแล้ววางในช่องแชทได้เลย คำตอบจะกลับมาเป็นหน้าเดิมนี้ โดยเพิ่มปุ่มขยายความไว้ในขั้นนั้นให้</p>
+  </div>
+</div>
+
+<div class="scrim" id="ansScrim">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="ansTitle">
+    <p class="sub" id="ansStep">คำอธิบายเพิ่มเติม</p>
+    <h3 id="ansTitle"></h3>
+    <div class="body" id="ansBody"></div>
+    <div class="thread" id="ansThread"></div>
+    <div class="compose">
+      <span class="clbl">ยังไม่เคลียร์ตรงไหน ถามต่อได้เลย</span>
+      <textarea id="ansAsk" placeholder="พิมพ์คำถามที่ต่อเนื่องจากคำอธิบายข้างบนนี้"></textarea>
+      <div class="mrow">
+        <button class="btn btn-p" id="ansCopy">คัดลอกคำถาม</button>
+        <button class="btn" id="ansClose">ปิด</button>
+        <span id="ansMsg" style="font-size:13px; color:var(--done)"></span>
+      </div>
+      <p class="hint">คัดลอกแล้ววางในแชท คำตอบจะกลับมาต่อท้ายอยู่ในกล่องนี้เอง ไม่ไปรบกวนหน้าหลัก</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* =====================================================================
+   คลังคำอธิบายเพิ่มเติม
+   ทุกครั้งที่ผู้เรียนกดถามในขั้นใด คำตอบจะถูกเพิ่มเป็นรายการใหม่ตรงนี้
+   รูปแบบ:  "รหัสขั้น": [ { q: "หัวข้อปุ่ม", a: "<p>คำอธิบาย</p>",
+                            thread: [ { q: "คำถามที่ถามต่อ", a: "<p>คำตอบ</p>" } ] } ]
+   thread คือบทสนทนาย่อยที่ต่อลงมาในกล่องขยายความนั้น เว้นว่างไว้ได้
+   ===================================================================== */
+var ANSWERS = {
+};
+
+/* =====================================================================
+   คำถามทวนความเข้าใจ  แสดงเป็นกล่องสีน้ำตาลในขั้นที่ระบุ
+   answer เป็น null ไว้ก่อน เมื่อผู้เรียนส่งคำตอบมาแล้วจึงเติมเฉลยลงไป
+   ===================================================================== */
+var CHECKS = {
+  "2.4": [
+    { body: "<p>ทางลาดอีกอันหนึ่งชันกว่าของเรามาก ลูกบอลบนทางลาดนั้นมีความเร่งเท่ากับ 6 เมตรต่อวินาทีกำลังสอง และปล่อยจากหยุดนิ่งเหมือนกัน</p>" +
+            "<p>สองข้อ <b>(ก) สูตรระยะทางของทางลาดนี้คืออะไร</b> และ <b>(ข) เมื่อผ่านไป 4 วินาที ความเร็วเป็นเท่าไร</b></p>" +
+            "<p style='font-size:14px; color:var(--ink3)'>ข้อ (ก) ใช้สูตรของกาลิเลโอที่เพิ่งใช้ไป ส่วนข้อ (ข) ไม่ต้องใช้สูตรระยะทางเลย ใช้ความหมายของคำว่าความเร่งอย่างเดียวก็ตอบได้</p>",
+      note: null, answer: null, thread: [] }
+  ],
+  "4.3": [
+    { body: "<p>ลองใช้เครื่องมือเดียวกันนี้ด้วยตัวเอง โดยเปลี่ยนไป<b>ปักหมุดที่วินาทีที่ 2</b> คือให้ <span class='v'>a</span> = 2 และให้ <span class='v'>h</span> = 0.5 ลูกบอลลูกเดิม ทางลาดเดิม สูตรเดิมคือ <span class='v'>s</span>(<span class='v'>t</span>) = <span class='v'>t</span>²</p>" +
+            "<p>ตอบสามช่อง คือ <b>ระยะทางที่ปลายช่วง</b> เท่ากับเท่าไร <b>ระยะที่เปลี่ยนไป</b> เท่ากับเท่าไร และ <b>อัตราเฉลี่ย</b> เท่ากับเท่าไร</p>" +
+            "<p style='font-size:14px; color:var(--ink3)'>ทำทีละบรรทัดแบบเดียวกับที่ทำมา ถ้าอยากลองต่อว่าค่านี้กำลังเล็งไปที่เลขอะไรก็เขียนมาได้เลย</p>",
+      note: null, answer: null, thread: [] }
+  ],
+  "8.2": [
+    { body: "<p>ทางลาดอีกอันหนึ่งมีความเร่งเท่ากับ 3 เมตรต่อวินาทีกำลังสอง สูตรระยะทางของมันคือ <span class='v'>s</span>(<span class='v'>t</span>) = 1.5<span class='v'>t</span>²</p>" +
+            "<p>ใช้วิธีเดียวกับที่เพิ่งทำ คือปล่อยทั้ง <span class='v'>a</span> และ <span class='v'>h</span> ไว้เป็นตัวอักษร แล้วตอบสองข้อ <b>(ก) อัตราเฉลี่ยที่จุด a เท่ากับอะไร</b> และ <b>(ข) ความเร็ว ณ วินาทีที่ 2.4 เท่ากับเท่าไร</b></p>" +
+            "<p style='font-size:14px; color:var(--ink3)'>ขั้นตอนไม่ต่างจากเดิมเลย มีแค่เลข 1.5 ติดมาด้วยตลอดทาง ทำได้ถึงไหนก็ส่งมาแค่นั้นได้</p>",
+      note: null, answer: null, thread: [] }
+  ]
+};
+
+/* หมวดของปุ่มอธิบายเพิ่มเติม เปลี่ยนชื่อได้ตามวิชา */
+var KIND_LABEL = {
+  "หลักการ":  "หลักการ เหตุผล ที่มาที่ไป",
+  "แทนค่า":   "วิธีแทนค่าและแก้สมการ",
+  "ตัวอย่าง": "ตัวอย่างประกอบเพิ่ม",
+  "เชื่อมโยง": "ขั้นนี้ต่อกับเรื่องใหญ่ตรงไหน"
+};
+
+/* ================= state ================= */
+var KEY = "th-derivative-page2-v1";
+var steps = [].slice.call(document.querySelectorAll(".step"));
+var state = {};
+var hasStore = (typeof window.storage !== "undefined" && window.storage);
+
+function save(){
+  if(!hasStore) return;
+  try{ window.storage.set(KEY, JSON.stringify(state)); }catch(e){}
+}
+function load(cb){
+  if(!hasStore){ cb(); return; }
+  try{
+    window.storage.get(KEY).then(function(r){
+      if(r && r.value){ try{ state = JSON.parse(r.value) || {}; }catch(e){ state = {}; } }
+      cb();
+    }).catch(function(){ cb(); });
+  }catch(e){ cb(); }
+}
+
+/* ================= build each step ================= */
+steps.forEach(function(step){
+  var id = step.getAttribute("data-id");
+  var acts = step.querySelector(".acts");
+  acts.innerHTML =
+    '<button class="btn btn-ok">เข้าใจแล้ว</button>' +
+    '<button class="btn btn-ask">ยังไม่เข้าใจ / อยากถาม</button>' +
+    '<button class="btn btn-more">อธิบายเพิ่มเติม</button>' +
+    '<span class="badge"></span>';
+
+  var stepTitle = (function(){ var h = step.querySelector("h3"); return h ? h.textContent.trim() : ""; })();
+
+  acts.querySelector(".btn-ok").addEventListener("click", function(){
+    state[id] = (state[id] === "ok") ? null : "ok";
+    save(); paint();
+  });
+  acts.querySelector(".btn-ask").addEventListener("click", function(){
+    openAsk(id, stepTitle, "ask");
+  });
+
+  var optHtml = "";
+  Object.keys(KIND_LABEL).forEach(function(k){
+    optHtml += '<button data-k="' + k + '">' + KIND_LABEL[k] + '</button>';
+  });
+  var mbox = document.createElement("div");
+  mbox.className = "morebox";
+  mbox.innerHTML =
+    '<span class="mlbl">อยากให้ขยายส่วนไหนของขั้นนี้</span>' +
+    '<div class="mopts">' + optHtml + '</div>' +
+    '<span class="mmsg"></span>' +
+    '<p class="mhint">เลือกแล้วคำขอจะถูกคัดลอก นำไปวางในแชท เนื้อหาของขั้นนี้จะถูกเขียนใหม่ทั้งขั้นให้อ่านต่อเนื่องกัน ไม่ใช่แปะเพิ่มข้างล่าง</p>';
+  acts.parentNode.insertBefore(mbox, acts.nextSibling);
+
+  acts.querySelector(".btn-more").addEventListener("click", function(){
+    mbox.classList.toggle("on");
+  });
+  [].slice.call(mbox.querySelectorAll(".mopts button")).forEach(function(b){
+    b.addEventListener("click", function(){
+      var k = b.getAttribute("data-k");
+      var payload = "[หน้าเรียนอนุพันธ์ — ขอคำอธิบายเพิ่ม §" + id + " " + stepTitle + "]\n" +
+                    "ประเภทที่ต้องการ: " + (KIND_LABEL[k] || k);
+      copyText(payload, mbox.querySelector(".mmsg"));
+    });
+  });
+
+  var ex = step.querySelector(".extras");
+  (ANSWERS[id] || []).forEach(function(item){
+    var b = document.createElement("button");
+    b.className = "ex-btn";
+    b.textContent = item.q;
+    b.addEventListener("click", function(){ openAns(id, item); });
+    ex.appendChild(b);
+  });
+
+  (CHECKS[id] || []).forEach(function(c){
+    var box = document.createElement("div");
+    box.className = "check";
+    box.innerHTML = '<span class="clab">คำถามทวนความเข้าใจ</span>' + c.body +
+      (c.note ? '<p class="cnote">' + c.note + '</p>' : '') +
+      '<div class="crow"><button class="btn-check bc-send">ส่งคำตอบ</button>' +
+      (c.answer ? '<button class="btn-check bc-sol">ดูเฉลย</button>' : '') + '</div>';
+    box.querySelector(".bc-send").addEventListener("click", function(){
+      openAsk(id, "ตอบคำถามทวนความเข้าใจ", "answer");
+    });
+    var sol = box.querySelector(".bc-sol");
+    if(sol) sol.addEventListener("click", function(){
+      openAns(id, { q:"เฉลย — คำถามทวนความเข้าใจ", a:c.answer, thread:c.thread });
+    });
+    ex.parentNode.insertBefore(box, ex.nextSibling);
+  });
+});
+
+/* ================= paint ================= */
+var pDone = document.getElementById("pDone"),
+    pTot  = document.getElementById("pTot"),
+    pFill = document.getElementById("pFill"),
+    nextBox = document.getElementById("nextBox"),
+    nextHint = document.getElementById("nextHint"),
+    opts = [].slice.call(document.querySelectorAll(".opt"));
+pTot.textContent = steps.length;
+
+function paint(){
+  var done = 0;
+  steps.forEach(function(step){
+    var id = step.getAttribute("data-id");
+    var st = state[id];
+    var ok = step.querySelector(".btn-ok"), ask = step.querySelector(".btn-ask"),
+        badge = step.querySelector(".badge");
+    step.classList.toggle("is-done", st === "ok");
+    step.classList.toggle("is-ask", st === "ask");
+    ok.classList.toggle("on", st === "ok");
+    ask.classList.toggle("on", st === "ask");
+    var hasAns = (ANSWERS[id] || []).length > 0;
+    badge.textContent = st === "ok" ? "เข้าใจแล้ว"
+      : (st === "ask" ? (hasAns ? "มีคำอธิบายเพิ่มแล้ว" : "ถามไปแล้ว รอคำตอบ") : "");
+    if(st === "ok") done++;
+  });
+  pDone.textContent = done;
+  pFill.style.width = Math.round(done / steps.length * 100) + "%";
+
+  var all = done === steps.length;
+  nextBox.classList.toggle("locked", !all);
+  opts.forEach(function(o){ o.disabled = !all; });
+  nextHint.textContent = all
+    ? "เลือกหัวข้อที่อยากไปต่อ กดแล้วคำขอจะถูกคัดลอก เอาไปวางในแชทได้เลย"
+    : "ปลดล็อกเมื่อกดยืนยันเข้าใจแล้วครบทุกขั้น (เหลืออีก " + (steps.length - done) + " ขั้น)";
+}
+
+document.getElementById("pReset").addEventListener("click", function(){
+  state = {}; save(); paint();
+});
+
+/* ================= clipboard ================= */
+function copyText(txt, msgEl){
+  function ok(){ if(msgEl){ msgEl.textContent = "คัดลอกแล้ว — วางในช่องแชทได้เลย"; setTimeout(function(){ msgEl.textContent = ""; }, 4000); } }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(ok).catch(function(){ fallback(txt, ok); });
+  } else { fallback(txt, ok); }
+}
+function fallback(txt, ok){
+  var ta = document.createElement("textarea");
+  ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand("copy"); ok(); }catch(e){}
+  document.body.removeChild(ta);
+}
+
+/* ================= ask modal ================= */
+var askScrim = document.getElementById("askScrim"),
+    askStep = document.getElementById("askStep"),
+    askTitle = document.getElementById("askTitle"),
+    askText = document.getElementById("askText"),
+    askMsg = document.getElementById("askMsg");
+var current = { id:null, title:"", kind:"ask" };
+
+function openAsk(id, title, kind){
+  current.id = id; current.title = title; current.kind = kind || "ask";
+  askStep.textContent = (current.kind === "answer" ? "ตอบคำถาม · ขั้น §" : "ขั้นที่ §") + id;
+  askTitle.textContent = current.kind === "answer" ? "คำตอบของคุณ" : title;
+  askText.placeholder = current.kind === "answer"
+    ? "พิมพ์คำตอบที่คุณคิดได้ ผิดก็ไม่เป็นไร จะตรวจให้ทีละบรรทัด"
+    : "เช่น ไม่เข้าใจว่าทำไมตัด h ทิ้งได้ / บรรทัดนี้มาจากไหน / คำว่าเข้าใกล้แปลว่าอะไร";
+  askText.value = ""; askMsg.textContent = "";
+  askScrim.classList.add("on");
+  setTimeout(function(){ askText.focus(); }, 40);
+}
+document.getElementById("askCopy").addEventListener("click", function(){
+  var q = askText.value.trim();
+  if(!q){ askText.focus(); return; }
+  var tag = current.kind === "answer"
+    ? "[หน้าเรียนอนุพันธ์ — ตอบคำถามทวน §" + current.id + "]"
+    : "[หน้าเรียนอนุพันธ์ — ขั้น §" + current.id + " " + current.title + "]";
+  copyText(tag + "\n" + q, askMsg);
+  if(current.kind !== "answer"){ state[current.id] = "ask"; save(); paint(); }
+});
+document.getElementById("askClose").addEventListener("click", function(){ askScrim.classList.remove("on"); });
+askScrim.addEventListener("click", function(e){ if(e.target === askScrim) askScrim.classList.remove("on"); });
+
+/* ================= answer modal ================= */
+var ansScrim = document.getElementById("ansScrim");
+var ansThread = document.getElementById("ansThread");
+var ansAsk = document.getElementById("ansAsk");
+var ansMsg = document.getElementById("ansMsg");
+var ansCur = { id:null, q:"" };
+
+function openAns(id, item){
+  ansCur.id = id; ansCur.q = item.q;
+  document.getElementById("ansStep").textContent = "คำอธิบายเพิ่มเติม · ขั้น §" + id;
+  document.getElementById("ansTitle").textContent = item.q;
+  document.getElementById("ansBody").innerHTML = item.a;
+
+  ansThread.innerHTML = "";
+  var msgs = item.thread || [];
+  msgs.forEach(function(m){
+    var q = document.createElement("div");
+    q.className = "tq";
+    q.innerHTML = '<span class="tlbl">คำถามของคุณ</span><p>' + m.q + '</p>';
+    ansThread.appendChild(q);
+    var a = document.createElement("div");
+    a.className = "ta";
+    a.innerHTML = '<span class="tlbl">คำตอบ</span>' + m.a;
+    ansThread.appendChild(a);
+  });
+  ansThread.style.display = msgs.length ? "block" : "none";
+
+  ansAsk.value = ""; ansMsg.textContent = "";
+  ansScrim.classList.add("on");
+  ansScrim.querySelector(".modal").scrollTop = 0;
+}
+
+document.getElementById("ansCopy").addEventListener("click", function(){
+  var q = ansAsk.value.trim();
+  if(!q){ ansAsk.focus(); return; }
+  var tag = "[หน้าเรียนอนุพันธ์ — ถามต่อในกล่องขยายความ §" + ansCur.id + " · " + ansCur.q + "]";
+  copyText(tag + "\n" + q, ansMsg);
+});
+document.getElementById("ansClose").addEventListener("click", function(){ ansScrim.classList.remove("on"); });
+ansScrim.addEventListener("click", function(e){ if(e.target === ansScrim) ansScrim.classList.remove("on"); });
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape"){ askScrim.classList.remove("on"); ansScrim.classList.remove("on"); }
+});
+
+/* ================= next steps ================= */
+opts.forEach(function(o){
+  o.addEventListener("click", function(){
+    if(o.disabled) return;
+    if(o.id === "optFree"){
+      openAsk("ไปต่อ", "อยากคุยเรื่องอะไรต่อ", "ask");
+      askStep.textContent = "ไปต่อ";
+      askTitle.textContent = "อยากคุยเรื่องอะไรต่อ";
+      return;
+    }
+    copyText(o.getAttribute("data-q"), nextHint);
+    nextHint.textContent = "คัดลอกแล้ว — วางในช่องแชทได้เลย";
+  });
+});
+
+/* ================= post-lesson discussion ================= */
+var discussText = document.getElementById("discussText"),
+    discussMsg  = document.getElementById("discussMsg");
+document.getElementById("discussCopy").addEventListener("click", function(){
+  var t = discussText.value.trim();
+  if(!t){ discussText.focus(); return; }
+  copyText("[หน้าเรียนอนุพันธ์ — พูดคุยหลังบทเรียน]\n" + t, discussMsg);
+});
+
+/* ================= aside toggle (mobile) ================= */
+var aside = document.getElementById("aside");
+document.getElementById("asideToggle").addEventListener("click", function(){
+  aside.classList.toggle("open");
+  this.textContent = aside.classList.contains("open") ? "▴" : "▾";
+});
+
+/* ================= log bar reveal ================= */
+var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(!reduce && "IntersectionObserver" in window){
+  var bars = [].slice.call(document.querySelectorAll(".log-bar i"));
+  bars.forEach(function(b){ b.dataset.w = b.style.getPropertyValue("--w"); b.style.setProperty("--w","0%"); });
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){
+        bars.forEach(function(b,i){ setTimeout(function(){ b.style.setProperty("--w", b.dataset.w); }, i*110); });
+        io.disconnect();
+      }
+    });
+  }, { threshold: 0.35 });
+  var lb = document.getElementById("logBox");
+  if(lb) io.observe(lb);
+}
+
+/* ================= go ================= */
+load(paint);
+})();
+</script>
+
+</body>
+</html>
