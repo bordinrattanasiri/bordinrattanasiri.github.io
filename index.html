@@ -3,307 +3,259 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>One lesson, measured — Bordin Rattanasiri</title>
-<meta name="description" content="A chat explanation of derivatives, kept word for word and cut into steps. 18 questions, 11 on one step, and what that measured.">
-<style>
-:root{
-  --paper:#E9E8E3;
-  --panel:#F3F2EE;
-  --ink:#16171B;
-  --mute:#6E6F6A;
-  --rule:#C9C8C1;
-  --mark:#7B2233;
-  --mono:ui-monospace,"SF Mono","Cascadia Mono","JetBrains Mono",Menlo,Consolas,monospace;
-  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
-}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{
-  margin:0;background:var(--paper);color:var(--ink);
-  font-family:var(--serif);font-size:18px;line-height:1.62;
-  -webkit-font-smoothing:antialiased;
-}
-.wrap{max-width:760px;margin:0 auto;padding:0 24px}
-section{padding:56px 0;border-top:1px solid var(--rule)}
-section:first-of-type{border-top:0}
-
-.eyebrow{
-  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--mute);margin:0 0 20px;
-}
-h1{
-  font-family:var(--mono);font-weight:600;
-  font-size:clamp(25px,4.4vw,38px);line-height:1.24;
-  letter-spacing:-.015em;margin:0 0 8px;text-wrap:balance;
-}
-h2{
-  font-family:var(--mono);font-weight:600;font-size:16px;
-  letter-spacing:.02em;margin:0 0 22px;
-}
-h3{font-family:var(--mono);font-size:13px;font-weight:600;margin:0 0 6px}
-p{margin:0 0 18px}
-p:last-child{margin-bottom:0}
-a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--mark)}
-a:hover{color:var(--mark)}
-a:focus-visible,button:focus-visible{outline:2px solid var(--mark);outline-offset:3px}
-strong{font-weight:600}
-.lede{font-size:20px}
-.note{font-size:15px;color:var(--mute)}
-.mono{font-family:var(--mono)}
-
-/* ---- header ---- */
-header{padding:52px 0 0}
-.byline{
-  font-family:var(--mono);font-size:12px;color:var(--mute);
-  display:flex;flex-wrap:wrap;gap:6px 14px;margin:0 0 40px;
-}
-
-/* ---- the distribution ---- */
-figure{margin:34px 0 0}
-.chart{width:100%;height:auto;display:block;overflow:visible}
-.bar{fill:var(--ink);transform-box:fill-box;transform-origin:bottom}
-.bar.spike{fill:var(--mark)}
-.bar.zero{fill:var(--rule)}
-figcaption{
-  font-family:var(--mono);font-size:12px;color:var(--mute);
-  margin-top:16px;line-height:1.55;
-}
-.axis{font-family:var(--mono);font-size:10px;fill:var(--mute)}
-.axis.hit{fill:var(--mark)}
-.count{font-family:var(--mono);font-size:13px;font-weight:600;fill:var(--mark)}
-@media (prefers-reduced-motion:no-preference){
-  .bar{animation:rise .5s cubic-bezier(.2,.7,.3,1) backwards}
-  @keyframes rise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
-}
-
-/* ---- cards ---- */
-.cards{display:grid;gap:16px;grid-template-columns:1fr 1fr}
-@media (max-width:640px){.cards{grid-template-columns:1fr}}
-.card{
-  background:var(--panel);border:1px solid var(--rule);
-  padding:22px;display:flex;flex-direction:column;gap:10px;
-}
-.card p{font-size:15px;margin:0;flex:1}
-.card .open{
-  font-family:var(--mono);font-size:12px;letter-spacing:.06em;
-  text-transform:uppercase;border-bottom:0;align-self:flex-start;
-  border:1px solid var(--ink);padding:7px 14px;
-}
-.card .open:hover{background:var(--ink);color:var(--paper)}
-
-/* ---- tables ---- */
-table{width:100%;border-collapse:collapse;font-size:15px;margin:0 0 20px}
-th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
-thead th{
-  font-family:var(--mono);font-size:11px;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--mute);font-weight:500;
-}
-td.num,th.num{font-family:var(--mono);text-align:right;white-space:nowrap}
-tr.accent td{color:var(--mark)}
-.qtable td:first-child{font-family:var(--mono);font-size:12px;white-space:nowrap;color:var(--mute)}
-.qtable .th{font-size:14px;color:var(--mute);display:block;margin-top:3px}
-.qtable td.num{font-size:12px}
-.sub td:nth-child(2){padding-left:26px;position:relative}
-.sub td:nth-child(2)::before{
-  content:"";position:absolute;left:8px;top:14px;width:10px;
-  border-top:1px solid var(--rule);
-}
-
-/* ---- code ---- */
-pre{
-  background:var(--panel);border:1px solid var(--rule);
-  padding:16px 18px;overflow-x:auto;font-family:var(--mono);
-  font-size:13px;line-height:1.7;margin:0 0 18px;
-}
-code{font-family:var(--mono);font-size:.92em}
-
-/* ---- lists of files ---- */
-.files{list-style:none;padding:0;margin:0;font-size:15px}
-.files li{padding:9px 0;border-bottom:1px solid var(--rule);display:flex;gap:14px}
-.files li:first-child{border-top:1px solid var(--rule)}
-.files .what{color:var(--mute);font-size:14px}
-
-footer{padding:44px 0 72px;border-top:1px solid var(--rule);font-size:15px;color:var(--mute)}
-footer a{border-bottom-color:var(--rule)}
-</style>
+<title>Two teaching skills — Bordin Rattanasiri</title>
+<meta name="description" content="interactive-lesson-page and ground-up-teaching: two skills that change how a language model teaches, written and corrected while using them to learn real subjects from zero.">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
+<header class="masthead">
   <div class="wrap">
-    <p class="byline">
-      <span>Bordin Rattanasiri</span>
-      <span>Music theory teacher, Thailand</span>
-      <span>July 2026</span>
-    </p>
-    <p class="eyebrow">One lesson, measured</p>
-    <h1>The explanation was good. It held about a quarter of what I needed, and the chat had no way to show that.</h1>
-
-    <figure>
-      <svg class="chart" viewBox="0 0 520 210" role="img"
-           aria-label="Bar chart of 25 steps. Step 2.1 received 11 questions, step 2.2 received 3, step 7.3 received 2, steps 3.2 and 8.2 received 1 each, and the remaining 20 steps received none.">
-        <line x1="0" y1="170" x2="520" y2="170" stroke="var(--rule)" stroke-width="1"/>
-        <g id="bars"></g>
-        <text class="count" x="75.5" y="18" text-anchor="middle">11</text>
-        <text class="axis" x="8" y="190">1.1</text>
-        <text class="axis hit" x="75.5" y="190" text-anchor="middle">2.1</text>
-        <text class="axis" x="512" y="190" text-anchor="end">8.2</text>
-      </svg>
-      <figcaption>
-        Where 18 questions landed across the 25 steps of one explanation.<br>
-        Eleven of them, 61%, arrived at a single step.
-      </figcaption>
-    </figure>
+    <span class="mark"><strong>Bordin Rattanasiri</strong> · teaching skills</span>
+    <a class="mark" href="origin.html">Where they came from →</a>
   </div>
 </header>
 
-<section>
-  <div class="wrap">
-    <h2>What happened</h2>
-    <p class="lede">I teach music theory in Thailand — fundamentals through harmony, counterpoint and form, to students from complete beginners up to university level. Fifteen years of it. My own maths stopped in secondary school.</p>
-    <p>In July 2026 I asked Claude to teach me derivatives, a topic I had never studied. The explanation it gave in chat was good. Good enough that I asked for it back word for word as a web page, with two buttons on every sub-step: one to mark it understood, and one that opens a box to type a question about that step. Whatever I asked came back as a panel attached to the step itself, so the answer sat where the confusion was. Claude cut its own answer into 25 steps; I did not choose that number, or the places it cut.</p>
-    <p>Nothing else changed. Same words, same model, same session, a few minutes apart. The only new thing was somewhere to point.</p>
-    <p>I asked 18 questions. Eleven of them landed on step 2.1. Answering all 18 took three times more writing than the whole original explanation contained.</p>
-    <p>Step 2.1 was not a hard step. It was missing about four sections' worth of ground, and nothing in the chat version could have revealed that — not to me, and not to the model. <strong>A learner cannot name what they do not understand; that is what not understanding is.</strong> Given somewhere to point, they can point, and the shape of where they point is the missing curriculum.</p>
-  </div>
-</section>
+<main class="wrap">
 
-<section>
-  <div class="wrap">
-    <h2>The two pages</h2>
-    <div class="cards">
-      <div class="card">
-        <h3>Lesson 1</h3>
-        <p>The chat explanation, kept word for word and cut into 25 steps. This is the page I actually studied from. The replies to all 18 questions are still inside it, behind the buttons where they landed.</p>
-        <a class="open" href="lesson-1.html">Open lesson 1</a>
-      </div>
-      <div class="card">
-        <h3>Lesson 2</h3>
-        <p>The same topic built again, after Claude had been told what had gone wrong the first time. Thirty steps, and nothing hidden behind a button.</p>
-        <a class="open" href="lesson-2.html">Open lesson 2</a>
-      </div>
-    </div>
-    <p class="note" style="margin-top:18px">Both are single HTML files with no server and no dependencies, and both are in Thai. Save either one and it works offline. Lesson 1 is the evidence; lesson 2 only shows what the same lesson looks like when the method is designed in from the start.</p>
-  </div>
-</section>
+  <p class="eyebrow">interactive-lesson-page · ground-up-teaching</p>
 
-<section>
-  <div class="wrap">
-    <h2>The numbers</h2>
-    <table>
-      <thead>
-        <tr><th></th><th class="num">Lesson 1</th><th class="num">Lesson 2</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Steps on the main line</td><td class="num">25</td><td class="num">30</td></tr>
-        <tr><td>Characters on the main line</td><td class="num">13,889</td><td class="num">60,580</td></tr>
-        <tr><td>Median characters per step</td><td class="num">223</td><td class="num">1,856</td></tr>
-        <tr><td>Steps under 600 characters</td><td class="num">21</td><td class="num">0</td></tr>
-        <tr><td>Questions asked</td><td class="num">18</td><td class="num">—</td></tr>
-        <tr><td>Characters written in reply</td><td class="num">42,220</td><td class="num">0</td></tr>
-        <tr class="accent"><td>Questions on the busiest step</td><td class="num">11 of 18</td><td class="num">—</td></tr>
-      </tbody>
-    </table>
-    <p>The first column is a measurement of the chat answer, not of the page. The page kept every word; it only made the seams visible. Cut along its own conceptual joints, a chat explanation that read as complete averages 223 characters per step, and 42,220 more characters had to be written before I could get through it.</p>
-    <p class="note">Three of the answer windows in lesson 1 were added by Claude unprompted rather than asked for. They are excluded from the count of 18. The script names them.</p>
+  <h1>Explaining and teaching are different activities.</h1>
 
-    <h2 style="margin-top:40px">Checking them</h2>
-    <p>Put <a href="verify.py">verify.py</a> beside the two lesson files and run it. No dependencies, Python 3.8 or newer. It prints every figure in the table above.</p>
-    <pre>python3 verify.py</pre>
-  </div>
-</section>
+  <p class="lede">Two skills that change how a language model teaches — from producing correct
+  explanations to building lessons a beginner can actually walk through. They were not designed
+  in the abstract. They were written, and repeatedly corrected, while using them to learn real
+  subjects from zero.</p>
 
-<section>
-  <div class="wrap">
-    <h2>Where the questions landed</h2>
-    <p>All 18, in the order asked, with the length of each reply. Indented rows are follow-ups inside the same thread. The originals are in Thai.</p>
-    <table class="qtable">
-      <thead>
-        <tr><th>Step</th><th>Question</th><th class="num">Reply</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>2.1</td><td>Where does s(t) = t² come from — and the table shows distance, not speed<span class="th">s(t) = t² มาจากไหน (และตัวเลขในตารางคือระยะทาง ไม่ใช่ความเร็ว)</span></td><td class="num">1,034</td></tr>
-        <tr class="sub"><td></td><td>Galileo found distance grows with time squared — does that hold only for straight ramps, and at every angle?<span class="th">แล้วที่กาลิเลโอพบว่าระยะทางโตแบบเวลายกกำลังสอง ใช้กับทางลาดเส้นตรงเท่านั้นหรือเปล่า ถ้าใช่เป็นทุกองศาความเอียงไหม</span></td><td class="num">2,305</td></tr>
-        <tr class="sub"><td></td><td>I don't understand "gravity is split into two directions, and only the part parallel to the slope pushes the ball down"<span class="th">ไม่เข้าใจคำว่า "แรงโน้มถ่วงถูกแบ่งออกเป็นสองทาง มีเพียงส่วนที่ขนานไปกับพื้นลาดเท่านั้นที่ดันลูกบอลให้ไหลลง"</span></td><td class="num">1,555</td></tr>
-        <tr class="sub"><td></td><td>Explain the unit of acceleration — metres per second squared<span class="th">อธิบายหน่วยความเร่ง — เมตรต่อวินาทีกำลังสอง</span></td><td class="num">1,431</td></tr>
-        <tr class="sub"><td></td><td>Is g = 9.8 the g-force people talk about? And give me a real example of "acceleration measures how fast speed changes"<span class="th">g = 9.8 คือแรงจีที่คนพูดกันใช่ไหม / แล้วขอตัวอย่างจริงของ "ความเร่งวัดว่าความเร็วเปลี่ยนเร็วแค่ไหน" หน่อย</span></td><td class="num">2,892</td></tr>
-        <tr class="sub"><td></td><td>Is 15 ÷ 3 = 5 what "dividing by seconds twice" means? I read that as 5 metres per second, per second<span class="th">ที่ผมคิดว่า เอา 15 ÷ 3 = 5 คือความหมายของ "หารวินาทีสองครั้ง" ใช่ไหม / แล้วผมอ่านเองว่า 5 เมตรต่อวินาที ต่อวินาที</span></td><td class="num">2,798</td></tr>
-        <tr class="sub"><td></td><td>That is what I meant — I read the "/s" already written as the first division<span class="th">ผมหมายถึงแบบนั้นแหละ ตรงที่เขียน /วิ ผมเข้าใจว่าคือหารรอบแรกไปแล้ว</span></td><td class="num">1,314</td></tr>
-        <tr class="sub"><td></td><td>In "acceleration = metres / second / second", where does that second denominator actually come from?<span class="th">ตรงสูตร ความเร่ง = เมตร / วินาที / วินาที คำว่าวินาทีตัวล่างที่เป็นตัวหาร มันมาจากไหนกันแน่</span></td><td class="num">2,628</td></tr>
-        <tr><td>2.1</td><td>What if the numbers I wrote down don't come out as t²?<span class="th">ถ้าตัวเลขที่จดมาไม่ลงตัวเป็น t² ล่ะ</span></td><td class="num">1,844</td></tr>
-        <tr class="sub"><td></td><td>Expand the sentence "imagine you really only have a four-row table"<span class="th">ขยายความประโยค "ลองนึกว่าคุณมีแค่ตาราง 4 แถวจริง ๆ" หน่อย</span></td><td class="num">2,266</td></tr>
-        <tr class="sub"><td></td><td>Ah — you mean there are only measured values in the table, with no formula to carry them on<span class="th">อ๋อ หมายถึงมีแต่ค่าที่วัดมาใส่ตาราง แต่ไม่มีสูตรมาจับต่อ</span></td><td class="num">968</td></tr>
-        <tr><td>2.2</td><td>Substitute and show me what a is. Does it have a unit? And h too<span class="th">แทนค่าให้ดูหน่อยว่า a เท่ากับเท่าไร มีหน่วยไหม แล้ว h ด้วย</span></td><td class="num">2,664</td></tr>
-        <tr class="sub"><td></td><td>The s(a+h) column isn't measured, it comes from the formula? Add a column for s(a+h) − s(a), and unpack the equation in the note<span class="th">ค่า s(a+h) ในตารางไม่ได้มาจากการวัดใช่ไหม มันมาจากสูตร / ขอเพิ่มคอลัมน์ s(a+h) − s(a) ก่อนคอลัมน์สุดท้าย / แล้วขอเจาะสมการในเกร็ดท้ายกล่อง</span></td><td class="num">4,507</td></tr>
-        <tr class="sub"><td></td><td>Guessing a formula from the pattern in a table — is that what's called a model?<span class="th">การเดาสูตรจากรูปแบบตัวเลขในตาราง อันนี้ใช่ที่เรียกว่าแบบจำลองไหม</span></td><td class="num">2,779</td></tr>
-        <tr><td>3.2</td><td>Is "average rate" a technical term? Would "average speed" be clearer?<span class="th">คำว่าอัตราเฉลี่ยเป็นคำเจาะจงหรือเป็นทางการไหม ใช้ว่าความเร็วเฉลี่ยจะชัดกว่าหรือเปล่า</span></td><td class="num">2,715</td></tr>
-        <tr><td>7.3</td><td>What if I want it at some other point — how do you write a when it changes?<span class="th">ถ้าจะหาที่จุดอื่นบ้างล่ะ เวลาเขียนจะระบุค่า a ที่เปลี่ยนไปอย่างไร</span></td><td class="num">2,578</td></tr>
-        <tr class="sub"><td></td><td>So the speed at point a is 2a? And what do we call it when a is some other value?<span class="th">สรุปว่าความเร็วที่จุด a เท่ากับ 2a ใช่ไหม / แล้วเวลาพูดถึงกรณีที่ a เป็นค่าอื่น เราเรียกมันว่าอะไร</span></td><td class="num">1,980</td></tr>
-        <tr><td>8.2</td><td>Checking my answer — acceleration 3 at a = 2.4 gives an average rate of 7.2 + 1.5h<span class="th">ตรวจคำตอบ ความเร่งเป็น 3 ที่จุด a = 2.4 ได้อัตราเฉลี่ยเป็น 7.2 + 1.5h</span></td><td class="num">2,627</td></tr>
-      </tbody>
-    </table>
-    <p>Reading down the first eight rows: the explanation had introduced <code>s(t) = t²</code> as a fact. Everything under it — where the formula came from, what a ramp has to do with gravity, what an acceleration unit means, why seconds appear twice — was ground the step stood on and did not lay. That is not a hard step. It is four missing steps wearing one number.</p>
+  <div class="spotlight" id="sp">
+    <span>Ask a capable model to explain something and you get a competent summary: accurate, dense, ordered by topic,</span>
+    <span>and close to useless if you are starting from nothing. It states results without their origins.</span>
+    <span>It defines terms before those terms do any work. It refers to things you have not met yet.</span>
+    <span>It leaves the connective tissue for you to infer. You read it, feel that you understood,</span>
+    <span>and find later that you cannot use <em>any of it</em>.</span>
   </div>
-</section>
+  <p class="sp-caption">↑ This is roughly what your reader has. Everything else is still on the page.</p>
 
-<section>
-  <div class="wrap">
-    <h2>The transcripts</h2>
-    <p>Unedited, including the turns that went wrong. The first session is the lesson: the two chat explanations, then lesson 1, then every question above. The second is where the method was written down.</p>
-    <ul class="files">
-      <li><a href="https://claude.ai/share/a9ce90b1-004f-497b-be87-658c9d3e8af8">Session 1 — learning derivatives, and building lesson 1</a></li>
-      <li><a href="https://claude.ai/share/b5642d3e-54cc-4d52-aff2-718a3fe5ec74">Session 2 — writing the method down, and lesson 2</a></li>
-    </ul>
-    <p class="note" style="margin-top:18px">The instruction that produced lesson 1 is in session 1: keep every line of the explanation, add a button to every sub-step. The three answer windows Claude added on its own are announced in the message that delivers the file.</p>
-  </div>
-</section>
+  <h2>Why they exist</h2>
 
-<section>
-  <div class="wrap">
-    <h2>The method</h2>
-    <p>After the lesson I asked Claude to write down what it had learned about teaching me, so that the next subject would not start from zero. That became two skill files and three reference documents. Claude wrote the prose; I decided what belonged in it, and every rule in it exists because its absence cost me something in session 1.</p>
-    <p>The rule that matters most is the one the chart above taught: <strong>a cluster of questions on one step means a section is missing, not that the step is hard.</strong> The repair is never a longer answer. It is new steps on the main line.</p>
-    <ul class="files">
-      <li><a href="https://github.com/bordinrattanasiri/bordinrattanasiri.github.io/blob/main/skills/interactive-lesson-page/SKILL.md">interactive-lesson-page</a><span class="what">Building and extending a lesson page across sessions</span></li>
-      <li><a href="https://github.com/bordinrattanasiri/bordinrattanasiri.github.io/blob/main/skills/ground-up-teaching/SKILL.md">ground-up-teaching</a><span class="what">The same teaching order, for chat with no page</span></li>
-      <li><a href="https://github.com/bordinrattanasiri/bordinrattanasiri.github.io/blob/main/skills/references/pedagogy.md">pedagogy.md</a><span class="what">What a step owes the reader before it may end</span></li>
-      <li><a href="https://github.com/bordinrattanasiri/bordinrattanasiri.github.io/blob/main/skills/references/page-spec.md">page-spec.md</a><span class="what">The page itself: controls, storage, states</span></li>
-      <li><a href="https://github.com/bordinrattanasiri/bordinrattanasiri.github.io/blob/main/skills/references/build-notes.md">build-notes.md</a><span class="what">Assembling a large single file without losing it</span></li>
-    </ul>
-    <p style="margin-top:22px">Beyond this one lesson I can see many more applications. My own subject would need a completely different page — audio, notation, replay — which is exactly the point. The workflow has to be designed per subject, not once. And all of this was built in Thai.</p>
-  </div>
-</section>
+  <p>The failure is not one of knowledge. The model knows the subject. The failure is that
+  <strong>explaining and teaching are different activities</strong>, and nothing in a plain chat
+  request asks for the second one.</p>
 
-<footer>
-  <div class="wrap">
-    <p>Everything here is MIT licensed. Use it, adapt it, or ignore it.</p>
-    <p>Bordin Rattanasiri · <a href="mailto:bordin.rattanasiri@gmail.com">bordin.rattanasiri@gmail.com</a></p>
+  <p>For most people the available response to this is nothing. You cannot fine-tune the model.
+  You cannot design the interface. You can only ask better questions, one at a time, and start
+  over tomorrow. A skill is the one lever that is actually within reach: a reusable specification
+  of <em>how</em> to teach, so that the next subject arrives in a form that has already been shown
+  to work, instead of depending on how well you happened to phrase the request.</p>
+
+  <p>That is the wider claim behind this repository. Using a general-purpose chat model to study
+  something seriously is still much harder than it should be, and the missing piece is rarely
+  capability — it is method and workflow. What is needed looks less like a conversation and more
+  like an application built for the shape of the subject being learned.</p>
+
+  <h2>The observation that shaped the design</h2>
+
+  <p>The design rests on an asymmetry between how a model holds a problem and how a person does.</p>
+
+  <p>A model holds the whole block at once, evenly and sharply. It can see everything it has said
+  and everything it is about to say, and it can pull all of it into a single act of reasoning.</p>
+
+  <p>A person cannot. Human working memory has one narrow point of sharp focus, surrounded by
+  material that fades outward — present, but blurred to different degrees, and decaying as
+  attention moves on. Read a section and understand it, and what survives into the next section is
+  a <em>concept</em>, not the wording, not the details, and often not the thread. In a genuinely
+  difficult subject you can be following the procedure correctly and simultaneously lose track of
+  what step you are on, why this step exists, and where you are in the whole arc.</p>
+
+  <p>Almost every rule in these skills is a consequence of taking that seriously:</p>
+
+  <ul>
+    <li><strong>Write for a narrow, moving spotlight.</strong> Whatever a sentence depends on must
+    be inside the reader's focus at the moment they read it, not four paragraphs back.</li>
+    <li><strong>Never reference by number.</strong> "As we saw in §3.2" is worthless to someone who
+    does not remember section numbers — and nobody remembers section numbers. Earlier material is
+    referenced by carrying its substance forward in a clause.</li>
+    <li><strong>State the position constantly.</strong> What is settled, what is still open, what
+    this part is for. A reader who knows where they are can follow much harder material than one
+    who does not.</li>
+    <li><strong>One thread.</strong> Every part is tied into a single line of argument, so the
+    shape of the whole stays visible from any point inside it.</li>
+    <li><strong>Assume nothing is still on screen.</strong> Not the definition, not the variable,
+    not the reason this quantity mattered.</li>
+  </ul>
+
+  <h2>Architecture before prose</h2>
+
+  <p>The largest determinant of whether a lesson works is fixed before a word of it is written.</p>
+
+  <p>Both skills therefore force the arc to be designed first: every step, what it settles, what it
+  needs from earlier steps, what it hands to the next. A lesson planned one step at a time drifts —
+  the third step arrives needing something the first should have established, and by then the first
+  cannot be repaired.</p>
+
+  <div class="pull">A section exists because the previous section left something undone. If nothing
+  forces it, it is enrichment rather than structure.</div>
+
+  <p>Each step carries one clear key point, and the points do not overlap, so that working through
+  the lesson is stepwise and a question asked in one step gets answered within that step's scope
+  instead of bleeding across the others.</p>
+
+  <h2>Completeness is not deferred to questions</h2>
+
+  <p>A tempting design is to teach lightly and let the learner ask for the rest. It does not work.
+  Anything a learner had to ask for was usually a paragraph that should have been written, and
+  material that accumulates in follow-up answers is invisible to everyone who does not ask.</p>
+
+  <p>So the first delivery has to be complete. In <code>interactive-lesson-page</code> this becomes
+  a hard invariant: <strong>the page as first built is the lesson.</strong> It is what the learner
+  works inside for the whole session, and questions only surface gradually as they read — which is
+  precisely why the initial build has to be made with real care rather than sketched and patched.
+  Once delivered, its main line does not change in response to questions. Answers live in their own
+  windows attached to the step they belong to; the main line changes only through an explicit
+  <em>explain this further</em> request on a specific step.</p>
+
+  <p class="note">This rule was not a guess. It came from watching a real lesson accumulate its
+  most useful material inside answer windows, where no one who did not press a button would ever
+  find it. <a href="origin.html">That lesson, and the numbers it produced →</a></p>
+
+  <h2>The artefact is the classroom</h2>
+
+  <p>In the page skill, everything lives in the HTML file: the teaching, the answers to questions,
+  the corrections, the check questions, and even the discussion at the end of the lesson. Nothing
+  is taught in chat. Chat carries a two-line note saying what changed and where it now sits.</p>
+
+  <p>The reason is simple. The file is the only thing the learner keeps. A brilliant explanation
+  that exists only in a chat log is gone the moment the conversation scrolls, and a learner who
+  saves the page should find in it the complete lesson and every conversation that happened
+  around it.</p>
+
+  <p>In the chat skill the conversation <em>is</em> the artefact, which is why the explanation is
+  delivered one movement per message rather than as a single long answer. A carefully built
+  explanation dumped into one message defeats itself: the reader loses the thread somewhere in the
+  middle, and by the time they think to ask, the place where they lost it has scrolled away.</p>
+
+  <h2>The two skills</h2>
+
+  <div class="card">
+    <h3><code>interactive-lesson-page</code></h3>
+    <p>Builds one self-contained HTML page that teaches a topic from zero, then grows it across
+    many turns as the learner works through it.</p>
+    <p>The workflow: scope the lesson with a few questions and confirm → design the whole arc →
+    build the page → then a working loop, where the learner marks steps understood, asks questions
+    on individual steps, or requests deeper explanation, and each of those routes to a different
+    kind of edit. The page carries a progress rail, a map of the argument, a per-step signpost of
+    what was settled and what was not, a sidebar of terms and symbols, optional enrichment windows,
+    check questions, and a closing panel that ends the session with a handoff document for the
+    next one.</p>
+    <p class="files">SKILL.md — orchestration and routing<br>
+    references/pedagogy.md — how to write the teaching, the larger half of the job<br>
+    references/page-spec.md — functional and markup contract<br>
+    references/build-notes.md — build procedure and validation</p>
   </div>
-</footer>
+
+  <div class="card">
+    <h3><code>ground-up-teaching</code></h3>
+    <p>The same doctrine with no page, for subjects that do not need the page's apparatus.</p>
+    <p>The workflow: a few scoping questions → a posted map of the entire planned explanation →
+    then one movement per message, continuing as the learner responds, with questions answered
+    where they arise and the thread returned to afterwards → a closing offer → a handoff
+    document.</p>
+    <p class="files">SKILL.md</p>
+  </div>
+
+  <p>The two are siblings on purpose. Where a rule exists in both, it says the same thing in the
+  vocabulary of its medium.</p>
+
+  <h2>Design invariants</h2>
+
+  <p>These are settled decisions, most of them made after something went wrong without them.</p>
+
+  <ol>
+    <li>The delivered page is fixed. Questions never restructure it; only an explicit request to
+    expand a step rewrites that step.</li>
+    <li>Nothing is taught in chat.</li>
+    <li>Scope is agreed before building; the build waits for confirmation.</li>
+    <li>A multi-lesson series is proposed only when the subject forces one, and only exists once
+    the learner agrees. Breadth alone is not a reason.</li>
+    <li>Enrichment is optional by construction: delete every optional window and the lesson must
+    still teach the topic completely.</li>
+    <li>Prose, not fragments — written register rather than spoken, complete sentences, concrete
+    example before symbol, always.</li>
+    <li>Teaching happens in the learner's language, with the English term given at first appearance
+    for anything the argument is built on, then one form held consistently.</li>
+    <li>Claims carry their status when they are not plain verified fact: illustrative
+    reconstruction, simplification made for teaching, or genuinely contested ground.</li>
+    <li>Facts are checked before the arc is planned, and arithmetic and code output are verified
+    before they are published.</li>
+    <li>Each skill carries its own handoff, so a session can be closed and resumed by dropping one
+    file into a fresh conversation.</li>
+    <li>Nothing is subject-specific. The rules are written in the vocabulary of quantitative
+    subjects because they are hardest to satisfy there, and translated explicitly for subjects
+    without equations — code, law, history, music.</li>
+  </ol>
+
+  <h2>Using them</h2>
+
+  <p>Each skill is a folder: a <code>SKILL.md</code> and, for the page skill, a
+  <code>references/</code> directory. Install them the way your Claude surface installs skills —
+  the zipped folder in each release is already in the expected shape. Consult Anthropic's current
+  documentation for where skills are uploaded, since that has moved more than once.</p>
+
+  <p>Then simply ask to be taught something. The skill takes over from there: it will ask what you
+  want the subject for, how deep to go, and what you already hold, and then build.</p>
+
+  <p><a href="https://github.com/bordinrattanasiri/bordinrattanasiri.github.io/tree/main/skills">Both
+  skills on GitHub →</a></p>
+
+  <h2>Status</h2>
+
+  <p>Both skills are in active use and still changing. They encode a particular view of what
+  teaching is, tested against real attempts to learn real subjects — which means the rules that
+  look arbitrary usually are not, and the ones that look obvious were usually learned the hard
+  way.</p>
+
+  <p>Contributions, disagreements, and reports of where the doctrine breaks are all welcome.</p>
+
+  <div class="foot">
+    <p>MIT licensed. Use it, adapt it, or ignore it.<br>
+    Bordin Rattanasiri · music theory teacher, Thailand · <a href="mailto:bordin.rattanasiri@gmail.com">bordin.rattanasiri@gmail.com</a></p>
+  </div>
+
+</main>
 
 <script>
 (function(){
-  var steps = ["1.1","1.2","1.3","2.1","2.2","3.1","3.2","4.1","4.2","4.3","4.4","4.5",
-               "5.1","5.2","5.3","6.1","6.2","6.3","6.4","7.1","7.2","7.3","7.4","8.1","8.2"];
-  var counts = [0,0,0,11,3,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,1];
-  var g = document.getElementById("bars");
-  var baseline = 170, unit = 13.2, w = 12, gap = 8.5, x0 = 8;
-  var ns = "http://www.w3.org/2000/svg";
-  counts.forEach(function(n, i){
-    var h = n ? n * unit : 2;
-    var r = document.createElementNS(ns, "rect");
-    r.setAttribute("x", x0 + i * (w + gap));
-    r.setAttribute("y", baseline - h);
-    r.setAttribute("width", w);
-    r.setAttribute("height", h);
-    r.setAttribute("class", "bar" + (n === 11 ? " spike" : n ? "" : " zero"));
-    r.style.animationDelay = (i * 22) + "ms";
-    var t = document.createElementNS(ns, "title");
-    t.textContent = "Step " + steps[i] + " — " + (n === 1 ? "1 question" : n + " questions");
-    r.appendChild(t);
-    g.appendChild(r);
+  var sp = document.getElementById('sp');
+  if(!sp) return;
+  var spans = sp.querySelectorAll('span');
+  if(!spans.length) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var i = 0, timer = null;
+  function light(n){
+    spans.forEach(function(s,k){
+      s.classList.remove('lit','near');
+      if(k === n) s.classList.add('lit');
+      else if(Math.abs(k - n) === 1) s.classList.add('near');
+    });
+  }
+  function advance(){ light(i); i = (i + 1) % spans.length; }
+  function start(){ if(!timer){ advance(); timer = setInterval(advance, 2600); } }
+  function stop(){ clearInterval(timer); timer = null; }
+  start();
+  sp.addEventListener('mousemove', function(e){
+    stop();
+    spans.forEach(function(s,k){
+      var r = s.getBoundingClientRect();
+      var inside = e.clientY >= r.top && e.clientY <= r.bottom && e.clientX >= r.left && e.clientX <= r.right;
+      if(inside){ i = k; light(k); }
+    });
+  });
+  sp.addEventListener('mouseleave', start);
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden) stop(); else start();
   });
 })();
 </script>
+
 </body>
 </html>
