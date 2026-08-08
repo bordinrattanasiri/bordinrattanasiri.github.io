@@ -133,6 +133,8 @@ hr{border:0;border-top:1px solid var(--rule);margin:4rem 0}
 }
 .spotlight span.near{filter:blur(1.1px);opacity:.66}
 .spotlight span.lit{filter:none;opacity:1}
+.spotlight.done span{filter:none;opacity:1}
+.spotlight.done span em{background:var(--mark-soft)}
 .spotlight span.lit em{font-style:normal;background:var(--mark-soft)}
 .sp-caption{
   font-family:'IBM Plex Mono',ui-monospace,monospace;

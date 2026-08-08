@@ -32,7 +32,7 @@
     <span>and close to useless if you are starting from nothing. It states results without their origins.</span>
     <span>It defines terms before those terms do any work. It refers to things you have not met yet.</span>
     <span>It leaves the connective tissue for you to infer. You read it, feel that you understood,</span>
-    <span>and find later that you cannot use <em>any of it</em>.</span>
+    <span>and find later that you cannot use <em style="font-style:normal">any of it</em>.</span>
   </div>
   <p class="sp-caption">↑ This is roughly what your reader has. Everything else is still on the page.</p>
 
@@ -230,7 +230,7 @@
   var spans = sp.querySelectorAll('span');
   if(!spans.length) return;
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var i = 0, timer = null;
+  var i = 0, timer = null, finished = false;
   function light(n){
     spans.forEach(function(s,k){
       s.classList.remove('lit','near');
@@ -238,8 +238,18 @@
       else if(Math.abs(k - n) === 1) s.classList.add('near');
     });
   }
-  function advance(){ light(i); i = (i + 1) % spans.length; }
-  function start(){ if(!timer){ advance(); timer = setInterval(advance, 2600); } }
+  function finish(){
+    finished = true;
+    stop();
+    sp.classList.add('done');
+    spans.forEach(function(s){ s.classList.remove('lit','near'); });
+  }
+  function advance(){
+    if(i >= spans.length){ finish(); return; }
+    light(i);
+    i++;
+  }
+  function start(){ if(!timer && !finished){ advance(); timer = setInterval(advance, 2600); } }
   function stop(){ clearInterval(timer); timer = null; }
   start();
   sp.addEventListener('mousemove', function(e){
@@ -247,10 +257,13 @@
     spans.forEach(function(s,k){
       var r = s.getBoundingClientRect();
       var inside = e.clientY >= r.top && e.clientY <= r.bottom && e.clientX >= r.left && e.clientX <= r.right;
-      if(inside){ i = k; light(k); }
+      if(inside){ light(k); }
     });
   });
-  sp.addEventListener('mouseleave', start);
+  sp.addEventListener('mouseleave', function(){
+    if(finished){ spans.forEach(function(s){ s.classList.remove('lit','near'); }); }
+    else { start(); }
+  });
   document.addEventListener('visibilitychange', function(){
     if(document.hidden) stop(); else start();
   });
